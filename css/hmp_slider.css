@@ -1,0 +1,55 @@
+
+
+	.coda-slider-wrapper { height:259px; width:1104px; }
+	.coda-slider { background:#0650A5;height: 259px; }
+	
+	/* Use this to keep the slider content contained in a box even when JavaScript is disabled */
+	.coda-slider-no-js .coda-slider { height: 259px; overflow:hidden; }
+	
+	/* Change the width of the entire slider (without dynamic arrows) */
+	.coda-slider{
+		float:right;
+	}
+	.coda-slider, .coda-slider .panel { width: 767px; } 
+	
+	/* Change margin and width of the slider (with dynamic arrows) */
+	.coda-slider-wrapper.arrows .coda-slider, .coda-slider-wrapper.arrows .coda-slider .panel { width: 600px }
+	.coda-slider-wrapper.arrows .coda-slider { margin: 0 10px }
+	
+	/* Arrow styling */
+	.coda-nav-left a, .coda-nav-right a { background: #000; color: #fff; padding: 5px; width: 100px }
+	
+	/* Tab nav */
+	.coda-nav ul li a.current { background: #39c }
+	
+	/* Panel padding */
+	.coda-slider .panel-wrapper { }
+	
+	/* Preloader */
+	.coda-slider p.loading { padding: 20px; text-align: center }
+
+/* Don't change anything below here unless you know what you're doing */
+
+	/* Tabbed nav */
+	.coda-nav{ float:left; height:259px; width:337px;}
+	.coda-nav ul { float:left; height:259px; width:337px; list-style:none;  }
+	.coda-nav ul li { margin:0;	padding:0; width:337px; height:85px; margin-bottom:4px; }
+	.coda-nav ul li a:link,.coda-nav ul li a:visited { font-weight:bold; padding-top:10px; text-transform:uppercase; font-size:13px; display: block; text-align:center; color:#023E84; width:337px; height:75px; text-decoration: none; background-image:URL('/images/template/hmp_buttons.jpg'); background-repeat:repeat-x; }
+	.coda-nav ul li a:hover,.coda-nav ul li a.current { background-position:bottom; color:#FEDE00; }
+	.coda-nav ul li a span{ font-size:20px; }
+	/* Miscellaneous */
+	.coda-slider-wrapper { clear: both; overflow:hidden; }
+	.coda-slider { float: right; overflow: hidden; position: relative }
+	.coda-slider .panel { display: block; float: left; }
+	.coda-slider .panel .panel-wrapper { padding:20px; }
+	.panel h2 a:link,.panel h2 a:visited{ color:#FFF; }
+	.panel{ color:#FFF; }
+	.panel .story_image{
+		float:left;
+		margin-right:10px;
+		margin-bottom:10px;
+	}
+	.coda-slider .panel-container { position: relative }
+	.coda-nav-left, .coda-nav-right { float: left }
+	.coda-nav-left a, .coda-nav-right a { display: block; text-align: center; text-decoration: none }
+	

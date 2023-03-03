@@ -1,0 +1,136 @@
+/*** ESSENTIAL STYLES ***/
+#menu_container{
+	width:100%;
+	position:absolute;
+	bottom:0px;
+	left:0px;
+	height:36px;
+}
+#menu, #menu * {
+	margin:			0;
+	padding:		0;
+	list-style:		none;
+	font-family: 'IM Fell Double Pica SC', arial, serif;
+}
+#menu {
+	line-height:	1.0;
+	height:36px;
+	float:left;
+	position:relative;
+}
+#menu ul {
+	position:		absolute;
+	top:			-999em;
+	width:			10em; /* left offset of submenus need to match (see below) */
+}
+#menu ul li {
+	/*width:			100%;*/
+}
+#menu li:hover {
+	visibility:		inherit; /* fixes IE7 'sticky bug' */
+}
+#menu li {
+	float:			left;
+	position:		relative;
+	display:inline;
+}
+#menu a {
+	display:		inline-block;
+	position:		relative;
+}
+#menu li:hover ul,
+#menu li.sfHover ul {
+	left:			0px;
+	top:			36px; /* match top ul list item height */
+	z-index:		99;
+}
+
+ul#menu li:hover li ul,
+ul#menu li.sfHover li ul {
+	top:			-999em;
+}
+ul#menu li li:hover ul,
+ul#menu li li.sfHover ul {
+	left:			10em; /* match ul width */
+	top:			0;
+}
+ul#menu li li:hover li ul,
+ul#menu li li.sfHover li ul {
+	top:			-999em;
+}
+ul#menu li li li:hover ul,
+ul#menu li li li.sfHover ul {
+	left:			10em; /* match ul width */
+	top:			0;
+}
+
+/*** DEMO SKIN ***/
+#menu {
+	float:			left;
+}
+#menu a {
+	text-decoration:none;
+}
+#menu li a, #menu li a:visited  { /* visited pseudo selector so IE6 applies text colour*/
+	height:36px;
+	text-align:center;
+	padding-left:14px;
+	padding-right:14px;
+	color:#4C3602;
+	line-height:36px;
+	font-size:16px;
+	font-weight:bold;
+	text-transform:uppercase;
+}
+
+#menu li.here a, #menu li.here a:visited  { /* visited pseudo selector so IE6 applies text colour*/
+	color:#F98B1A;
+}
+
+#menu li li.here a, #menu li li.here a:visited  { /* visited pseudo selector so IE6 applies text colour*/
+	color:#FFFFFF;
+}
+
+#menu li a:hover  { /* visited pseudo selector so IE6 applies text colour*/
+	color:#785400;
+}
+#menu li {
+}
+#menu li li a,#menu li li a:visited {
+	height:21px;
+	color:#FFF;
+	line-height:21px;
+	font-size:12px;
+	padding-left:10px;
+	display:block;
+	text-align:left;
+}
+#menu li li a:hover{
+	text-decoration:none;
+	color:#710000;
+	background-color:#FFCC00;
+}
+
+#menu li li {
+	width:258px;
+	line-height:21px;
+	height:21px;
+}
+#menu li ul {
+	background-color:#710000;
+	border:solid 1px #640000;
+	width:258px;
+}
+#menu li li:hover, #menu li li.sfHover,
+#menu li li a:focus, #menu li li a:hover, #menu li li a:active {
+	line-height:21px;
+}
+#menu li li li {
+	background:		#9AAEDB;
+}
+#menu li:hover, #menu li.sfHover,
+#menu a:focus, #menu a:hover, #menu a:active {
+	outline:		0;
+	color:#FFB200;
+}
+

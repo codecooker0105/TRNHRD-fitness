@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="122px" height="122px" viewBox="0 0 122 122" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 61.2 (89653) - https://sketch.com -->
+    <title>icon3</title>
+    <desc>Created with Sketch.</desc>
+    <g id="icon3" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g transform="translate(28.000000, 28.000000)">
+            <path d="M33.5,0 C52.0015391,0 67,14.9984609 67,33.5 C67,52.0015391 52.0015391,67 33.5,67 C14.9984609,67 0,52.0015391 0,33.5 C0,14.9984609 14.9984609,0 33.5,0 Z M33.5,6 C18.3121694,6 6,18.3121694 6,33.5 C6,48.6878306 18.3121694,61 33.5,61 C48.6878306,61 61,48.6878306 61,33.5 C61,18.3121694 48.6878306,6 33.5,6 Z" id="Combined-Shape" stroke="#FE9230" stroke-width="4"></path>
+            <circle id="Oval-Copy-7" fill="#FE9230" cx="33.5" cy="33.5" r="15.5"></circle>
+        </g>
+    </g>
+</svg>
