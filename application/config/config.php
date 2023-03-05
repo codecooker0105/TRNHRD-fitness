@@ -15,7 +15,7 @@
 |
 */
 //  $config['base_url']	= 'http://trnhrd.com/';
- $config['base_url']	= 'http://localhost/hy/';
+ $config['base_url']	= 'http://localhost/';
 /*
 |--------------------------------------------------------------------------
 | Index File

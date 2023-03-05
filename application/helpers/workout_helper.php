@@ -1,4 +1,4 @@
-<?
+<?php
 
 function secToMinute($seconds){
 	if ($seconds > 0) {

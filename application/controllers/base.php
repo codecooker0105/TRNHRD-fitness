@@ -10,6 +10,8 @@ class Base extends CI_Controller
 	function home()
 	{
 		$data['page_title'] = 'Home';
+		$data['meta_keywords'] = 'TRNHRD';
+		$data['meta_description'] = 'Accomplish your fitness goals with our affordable, certified personal trainer in New York. Find out how Trnhrd helps you create challenging workouts more easily.';
 		$data['assets'] = 'homepage';
 		$this->load->view('base/header', $data);
 		$this->load->view('base/intro', $data);
@@ -27,23 +29,35 @@ class Base extends CI_Controller
 		$this->load->view('base/landing', $data);
 		$this->load->view('base/footer', $data);
 	}
-	
-	function contact() {
-		$this->load->view('base/header');
-		$this->load->view('base/contact');
-		$this->load->view('base/footer');
+
+	function contact()
+	{
+		$data['page_title'] = 'TRNHRD';
+		$data['meta_keywords'] = 'TRNHRD';
+		$data['meta_description'] = 'Accomplish your fitness goals with our affordable, certified personal trainer in New York. Find out how Trnhrd helps you create challenging workouts more easily.';
+		$this->load->view('base/header', $data);
+		$this->load->view('base/contact', $data);
+		$this->load->view('base/footer', $data);
 	}
 
-	function about() {
-		$this->load->view('base/header');
-		$this->load->view('base/about');
-		$this->load->view('base/footer');
+	function about()
+	{
+		$data['page_title'] = 'TRNHRD';
+		$data['meta_keywords'] = 'TRNHRD';
+		$data['meta_description'] = 'Accomplish your fitness goals with our affordable, certified personal trainer in New York. Find out how Trnhrd helps you create challenging workouts more easily.';
+		$this->load->view('base/header', $data);
+		$this->load->view('base/about', $data);
+		$this->load->view('base/footer', $data);
 	}
 
-	function testimonial() {
-		$this->load->view('base/header');
-		$this->load->view('base/testimonial');
-		$this->load->view('base/footer');
+	function testimonial()
+	{
+		$data['page_title'] = 'TRNHRD';
+		$data['meta_keywords'] = 'TRNHRD';
+		$data['meta_description'] = 'Accomplish your fitness goals with our affordable, certified personal trainer in New York. Find out how Trnhrd helps you create challenging workouts more easily.';
+		$this->load->view('base/header', $data);
+		$this->load->view('base/testimonial', $data);
+		$this->load->view('base/footer', $data);
 	}
 
 	function subscriber()
