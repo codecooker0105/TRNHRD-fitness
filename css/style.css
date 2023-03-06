@@ -247,7 +247,7 @@ h3{
 }
 
 hr{
-	background-color:#E1AD26;
+	background-color:transparent;
 	height:2px;
 	margin-top:15px;
 	margin-bottom:15px;
@@ -300,8 +300,8 @@ fieldset legend{
 
 
 
-a:link, a:visited { text-decoration: none; color: #0A6BAD; }
-a:hover { text-decoration: underline; }
+/* a:link, a:visited { text-decoration: none; color: #0A6BAD; }
+a:hover { text-decoration: underline; } */
 
 
 div#header_info {
@@ -347,9 +347,16 @@ div#header {
 
 div#header img#logo {
 	position:absolute;
-	left:5px;
-	top:10px;
-	
+	left: 50px;
+	top: 50px;
+}
+
+div#header h1 {
+	color: white;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 120px;
 }
 
 div#header div#login {
@@ -988,6 +995,7 @@ span#day{
 
 #workout_calendar table#calendar_inner{
 	background-color:#858585;
+	width: 100%;
 }
 
 #workout_calendar td.day_cell{
@@ -1083,32 +1091,7 @@ input,select,textarea{
 	border:solid 2px #EABD46;
 }
 
-form#register_form input,form#register_form textarea,form#register_form select{
-	background-color:#DCDCDC;
-	padding:3px;
-	margin:3px;
-}
 
-form#register_form input.midsize{
-	width:252px;
-	height:17px;
-	line-height:17px;
-	font-size:13px;
-}
-
-form#register_form input.smallsize{
-	width:139px;
-	height:17px;
-	line-height:17px;
-	font-size:13px;
-}
-
-form#register_form select.smallsize{
-	width:139px;
-	height:23px;
-	line-height:17px;
-	font-size:13px;
-}
 
 input.submit{
 	background-image:URL('/images/template/button_123_43.jpg');
@@ -2721,7 +2704,7 @@ div#content2 h1 {
     font-size: 21px;
     height: 100% !important;
     margin-bottom: 0px;
-    width: 21%;
+    width: 100%;
     font-weight: 500;
 }
 .check-box-list label{

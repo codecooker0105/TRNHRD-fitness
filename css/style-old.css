@@ -1043,32 +1043,6 @@ input,select,textarea{
 	border:solid 2px #EABD46;
 }
 
-form#register_form input,form#register_form textarea,form#register_form select{
-	background-color:#DCDCDC;
-	padding:3px;
-	margin:3px;
-}
-
-form#register_form input.midsize{
-	width:252px;
-	height:17px;
-	line-height:17px;
-	font-size:13px;
-}
-
-form#register_form input.smallsize{
-	width:139px;
-	height:17px;
-	line-height:17px;
-	font-size:13px;
-}
-
-form#register_form select.smallsize{
-	width:139px;
-	height:23px;
-	line-height:17px;
-	font-size:13px;
-}
 
 input.submit{
 	background-image:URL('/images/template/button_123_43.jpg');

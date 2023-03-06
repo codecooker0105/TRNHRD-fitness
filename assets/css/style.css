@@ -113,7 +113,9 @@ a:hover, a:focus {
 	text-decoration: none;
 	outline: none;
 }
-
+a {
+	color: #222;
+}
 .inner-intro h1 {
 	font-weight: 700;
 	text-transform: capitalize;
@@ -2710,7 +2712,7 @@ figure {
 	background: url(../images/explanation/CompositeLayer.png) no-repeat 0 0;
   background-size: cover;
 	position: relative;
-	height: 180vh;
+	height: 150vh;
 }
 .page-signin .main-body {
 	max-width: 480px;
@@ -2902,13 +2904,6 @@ label {
 	left: 0;
 	opacity: 0
 }
-.checkbox-field #terms_accept {
-	position: absolute;
-	top: 0;
-	left: 0;
-	opacity: 0
-}
-
 .custom-check {
 	width: 20px;
 	height: 20px;
@@ -2928,9 +2923,6 @@ label {
 	left: 5px;
 }
 .checkbox-field #check_box:checked + .custom-check:before {
-	content: "\f3fd";
-}
-.checkbox-field #terms_accept:checked + .custom-check:before {
 	content: "\f3fd";
 }
 .spacer {
@@ -7020,26 +7012,17 @@ ul.tags li {
 	background: white;
 	padding: 10px;
 }
-.past-workout {
+.dashboard .today_workout .past-workout {
 	background: white;
 	padding: 10px;
 }
-.past-workout .add-exercise {
-	background: #efbc3f;
-	color: black !important;
-	margin: 10px 30px;
-	padding: 13px;
-	display: block;
-	text-align: center;
-	cursor: pointer;
-}
-.past-workout .item-workout {
+.dashboard .today_workout .past-workout .item-workout {
 	display: flex;
 	justify-content: center;
 	align-items: center;
 }
 
-.past-workout .item-workout img {
+.dashboard .today_workout .past-workout .item-workout img {
 	border-radius: 50%;
 	width: 50px;
 	height: 50px;
@@ -7047,7 +7030,7 @@ ul.tags li {
 	object-fit: cover;
 }
 @media (max-width: 1024px) {
-	.past-workout .item-workout {
+	.dashboard .today_workout .past-workout .item-workout {
 		display: block;
 		text-align: center;
 	}
@@ -7055,7 +7038,7 @@ ul.tags li {
 		overflow: hidden;
 	}
 }
-.past-workout .item-workout .item-workout-content {
+.dashboard .today_workout .past-workout .item-workout .item-workout-content {
 	padding-left: 20px;
 }
 /******************************************************************************
@@ -9070,9 +9053,4 @@ a.btn.xplus-btn.pricing.active:hover {
 }
 .project-detail-block {
 	padding: 30px;
-}
-
-#colorbox {
-	width: 520px !important;
-	height: 400px !important;
 }

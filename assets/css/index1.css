@@ -300,9 +300,6 @@
   justify-content: left;
   align-items: center;
 }
-.fitness_to_live .fitness_to_live_get_in_touch img{ 
-  cursor: pointer;
-}
 .fitness_to_live .fitness_to_live_get_in_touch h4 {
   padding-left: 20px;
 }
