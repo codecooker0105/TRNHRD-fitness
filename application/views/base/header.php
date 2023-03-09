@@ -49,14 +49,14 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAm-gRSVrsjGjc00jQSkNDVKIzxU8SlkSM&libraries=places">
     </script>
 
-    <link rel="stylesheet" href="http://localhost/css/swiper.min.css" type="text/css" media="screen" />
-    <link rel="stylesheet" href="http://localhost/css/style.css" type="text/css" media="screen" />
-    <link rel="stylesheet" href="http://localhost/css/colorbox.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="/css/swiper.min.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="/css/style.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="/css/colorbox.css" type="text/css" media="screen" />
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
         integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
-    <script type="text/javascript" src="http://localhost/js/jquery-1.5.1.min.js"></script>
-    <script type="text/javascript" src="http://localhost/js/jquery.colorbox-min.js"></script>
-    <link rel="stylesheet" href="http://localhost/css/home.css" type="text/css" media="screen" />
+    <script type="text/javascript" src="/js/jquery-1.5.1.min.js"></script>
+    <script type="text/javascript" src="/js/jquery.colorbox-min.js"></script>
+    <link rel="stylesheet" href="/css/home.css" type="text/css" media="screen" />
 
     <?php
     if (isset($assets)) {

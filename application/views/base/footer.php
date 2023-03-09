@@ -116,7 +116,7 @@
 </script>
 
 <!-- Swiper JS -->
-<script src="http://localhost/css/swiper.min.js"></script>
+<script src="/css/swiper.min.js"></script>
 
 <!-- Initialize Swiper -->
 <script>
