@@ -11,7 +11,9 @@
     <meta name="keywords" content="<?php echo $meta_keywords; ?>" />
 
 
-    <title><?php echo $page_title; ?></title>
+    <title>
+        <?php echo $page_title; ?>
+    </title>
     <link rel="shortcut icon" type="image/x-icon" href="/assets/fav.png" />
     <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,700" rel="stylesheet" />
     <link href="/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
@@ -33,14 +35,14 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-151191007-1"></script>
     <script>
-    window.dataLayer = window.dataLayer || [];
+        window.dataLayer = window.dataLayer || [];
 
-    function gtag() {
-        dataLayer.push(arguments);
-    }
-    gtag('js', new Date());
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
 
-    gtag('config', 'UA-151191007-1');
+        gtag('config', 'UA-151191007-1');
     </script>
 
     <!-- google map -->
@@ -57,10 +59,10 @@
     <link rel="stylesheet" href="http://localhost/css/home.css" type="text/css" media="screen" />
 
     <?php
-  if (isset($assets)) {
-    $this->carabiner->display($assets);
-  }
-  ?>
+    if (isset($assets)) {
+        $this->carabiner->display($assets);
+    }
+    ?>
 </head>
 
 <body>
@@ -88,9 +90,9 @@
     <header id="header" class="header header-1 header_tran">
         <div class="nav-wrap">
             <div class="reletiv_box">
-                <div class="container">
+                <div class="container-fluid">
                     <div class="row d-flex align-items-center">
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <div class="logo">
                                 <a href="/">
                                     <img src="/assets/images/logo.png" alt="" />
@@ -99,36 +101,42 @@
                             <!-- Phone Menu button -->
                             <button id="menu" class="menu hidden-md-up"></button>
                         </div>
-                        <div class="col-md-9 nav-bg">
+                        <div class="col-md-10 nav-bg">
                             <nav class="navigation">
                                 <ul>
-                                    <li>
+                                    <li class="<?php if ($url_segment == 'index')
+                                        echo 'selected'; ?>">
                                         <a href="/">Home</a>
                                     </li>
-                                    <li>
+                                    <li class="<?php if ($url_segment == 'about')
+                                        echo 'selected'; ?>">
                                         <a href="/about">About us</a>
                                     </li>
-                                    <li>
+                                    <li class="<?php if ($url_segment == 'testimonial')
+                                        echo 'selected'; ?>">
                                         <a href="/testimonial">Testimonial</a>
                                     </li>
-                                    <li>
+                                    <li class="<?php if ($url_segment == 'contact')
+                                        echo 'selected'; ?>">
                                         <a href="/contact">Contact</a>
                                     </li>
                                     <?php if ($this->ion_auth->logged_in()) { ?>
-                                    <li>
-                                        <a href="/member" class="login">Dashboard</a>
-                                    </li>
-                                    <li>
-                                        <a href="/member/logout" class="signup">Logout</a>
-                                    </li>
-                                    <?php } else { ?>
-
-                                    <li>
-                                        <a href="/member/login" class="login">Login</a>
-                                    </li>
-                                    <li>
-                                        <a href="/member/register" class="signup">Sign up</a>
-                                    </li>
+                                        <li class="no_login_btn">
+                                            <a href="/member/logout" class="signup">Logout</a>
+                                        </li>
+                                    <?php } else {
+                                        if ($url_segment != 'login') { ?>
+                                            <li class="login_btn <?php if ($url_segment == 'register')
+                                                echo 'blank_btn'; ?>">
+                                                <a href="/member/login" class="login">Login</a>
+                                            </li>
+                                        <?php }
+                                        if ($url_segment != 'register') { ?>
+                                            <li class="<?php if ($url_segment == 'login')
+                                                echo 'blank_btn'; ?>">
+                                                <a href="/member/register" class="signup">Sign up</a>
+                                            </li>
+                                        <?php } ?>
                                     <?php } ?>
                                 </ul>
                             </nav>

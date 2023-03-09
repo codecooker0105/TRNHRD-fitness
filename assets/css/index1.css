@@ -4,26 +4,11 @@
   padding-bottom: 25px;
   display: inline-block;
 }
-.section_tit:before {
-  content: "";
-  position: absolute;
-  bottom: 0px;
-  left: 0px;
-  width: 35%;
-  height: 2px;
-  background: #000;
-}
-.section_tit:after {
-  content: "";
-  position: absolute;
-  bottom: 0px;
-  right: 0px;
-  width: 35%;
-  height: 2px;
-  background: #000;
-}
 .section_tit h2 {
   margin: 0px;
+  color: #222d35;
+  font-size: 62px;
+  line-height: 62px;
 }
 
 .section_explanation {
@@ -54,14 +39,13 @@
 }
 
 @media only screen and (max-width: 767px) {
-	.section_explanation:before {
-		display: none;
-	}
-	.section_explanation:after {
-		display: none;
-	}
+  .section_explanation:before {
+    display: none;
+  }
+  .section_explanation:after {
+    display: none;
+  }
 }
-
 
 .three_line {
   width: 40px;
@@ -71,26 +55,6 @@
   bottom: 0px;
   left: 50%;
   transform: translateX(-50%);
-}
-.three_line:before {
-  content: "";
-  position: absolute;
-  height: 2px;
-  width: 80px;
-  bottom: -7px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #000;
-}
-.three_line:after {
-  content: "";
-  position: absolute;
-  height: 2px;
-  width: 80px;
-  bottom: 7px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #000;
 }
 @media (max-width: 767px) {
   .three_line {
@@ -120,12 +84,13 @@
 }
 
 .main-banner .banner-text .sub-text {
-  font-weight: 500;
+  font-weight: 700 !important;
   color: #ffffff;
   font-size: 30px;
   display: block;
   margin-bottom: 5px;
-  text-transform: capitalize;
+  text-transform: uppercase;
+  font-family: "Rajdhani";
   letter-spacing: 2px;
   line-height: 2;
 }
@@ -166,6 +131,9 @@
   padding-bottom: 15px !important;
   padding-left: 33px !important;
   border-radius: 0px !important;
+  background-color: #e8a20d;
+  color: #222d35;
+  font-weight: 700 !important;
 }
 
 #wrapper .main-banner .tp-bullets {
@@ -225,7 +193,7 @@
 .process_box {
   border: 1px solid #000;
   text-align: center;
-  padding: 0px 30px 30px 30px;
+  padding: 0px 30px 0px 30px;
 }
 .triangle_box {
   position: relative;
@@ -246,17 +214,19 @@
   display: flex;
   justify-content: left;
   align-items: center;
+  height: 45px;
 }
 .process_detail h3 {
-	margin: 0px;
-	color: white;
+  margin: 0px;
+  color: white;
   text-align: left;
+  text-transform: uppercase;
   padding-left: 20px;
 }
 .process_detail p {
-	margin: 20px 0px;
-	color: white;
-	text-align: left;
+  margin: 20px 0px;
+  color: white;
+  text-align: left;
 }
 @media only screen and (min-width: 992px) and (max-width: 1199px) {
   .process_detail h3 {
@@ -269,7 +239,7 @@
   position: relative;
 }
 
-.fitness_h2_paragraph:after{
+.fitness_h2_paragraph:after {
   content: "";
   background: #f5d689;
   display: block;
@@ -280,7 +250,7 @@
   height: 3px;
 }
 
-.fitness_h2_paragraph:before{
+.fitness_h2_paragraph:before {
   content: "";
   background: #f8dd9c;
   display: block;
@@ -289,23 +259,57 @@
   top: -5px;
   width: 20px;
   height: 3px;
+  opacity: 0.52;
 }
 
 .fitness_to_live .fitness_to_live_item {
   display: flex;
 }
-
+.fitness_to_live .fitness_to_live_title {
+  font-size: 60px;
+}
+.container-fluid {
+  padding: 0 100px;
+}
+.header-1 .container-fluid {
+  padding: 0;
+}
+@media (max-width: 1200px) {
+  .container-fluid {
+    padding: 0 100px;
+  }
+}
+@media (max-width: 992px) {
+  .container-fluid {
+    padding: 0 60px;
+  }
+}
+@media (max-width: 767px) {
+  .container-fluid {
+    padding: 0 40px;
+  }
+  .header-1 .container-fluid {
+    padding: 0 40px;
+  }
+}
+@media (max-width: 576px) {
+  .container-fluid {
+    padding: 0 40px;
+  }
+}
 .fitness_to_live .fitness_to_live_get_in_touch {
   display: flex;
   justify-content: left;
   align-items: center;
 }
-.fitness_to_live .fitness_to_live_get_in_touch h4 {
-  padding-left: 20px;
+.fitness_to_live .fitness_to_live_get_in_touch a {
+  width: 60px;
+  height: 60px;
+  margin: 10px 10px 10px 0;
 }
 
 .fitness_to_live .fitness_to_live_item p {
-  font-size: 12px;
+  font-size: 16px;
 }
 
 .fitness_to_live .yellow_circle {
@@ -407,13 +411,14 @@
 .courses_detail h3 {
   margin: 0px 0px 15px 0px;
   text-align: center;
-  height: 50px;
+  font-size: 24px;
 }
 .courses_detail h3 a {
   color: #fec722;
 }
 .courses_detail p {
   color: #fff;
+  font-size: 16px;
 }
 .courses_detail .read-more {
   color: #fec722;
@@ -613,8 +618,7 @@
 }
 /* Testimonial */
 .testimonial_section {
-  background: url(../images/explanation/tesimonial.png) no-repeat 0 0;
-  background-size: cover;
+  background-color: #ffffff;
   position: relative;
 }
 .testimonial_section:before {
@@ -626,43 +630,49 @@
   height: 100%;
   background: rgba(255, 255, 255, 0.14);
 }
-.testimonial_section .section_tit h2 {
-  color: #000;
-}
-.patient_head {
-  background: #1bbce8;
+.item_testimonial .patient_head {
+  background: white;
   position: relative;
 }
-.patient_head:before {
-  content: "";
-  position: absolute;
-  bottom: -8px;
-  left: 25%;
-  background: #fff;
-  width: 15px;
-  height: 15px;
-  transform: rotate(48deg);
+.item_testimonial figure {
+  width: 164px;
+}
+.item_testimonial figure img {
+  border-radius: 50%;
 }
 .patient_img {
   float: left;
-  width: 70px;
-  margin-right: 20px;
+  margin-right: 30px;
 }
 .patient_detail {
   float: left;
-  width: calc(100% - 90px);
-  color: #fff;
+  color: #78797a;
 }
 .patient_detail h3 {
   margin: 0px;
-  color: #fff;
+  color: #222d35;
+  font-size: 30px;
+  line-height: 30px;
+  margin-bottom: 17px;
+}
+.patient_detail span {
+  color: #78797a;
+  font-size: 18px;
+  line-height: 18px;
 }
 .patient_text {
   background: #fff;
-  padding: 20px;
+  padding: 20px 0;
+  color: #222d35;
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 24px;
 }
 .patient_text p {
   margin: 0px;
+  font-size: 24px;
+  line-height: 24px;
+  color: #222d35;
 }
 .dots_style .owl-dots {
   text-align: center;
@@ -683,6 +693,10 @@
 @media (max-width: 767px) {
   .dots_style .owl-dots {
     margin-top: 30px;
+  }
+  .section_tit h2 {
+    font-size: 34px;
+    line-height: 34px;
   }
 }
 
@@ -826,20 +840,57 @@
 
 .explanation {
   background: #222d35;
-	/* background: green; */
-	padding-top: 20px;
-	padding-bottom: 40px;
+  /* background: green; */
+  padding-top: 20px;
+  padding-bottom: 40px;
 }
 
 .traning_part {
   padding: 0px 50px;
 }
 
-.traning_part h3 {
+.traning_part h2 {
   color: white;
   padding-bottom: 10px;
+  font-size: 40px;
 }
 .error {
   color: red;
   font-weight: 900;
-} 
+}
+.say_testimonial .owl-nav {
+  position: relative;
+  float: right;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+.say_testimonial .owl-controls .owl-nav .disabled i {
+  color: #707070;
+}
+.say_testimonial .owl-controls .owl-nav .disabled {
+  border: 1px solid #707070;
+}
+.say_testimonial .owl-nav .owl-prev {
+  margin-right: 10px;
+}
+.say_testimonial .owl-nav .owl-prev,
+.say_testimonial .owl-nav .owl-next {
+  display: block;
+  position: inherit;
+  -webkit-transform: translateY(0);
+  transform: translateY(0);
+  background: white;
+  border: 1px solid #efbc3f;
+}
+.say_testimonial .owl-nav .owl-prev i,
+.say_testimonial .owl-nav .owl-next i {
+  color: #efbc3f;
+}
+.testimonial_section .testimonial_colon {
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 100;
+}
