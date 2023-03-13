@@ -3,9 +3,11 @@
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
-class Api_model extends CI_Model {
+class Api_model extends CI_Model
+{
 
-    public $state = array('AL' => "Alabama",
+    public $state = array(
+        'AL' => "Alabama",
         'AK' => "Alaska",
         'AZ' => "Arizona",
         'AR' => "Arkansas",
@@ -55,10 +57,12 @@ class Api_model extends CI_Model {
         'WA' => "Washington",
         'WV' => "West Virginia",
         'WI' => "Wisconsin",
-        'WY' => "Wyoming");
+        'WY' => "Wyoming"
+    );
     public $workoutdays = array(1 => 'Monday', 2 => 'Tuesday', 3 => 'Wednesday', 4 => 'Thursday', 5 => 'Friday', 6 => 'Saturday', 7 => 'Sunday');
 
-    function __construct() {
+    function __construct()
+    {
         // Call the parent Model
         parent::__construct();
 
@@ -66,7 +70,8 @@ class Api_model extends CI_Model {
         $this->load->database();
     }
 
-    function validate($mandatory_fields = [], $post = []) {
+    function validate($mandatory_fields = [], $post = [])
+    {
         if (sizeof($mandatory_fields)) {
             foreach ($mandatory_fields as $mandatory_field) {
                 if (!isset($post[$mandatory_field]) || empty($post[$mandatory_field])) {
@@ -80,12 +85,14 @@ class Api_model extends CI_Model {
         }
     }
 
-    public function wd_result($options = []) {
+    public function wd_result($options = [])
+    {
         echo json_encode($options);
         exit;
     }
 
-    public function user_detail_by_email($email) {
+    public function user_detail_by_email($email)
+    {
         $this->db->select('meta.*,groups.name as group_name, groups.description as group_description,users.group_id,users.username,users.email');
         $this->db->from('users');
         $this->db->join('meta', 'users.id = meta.user_id');
@@ -95,22 +102,26 @@ class Api_model extends CI_Model {
         return $user;
     }
 
-    public function user_table_detail_through_email($email) {
+    public function user_table_detail_through_email($email)
+    {
         $user = $this->db->get_where('users', ['users.email' => $email])->row_array();
         return $user;
     }
 
-    public function user_table_detail_through_username($username) {
+    public function user_table_detail_through_username($username)
+    {
         $user = $this->db->get_where('users', ['users.username' => $username])->row_array();
         return $user;
     }
 
-    public function updateDeviceField($user_id, $update) {
+    public function updateDeviceField($user_id, $update)
+    {
         $this->db->where('id', $user_id);
         $this->db->update('users', $update);
     }
 
-    public function user_detail_by_user_id($user_id) {
+    public function user_detail_by_user_id($user_id)
+    {
         $this->db->select('users.id,users.group_id,users.username,users.email,users.active,users.device_type,users.device_token,groups.name as group_name, groups.description as group_description,meta.first_name,meta.last_name,meta.city,meta.state,meta.zip,meta.photo,meta.progression_plan_id,meta.progression_plan_day,meta.exp_level_id,meta.available_equipment,meta.workoutdays,meta.tos_agreement');
         $this->db->from('users');
         $this->db->join('meta', 'users.id = meta.user_id');
@@ -152,7 +163,8 @@ class Api_model extends CI_Model {
         return $user;
     }
 
-    public function basic_user_detail_by_user_id($user_id) {
+    public function basic_user_detail_by_user_id($user_id)
+    {
         $this->db->select('users.id,users.group_id,users.username,users.email,users.active,users.device_type,users.device_token,groups.name as group_name, groups.description as group_description,meta.first_name,meta.last_name,meta.city,meta.state,meta.zip,meta.photo,meta.progression_plan_id,meta.progression_plan_day,meta.exp_level_id,meta.available_equipment,meta.workoutdays,meta.tos_agreement');
         $this->db->from('users');
         $this->db->join('meta', 'users.id = meta.user_id');
@@ -161,7 +173,8 @@ class Api_model extends CI_Model {
         return $this->db->get()->row();
     }
 
-    public function generate_otp($user_id) {
+    public function generate_otp($user_id)
+    {
         $userOTP = $this->db->get_where('users', ['id' => $user_id])->row();
         if (!empty($userOTP->forgot_password_otp)) {
             $random = $userOTP->forgot_password_otp;
@@ -178,42 +191,49 @@ class Api_model extends CI_Model {
         return $random;
     }
 
-    public function update_password($user_id, $password) {
+    public function update_password($user_id, $password)
+    {
         return $this->db->update('users', array('forgot_password_otp' => '', 'password' => $password), ['id' => $user_id]);
     }
 
-    function exp_level_name_from_id($id) {
+    function exp_level_name_from_id($id)
+    {
         $data = $this->db->get_where('experience_level', ['id' => $id])->row();
         return $data;
     }
 
-    function available_equipment_array_from_id($id) {
+    function available_equipment_array_from_id($id)
+    {
         $this->db->where_in('id', explode(',', $id));
         $data = $this->db->get('equipment')->result();
         return $data;
     }
 
-    function progression_plan_array_from_id($id) {
+    function progression_plan_array_from_id($id)
+    {
         $data = $this->db->get_where('progression_plans', ['id' => $id])->row();
         return $data;
     }
 
-    function workout_array_from_id($id) {
+    function workout_array_from_id($id)
+    {
         $count = 0;
         foreach (explode(',', $id) as $key => $value) {
             $workoutdaysObject[$count] = new stdClass();
             $workoutdaysObject[$count]->id = $value;
             $workoutdaysObject[$count]->value = $this->workoutdays[$value];
-            $count ++;
+            $count++;
         }
         return $workoutdaysObject;
     }
 
-    function validate_otp($otp) {
+    function validate_otp($otp)
+    {
         return $this->db->get_where('users', ['forgot_password_otp' => $otp])->row();
     }
 
-    function get_clients($trainer_id) {
+    function get_clients($trainer_id)
+    {
         $this->db->select('trainer_clients.id,users.email,trainer_clients.status,meta.first_name,meta.last_name,meta.photo,meta.user_id,meta.available_equipment');
         $this->db->from('users');
         $this->db->join('trainer_clients', 'users.email = trainer_clients.email');
@@ -223,7 +243,8 @@ class Api_model extends CI_Model {
         return $client;
     }
 
-    function get_trainers($member_email) {
+    function get_trainers($member_email)
+    {
         $this->db->select('trainer_clients.id,users.email,trainer_clients.status,meta.first_name,meta.last_name,meta.photo,meta.user_id');
         $this->db->from('users');
         $this->db->join('trainer_clients', 'users.id = trainer_clients.trainer_id');
@@ -233,7 +254,8 @@ class Api_model extends CI_Model {
         return $trainers;
     }
 
-    function get_groups($trainer_id) {
+    function get_groups($trainer_id)
+    {
         $groups = $this->db->get_where('trainer_client_groups', ['trainer_id' => $trainer_id])->result_array();
         if ($groups) {
             foreach ($groups as $key => $group) {
@@ -256,7 +278,8 @@ class Api_model extends CI_Model {
         return $groups;
     }
 
-    function get_groups_for_workout($trainer_id) {
+    function get_groups_for_workout($trainer_id)
+    {
         $this->db->select("CONCAT('group-',trainer_client_groups.id) as group_id,trainer_client_groups.*", FALSE);
         $groups = $this->db->get_where('trainer_client_groups', ['trainer_id' => $trainer_id])->result_array();
         if ($groups) {
@@ -280,7 +303,8 @@ class Api_model extends CI_Model {
         return $groups;
     }
 
-    function view_group($group_id) {
+    function view_group($group_id)
+    {
         $group = $this->db->get_where('trainer_client_groups', ['id' => $group_id])->row_array();
         if ($group) {
             if (isset($group['exp_level_id'])) {
@@ -307,23 +331,27 @@ class Api_model extends CI_Model {
         return $group;
     }
 
-    function delete_group($group_id) {
+    function delete_group($group_id)
+    {
         $this->db->update('trainer_clients', ['trainer_group_id' => 'NULL'], ['trainer_group_id' => $group_id]);
         $this->db->delete('trainer_client_groups', array('id' => $group_id));
         return TRUE;
     }
 
-    function remove_client($trainer_id, $client_id) {
+    function remove_client($trainer_id, $client_id)
+    {
         $this->db->delete('trainer_clients', ['trainer_id' => $trainer_id, 'client_id' => $client_id]);
     }
 
-    function remove_trainer($client_id, $trainer_id) {
+    function remove_trainer($client_id, $trainer_id)
+    {
         $this->db->delete('trainer_clients', ['trainer_id' => $trainer_id, 'client_id' => $client_id]);
     }
 
     /*    List Of Stat    */
 
-    function stat_list($user_id) {
+    function stat_list($user_id)
+    {
         $stats = $this->db->get_where('user_stats', ['user_id' => $user_id])->result();
 
         if ($stats) {
@@ -345,7 +373,7 @@ class Api_model extends CI_Model {
                 } else {
                     $stats[$key]->current_stat = "0";
                 }
-//                $this->db->order_by('date_taken');
+                //                $this->db->order_by('date_taken');
 //                $stats[$key]->user_stats_values = $this->db->get_where('user_stats_values',['stat_id' => $stat->id])->result();
             }
         }
@@ -354,7 +382,8 @@ class Api_model extends CI_Model {
 
     /*    View Stat    */
 
-    function view_stat($stat_id) {
+    function view_stat($stat_id)
+    {
         $stats = $this->db->get_where('user_stats', ['id' => $stat_id])->row();
         if ($stats) {
             $this->db->order_by('stat_value');
@@ -379,7 +408,8 @@ class Api_model extends CI_Model {
 
     /*    View Stat of this Week   */
 
-    function view_stat_weekly($stat_id) {
+    function view_stat_weekly($stat_id)
+    {
         $stats = $this->db->get_where('user_stats', ['id' => $stat_id])->row();
         if ($stats) {
             $this->db->order_by('stat_value');
@@ -404,7 +434,8 @@ class Api_model extends CI_Model {
 
     /*    View Stat of this Month   */
 
-    function view_stat_monthly($stat_id) {
+    function view_stat_monthly($stat_id)
+    {
         $stats = $this->db->get_where('user_stats', ['id' => $stat_id])->row();
         if ($stats) {
             $this->db->order_by('stat_value');
@@ -429,7 +460,8 @@ class Api_model extends CI_Model {
 
     /*    Update New Stat    */
 
-    function update_new_stat($data) {
+    function update_new_stat($data)
+    {
         $stats = $this->db->get_where('user_stats_values', ['stat_id' => $data['stat_id'], 'Date(date_taken)' => $data['date_taken']])->row();
         if ($stats) {
             $this->db->update('user_stats_values', ['stat_value' => $data['stat_value']], ['id' => $stats->id]);
@@ -439,37 +471,41 @@ class Api_model extends CI_Model {
         return true;
     }
 
-    function check_exercise_video_existance($trainer_id, $exercise_id) {
+    function check_exercise_video_existance($trainer_id, $exercise_id)
+    {
         return $this->db->get_where('exercise_video', ['trainer_id' => $trainer_id, 'exercise_id' => $exercise_id])->row();
     }
 
-    function insert_exercise_video($data) {
+    function insert_exercise_video($data)
+    {
         return $this->db->insert('exercise_video', $data);
     }
 
-    function delete_exercise_video($trainer_id, $exercise_id) {
+    function delete_exercise_video($trainer_id, $exercise_id)
+    {
         $this->db->delete('exercise_video', ['trainer_id' => $trainer_id, 'exercise_id' => $exercise_id]);
     }
 
-    public function login($identity, $password, $remember = FALSE) {
+    public function login($identity, $password, $remember = FALSE)
+    {
         if (empty($identity) || empty($password)) {
             return FALSE;
         }
 
         $query = $this->db->select('email, id, password, group_id')
-                ->where('email', $identity)
-                ->where('active', 1)
-                ->limit(1)
-                ->get('users');
+            ->where('email', $identity)
+            ->where('active', 1)
+            ->limit(1)
+            ->get('users');
 
         $result = $query->row();
 
         if ($query->num_rows() == 1) {
             $query1 = $this->db->select('password')
-                    ->select('salt')
-                    ->where('email', $identity)
-                    ->limit(1)
-                    ->get('users');
+                ->select('salt')
+                ->where('email', $identity)
+                ->limit(1)
+                ->get('users');
 
             $result1 = $query1->row();
 
@@ -477,7 +513,7 @@ class Api_model extends CI_Model {
 
             $password = $salt . substr(sha1($salt . $password), 0, -10);
 
-//            $password = $this->hash_password_db($identity, $password);
+            //            $password = $this->hash_password_db($identity, $password);
 
             if ($result1->password === $password) {
                 $this->db->update('users', array('last_login' => now()), array('id' => $result->id));
@@ -491,9 +527,10 @@ class Api_model extends CI_Model {
         return FALSE;
     }
 
-    public function prebuild_videos_list() {
+    public function prebuild_videos_list()
+    {
         $this->db->select('id, title, mobile_video');
-        return $this->db->get('exercises',4)->result_array();
+        return $this->db->get('exercises', 4)->result_array();
     }
 
 }

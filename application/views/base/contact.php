@@ -1,11 +1,7 @@
-
-
 <!-- END HEADER -->
 <!-- CONTENT -->
 <!-- Intro Section -->
-<section
-  class="inner-intro bg-img-3 light-color overlay-before parallax-background"
->
+<section class="inner-intro bg-img-3 light-color overlay-before parallax-background">
   <div class="container">
     <div class="row title">
       <div class="title_row">
@@ -42,51 +38,23 @@
           <div class="row">
             <div class="col-lg-6">
               <div class="form-field">
-                <input
-                  class="input-sm form-full"
-                  id="name"
-                  type="text"
-                  name="form-name"
-                  placeholder="Your Name"
-                />
+                <input class="input-sm form-full" id="name" type="text" name="form-name" placeholder="Your Name" />
               </div>
               <div class="form-field">
-                <input
-                  class="input-sm form-full"
-                  id="email"
-                  type="text"
-                  name="form-email"
-                  placeholder="Email"
-                />
+                <input class="input-sm form-full" id="email" type="text" name="form-email" placeholder="Email" />
               </div>
               <div class="form-field">
-                <input
-                  class="input-sm form-full"
-                  id="sub"
-                  type="text"
-                  name="form-subject"
-                  placeholder="Subject"
-                />
+                <input class="input-sm form-full" id="sub" type="text" name="form-subject" placeholder="Subject" />
               </div>
             </div>
             <div class="col-lg-6">
               <div class="form-field">
-                <textarea
-                  class="form-full"
-                  id="message"
-                  rows="7"
-                  name="form-message"
-                  placeholder="Your Message"
-                ></textarea>
+                <textarea class="form-full" id="message" rows="7" name="form-message"
+                  placeholder="Your Message"></textarea>
               </div>
             </div>
             <div class="col-lg-12 mt-30">
-              <button
-                class="btn-text"
-                type="button"
-                id="submit"
-                name="button"
-              >
+              <button class="btn-text" type="button" id="submit" name="button">
                 Send Message
               </button>
             </div>
@@ -183,4 +151,3 @@
 </section>
 <!-- Contact Section -->
 <!--End Contact-->
-

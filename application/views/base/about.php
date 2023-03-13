@@ -1,9 +1,6 @@
-
 <!-- CONTENT -->
 <!-- Intro Section -->
-<section
-  class="inner-intro bg-img-3 light-color overlay-before parallax-background"
->
+<section class="inner-intro bg-img-3 light-color overlay-before parallax-background">
   <div class="container">
     <div class="row title">
       <div class="title_row">
@@ -38,10 +35,7 @@
     <div class="row">
       <div class="col-lg-4">
         <div class="solution_box about_new">
-          <i
-            class="fa fa-check-square-o color_orenge"
-            aria-hidden="true"
-          ></i>
+          <i class="fa fa-check-square-o color_orenge" aria-hidden="true"></i>
           <h4>Why Choose Us</h4>
           <p>
             Lorem Ipsum is simply dummy text of the printing and typesetting
@@ -52,10 +46,7 @@
 
       <div class="col-lg-4 mt-sm-30 mt-xs-30">
         <div class="solution_box about_new">
-          <i
-            class="fa fa-paper-plane-o color_orenge"
-            aria-hidden="true"
-          ></i>
+          <i class="fa fa-paper-plane-o color_orenge" aria-hidden="true"></i>
           <h4>Our Mission</h4>
           <p>
             Lorem Ipsum is simply dummy text of the printing and typesetting
@@ -110,10 +101,7 @@
 <!-- Section End-->
 
 <!-- Counter Section -->
-<div
-  class="fact-counter-wrapper padding-60 ptb-xs-40 bg-img overlay-before"
-  data-stellar-background-ratio="0.5"
->
+<div class="fact-counter-wrapper padding-60 ptb-xs-40 bg-img overlay-before" data-stellar-background-ratio="0.5">
   <div class="container text-center pos_reletive">
     <div class="row">
       <div class="col-lg-3 col-md-6">

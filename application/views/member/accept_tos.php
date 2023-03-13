@@ -1,14 +1,17 @@
-	
-	<div class="error"><?php echo $message;?></div>
-	
-    <?php echo form_open("member/accept_tos");?>
-      <table width="100%">
-<tr>
-    <td align="center"><h2 class="header_392">Terms of Use</h2></td>
-</tr>
-<tr>
-    <td>
-        <textarea readonly="readonly" style="width:100%; height:150px;">
+<div class="error">
+    <?php echo $message; ?>
+</div>
+
+<?php echo form_open("member/accept_tos"); ?>
+<table width="100%">
+    <tr>
+        <td align="center">
+            <h2 class="header_392">Terms of Use</h2>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <textarea readonly="readonly" style="width:100%; height:150px;">
 USER AGREEMENT: TERMS AND CONDITIONS FOR USING HYBRID FITNESS TRAINING EVOLVED ("HYBRID FITNESS" OR "HF") WEBSITE
 
 By accessing or using HF, you (the user or "You") agree to be bound by the terms and conditions of this online services agreement ("Agreement"). This is a legally binding agreement between You and HF.  This Agreement governs your use of the HF website. If You do not agree to the terms and conditions set forth below, Your sole remedy is stop using HF, its website, and services subject to the terms and conditions of cancellation and termination below.
@@ -90,13 +93,15 @@ Except as provided herein, no civil action with respect to any dispute, claim or
 If any part of this Agreement is held invalid or unenforceable, that part will be construed to reflect the parties' original intent, and the remaining portions will remain in full force and effect. A waiver by either party of any term or condition of this Agreement or any breach thereof, in any one instance, will not waive such term or condition or any subsequent breach thereof. You may assign your rights under this Agreement to any party that consents to, and agrees to be bound by, its terms and conditions; HF may assign its rights under this Agreement without condition. This Agreement will be binding upon and will inure to the benefit of the parties, their successors and permitted assigns.  This Agreement constitutes the entire Agreement between the parties and cannot be changed orally.
 
         </textarea>
-    </td>
-</tr>
-<tr>
-    <td><?php echo form_checkbox($terms_accept);?> Accept Terms and Conditions of Use?</td>
-</tr>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <?php echo form_checkbox($terms_accept); ?> Accept Terms and Conditions of Use?
+        </td>
+    </tr>
 </table>
 
 <p><input type="submit" class="submit" value="Accept Terms"></p>
 
-<?php echo form_close();?>
+<?php echo form_close(); ?>

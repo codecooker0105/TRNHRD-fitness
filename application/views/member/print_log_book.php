@@ -1,15 +1,15 @@
 <div id="generator_left">
-	<h1><?=$title?>: <?php if($workout){ ?><?=$workout['title']?><? } ?></h1>
+	<h1><?=$title?>: <?php if($workout){ ?><?=$workout['title']?><?php } ?></h1>
 
-    <? //print_r($workout); ?>
+    <?php //print_r($workout); ?>
 	<?php if($workout){ ?>
-    <? if($workout['created'] == 'true'){ ?>
+    <?php if($workout['created'] == 'true'){ ?>
     	<ul id="workout_logbook"><?
         foreach($workout['sections'] as $section){
-            ?><li><?=$section['title']?><? if($section['section_rest'] != '' && $section['section_rest'] != 0){ ?> - <?=secToMinute($section['section_rest'])?><? } ?>
-            <? if(isset($section['exercises'])){ ?>
+            ?><li><?=$section['title']?><?php if($section['section_rest'] != '' && $section['section_rest'] != 0){ ?> - <?=secToMinute($section['section_rest'])?><?php } ?>
+            <?php if(isset($section['exercises'])){ ?>
                 <ul class="section">
-                <? foreach($section['exercises'] as $exercise){ ?>
+                <?php foreach($section['exercises'] as $exercise){ ?>
 					       	<li class="exercise_type">
                             	<table width="100%" cellspacing="0" cellpadding="0" border="1">
                                 <thead>
@@ -20,10 +20,10 @@
                                 </tr>
                                 <tr>
                                     <th>Set</th>
-                                    <th><? if($exercise['set_type'] == 'sets_reps'){ ?>Reps<? }elseif($exercise['set_type'] == 'sets_time'){ ?>Time<? } ?></th>
+                                    <th><?php if($exercise['set_type'] == 'sets_reps'){ ?>Reps<?php }elseif($exercise['set_type'] == 'sets_time'){ ?>Time<?php } ?></th>
                                     <th>Weight</th>
                                     <th>Rest</th>
-                                    <th><? if($exercise['set_type'] == 'sets_reps'){ ?>Reps<? }elseif($exercise['set_type'] == 'sets_time'){ ?>Time<? } ?></th>
+                                    <th><?php if($exercise['set_type'] == 'sets_reps'){ ?>Reps<?php }elseif($exercise['set_type'] == 'sets_time'){ ?>Time<?php } ?></th>
                                     <th class="right">Weight</th>
                                 </tr>
                                 </thead>
@@ -54,23 +54,23 @@
 									$difficulty = 3;
 								}
 								$rest = $ex_rest[$index]; ?>                                
-                                <tr <? if($set == count($ex_sets)){ ?> class="bottom" <? } ?>>
+                                <tr <?php if($set == count($ex_sets)){ ?> class="bottom" <?php } ?>>
                                 	<td align="center"><?=$set?></td>
-                                    <td align="center"><? if($exercise['set_type'] == 'sets_reps'){ ?><?=$ex_reps[$index]?><? }else{ ?><?=secToMinute($ex_time[$index])?><? } ?></td>
+                                    <td align="center"><?php if($exercise['set_type'] == 'sets_reps'){ ?><?=$ex_reps[$index]?><?php }else{ ?><?=secToMinute($ex_time[$index])?><?php } ?></td>
                                     <td align="center">
-										<? if($exercise['weight_option'] == 'weighted'){ ?>
-                                        	<? if($weight == 0){ ?>N/A<? }else{ ?><?=$weight?> lbs.<? } ?>
-                                        <? }elseif($exercise['weight_option'] == 'bodyweight'){ ?>
+										<?php if($exercise['weight_option'] == 'weighted'){ ?>
+                                        	<?php if($weight == 0){ ?>N/A<?php }else{ ?><?=$weight?> lbs.<?php } ?>
+                                        <?php }elseif($exercise['weight_option'] == 'bodyweight'){ ?>
                                         	Body Weight
-                                        <? } ?>
+                                        <?php } ?>
                                         </td>
                                     <td align="center"><?=$ex_rest[$index]?></td>
                                     <td>&nbsp;</td>
-                                    <td><? if($exercise['weight_option'] == 'bodyweight'){ ?>
+                                    <td><?php if($exercise['weight_option'] == 'bodyweight'){ ?>
                                         	Body Weight
-                                        <? } ?></td>
+                                        <?php } ?></td>
                                 </tr>
-                                <? } ?>
+                                <?php } ?>
                                 <tbody class="footer">
                                 <tr>
                                 	<td colspan="7" class="left">
@@ -83,12 +83,12 @@
                             </li><?
                 } ?>
                 </ul>
-            <? } ?>
+            <?php } ?>
             </li><?
         }
 		?></ul><?
 	}
     }else{ ?>
     	<p><strong>You had no workout today</strong></p>
-    <? } ?>
+    <?php } ?>
 </div>

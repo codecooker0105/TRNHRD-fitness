@@ -69,6 +69,8 @@ class Member extends Controller
 					$this->data['trainer'] = false;
 				}
 			}
+			$this->header_data['meta_keywords'] = 'TRNHRD';
+			$this->header_data['meta_description'] = 'Accomplish your fitness goals with our affordable, certified personal trainer in New York. Find out how Trnhrd helps you create challenging workouts more easily.';
 
 			$this->crud->use_table('user_weather');
 			$zipcodes = $this->crud->retrieve(array('user_id' => $this->data['user']->id), '', '', array('default' => 'desc'))->result_array();
@@ -149,6 +151,8 @@ class Member extends Controller
 
 			$this->crud->use_table('trainer_client_groups');
 			$this->data['trainer_groups'] = $this->crud->retrieve(array('trainer_id' => $this->session->userdata('user_id')))->result_array();
+			$this->header_data['meta_keywords'] = 'TRNHRD';
+			$this->header_data['meta_description'] = 'Accomplish your fitness goals with our affordable, certified personal trainer in New York. Find out how Trnhrd helps you create challenging workouts more easily.';
 
 			$this->header_data['assets'] = 'clients';
 			$this->load->view('base/header', $this->header_data);
@@ -208,7 +212,8 @@ class Member extends Controller
 
 			$this->data['user'] = $this->ion_auth->get_user();
 			$this->data['clients'] = $this->ion_auth->get_clients(false, NULL, NULL, $this->session->userdata('user_id'), 'confirmed');
-
+			$this->data['meta_keywords'] = 'TRNHRD';
+			$this->data['meta_description'] = 'Accomplish your fitness goals with our affordable, certified personal trainer in New York. Find out how Trnhrd helps you create challenging workouts more easily.';
 
 			//render
 			$this->load->view('base/header', $this->data);
@@ -328,7 +333,8 @@ class Member extends Controller
 
 			$this->data['user'] = $this->ion_auth->get_user();
 			$this->data['clients'] = $this->ion_auth->get_clients(false, NULL, NULL, $this->session->userdata('user_id'), 'confirmed');
-
+			$this->data['meta_keywords'] = 'TRNHRD';
+			$this->data['meta_description'] = 'Accomplish your fitness goals with our affordable, certified personal trainer in New York. Find out how Trnhrd helps you create challenging workouts more easily.';
 
 			//render
 			$this->load->view('base/header', $this->data);
@@ -378,6 +384,8 @@ class Member extends Controller
 			$this->data['user'] = $this->ion_auth->get_user();
 			$this->crud->use_table('user_stats');
 			$this->data['stats'] = $this->crud->retrieve(array('user_id' => $this->data['user']->id), '', '', array('title' => 'desc'))->result();
+			$this->data['meta_keywords'] = 'TRNHRD';
+			$this->data['meta_description'] = 'Accomplish your fitness goals with our affordable, certified personal trainer in New York. Find out how Trnhrd helps you create challenging workouts more easily.';
 
 			$this->header_data['assets'] = 'edit_stats';
 			$this->load->view('base/header', $this->header_data);
@@ -900,8 +908,10 @@ class Member extends Controller
 				'value' => 'accept',
 				'class' => 'required'
 			);
+			$this->data['meta_keywords'] = 'TRNHRD';
+			$this->data['meta_description'] = 'Accomplish your fitness goals with our affordable, certified personal trainer in New York. Find out how Trnhrd helps you create challenging workouts more easily.';
 
-			$this->load->view('base/header');
+			$this->load->view('base/header', $this->data);
 			$this->load->view('base/integration_start');
 			$this->load->view('member/accept_tos', $this->data);
 			$this->load->view('base/integration_end');
@@ -1007,6 +1017,8 @@ class Member extends Controller
 			foreach ($query->result() as $progression) {
 				$this->data['progressions'][$progression->id] = $progression->title;
 			}
+			$this->header_data['meta_keywords'] = 'TRNHRD';
+			$this->header_data['meta_description'] = 'Accomplish your fitness goals with our affordable, certified personal trainer in New York. Find out how Trnhrd helps you create challenging workouts more easily.';
 
 			$this->header_data['assets'] = 'workout_generator';
 			$this->load->view('base/header', $this->header_data);
@@ -1235,17 +1247,17 @@ class Member extends Controller
 		}
 
 		?><p>The new workout(s) have been added to
-											<?php if ($user_type == 'group') { ?>															<?= $group->title ?>										<?php } else { ?>															<?= $user->first_name ?>
-																<?= $user->last_name ?>'s<?php } ?> workout log. You may close this dialog and add this workout to another date or
-											client or choose a destination below.</p>
-										<ul>
-											<li><a href="/member">Dashboard</a></li>
-											<?php if ($user_type != 'group') { ?>
-																<li><a href="/member/client_log_book/<?= $user->id ?>"><?= $user->first_name ?>												 			<?= $user->last_name ?>'s Workout
-																		Log</a></li>
-											<?php } ?>
-											<li><a href="/member/workout_generator">Reset Workout Generator</a></li>
-										</ul><?php
+															<?php if ($user_type == 'group') { ?>																					<?= $group->title ?>														<?php } else { ?>																					<?= $user->first_name ?>
+																						<?= $user->last_name ?>'s<?php } ?> workout log. You may close this dialog and add this workout to another date or
+															client or choose a destination below.</p>
+														<ul>
+															<li><a href="/member">Dashboard</a></li>
+															<?php if ($user_type != 'group') { ?>
+																						<li><a href="/member/client_log_book/<?= $user->id ?>"><?= $user->first_name ?>																		 			<?= $user->last_name ?>'s Workout
+																								Log</a></li>
+															<?php } ?>
+															<li><a href="/member/workout_generator">Reset Workout Generator</a></li>
+														</ul><?php
 
 
 	}
@@ -1405,21 +1417,21 @@ class Member extends Controller
 		$this->crud->use_table('skeleton_section_types');
 		$section = $this->crud->retrieve(array('id' => $id))->row();
 		if ($section) { ?>
-															<li class="section">
-																<div class="ui-widget ui-helper-clearfix ui-state-default ui-corner-all move"><span
-																		class="ui-icon ui-icon-arrow-4 move"></span></div>
-																<input type="hidden" value="<?= $section->id ?>" name="section_id" class="section_id" />
-																<?php if ($section->type == 'rest' || $section->type == 'active-rest') { ?>
-																					<span class="rest"><?= $section->title ?> - <?= secToMinute($section_rest) ?></span>
-																<?php } else { ?>
-																					<a href="#" class="section_title off"><?= $section->title ?></a>
-																<?php } ?>
-																<div class="remove_section ui-widget ui-helper-clearfix ui-state-default ui-corner-all remove"><span
-																		class="ui-icon ui-icon-closethick remove"></span>Remove Section</div>
-																<div class="add_exercise ui-widget ui-helper-clearfix ui-state-default ui-corner-all pointer"><span
-																		class="ui-icon ui-icon-plus pointer"></span>Add Exercise Type</div>
-																<ul class="workout_categories"></ul>
-											<?
+																					<li class="section">
+																						<div class="ui-widget ui-helper-clearfix ui-state-default ui-corner-all move"><span
+																								class="ui-icon ui-icon-arrow-4 move"></span></div>
+																						<input type="hidden" value="<?= $section->id ?>" name="section_id" class="section_id" />
+																						<?php if ($section->type == 'rest' || $section->type == 'active-rest') { ?>
+																													<span class="rest"><?= $section->title ?> - <?= secToMinute($section_rest) ?></span>
+																						<?php } else { ?>
+																													<a href="#" class="section_title off"><?= $section->title ?></a>
+																						<?php } ?>
+																						<div class="remove_section ui-widget ui-helper-clearfix ui-state-default ui-corner-all remove"><span
+																								class="ui-icon ui-icon-closethick remove"></span>Remove Section</div>
+																						<div class="add_exercise ui-widget ui-helper-clearfix ui-state-default ui-corner-all pointer"><span
+																								class="ui-icon ui-icon-plus pointer"></span>Add Exercise Type</div>
+																						<ul class="workout_categories"></ul>
+															<?
 		}
 	}
 
@@ -1433,11 +1445,11 @@ class Member extends Controller
 		$this->crud->use_table('exercise_types');
 		$e_type = $this->crud->retrieve(array('id' => $id))->row();
 		if ($e_type) { ?>
-															<li class="category">
-																<div class="ui-state-default ui-corner-all move"><span class="ui-icon ui-icon-arrow-4 move"></span></div><input
-																	type="hidden" value="<?= $e_type->id ?>" name="category_id" class="category_id" /><a href="#"
-																	class="workout_category_title"><?= $e_type->title ?></a>
-																<?php
+																					<li class="category">
+																						<div class="ui-state-default ui-corner-all move"><span class="ui-icon ui-icon-arrow-4 move"></span></div><input
+																							type="hidden" value="<?= $e_type->id ?>" name="category_id" class="category_id" /><a href="#"
+																							class="workout_category_title"><?= $e_type->title ?></a>
+																						<?php
 		}
 	}
 
@@ -1461,97 +1473,97 @@ class Member extends Controller
 		$this->crud->use_table('exercise_types');
 		$e_type = $this->crud->retrieve(array('id' => $id))->row();
 		if ($e_type) { ?>
-															<li class="category">
-																<div class="ui-state-default ui-corner-all move"><span class="ui-icon ui-icon-arrow-4 move"></span></div><a href="#"
-																	class="workout_category_title"><?= $e_type->title ?></a>
-																<?
-																?>
-																<ul class="workout_exercises">
-																	<li class="exercise_type">
-																		<input type="hidden" value="<?= $e_type->id ?>" name="category_id" class="category_id" />
-																		<input type="hidden" name="exercise_id"
-																			value="<?php if (isset($exercise->id)) { ?><?= $exercise->id ?><?php } ?>" class="exercise_id" />
-																		<input type="hidden" name="ex_type" value="<?= $e_type->title ?>" class="ex_type" />
+																					<li class="category">
+																						<div class="ui-state-default ui-corner-all move"><span class="ui-icon ui-icon-arrow-4 move"></span></div><a href="#"
+																							class="workout_category_title"><?= $e_type->title ?></a>
+																						<?
+																						?>
+																						<ul class="workout_exercises">
+																							<li class="exercise_type">
+																								<input type="hidden" value="<?= $e_type->id ?>" name="category_id" class="category_id" />
+																								<input type="hidden" name="exercise_id"
+																									value="<?php if (isset($exercise->id)) { ?><?= $exercise->id ?><?php } ?>" class="exercise_id" />
+																								<input type="hidden" name="ex_type" value="<?= $e_type->title ?>" class="ex_type" />
 
-																		<table width="100%" cellspacing="0" cellpadding="0">
-																			<thead>
-																				<tr>
-																					<th class="left"><a
-																							href="/member/popup_video/<?php if (isset($exercise->id)) { ?><?= $exercise->id ?><?php } ?>"
-																							class="play-exercise"><?php if (isset($exercise->id)) { ?><?= $exercise->title ?><?php } ?></a>
-																					</th>
-																					<th>Set</th>
-																					<th>Reps/Time</th>
-																					<th>Rest</th>
-																					<th class="right">Weight</th>
-																				</tr>
-																			</thead>
-																			<tbody>
-																				<?php $set = 1;
-																				while ($set <= 3) { ?>
-																									<tr <?php if ($set == 3) { ?> class="bottom" <?php } ?>>
-																										<?php if ($set == 1) { ?>
-																															<td class="ex_options left bottom" rowspan="3">
-																																<strong>Set Options:</strong><br />
-																																<select name="set_type[]" class="set_type">
-																																	<option value="sets_reps" selected="selected">Sets x Reps</option>
-																																	<option value="sets_time">Sets x Time</option>
-																																</select><br />
-																																<strong>Weight Options:</strong><br />
-																																<select name="weight_option[]" class="weight_option">
-																																	<option value="weighted" selected="selected">Weighted</option>
-																																	<option value="bodyweight"> Bodyweight only</option>
-																																</select>
-																															</td><?php } ?>
-																										<td><span class="set_number"><?= $set ?></span><input name="sets[]" type="hidden"
-																												value="<?= $set ?>" /></td>
-																										<td><select name="reps[]" class="reps">
-																												<?php for ($x = 1; $x <= 30; $x++) { ?>
-																																	<option value="<?= $x ?>" <?php if (10 == $x) { ?> selected="selected" <?php } ?>>
-																																		<?= $x ?></option>
-																												<?php } ?>
-																											</select>
-																											<select name="time[]" class="time">
-																												<?php for ($x = 15; $x <= 300; $x += 15) { ?>
-																																	<option value="<?= $x ?>" <?php if (30 == $x) { ?> selected="selected" <?php } ?>>
-																																		<?= secToMinute($x) ?></option>
-																												<?php } ?>
-																											</select>
-																										</td>
-																										<td class="right">
-																											<select name="rest[]" class="rest">
-																												<?php for ($x = 0; $x <= 300; $x += 15) { ?>
-																																	<option value="<?= $x ?>" <?php if (30 == $x) { ?> selected="selected" <?php } ?>>
-																																		<?= $x ?></option>
-																												<?php } ?>
-																											</select>
-																										</td>
-																										<td class="right">
-																											<span class="weight_input_box"><input type="text" name="weight[]" class="weight" value="" />
-																												lbs.</span>
-																											<span class="bodyweight">Body Weight Only</span>
-																										</td>
-																									</tr>
-																									<?php $set++;
-																				} ?>
-																			<tbody class="spacer">
-																				<tr>
-																					<td colspan="6">&nbsp;</td>
-																				</tr>
-																			</tbody>
-																			<tbody class="footer">
-																				<tr>
-																					<td colspan="6" class="left">
-																						<strong>OPTIONS</strong>
-																						<a href="#" class="add_set">Add Set</a> | <a href="#" class="remove_set">Remove Set</a> | <a
-																							href="#" class="select_exercise<?= $e_type->id ?>" id="exercise_10000">Select
-																							Exercise</a> | <a href="#" class="remove_exercise">Remove Exercise</a>
-																					</td>
-																				</tr>
-																			</tbody>
-																		</table>
-																	</li>
-																</ul><?php
+																								<table width="100%" cellspacing="0" cellpadding="0">
+																									<thead>
+																										<tr>
+																											<th class="left"><a
+																													href="/member/popup_video/<?php if (isset($exercise->id)) { ?><?= $exercise->id ?><?php } ?>"
+																													class="play-exercise"><?php if (isset($exercise->id)) { ?><?= $exercise->title ?><?php } ?></a>
+																											</th>
+																											<th>Set</th>
+																											<th>Reps/Time</th>
+																											<th>Rest</th>
+																											<th class="right">Weight</th>
+																										</tr>
+																									</thead>
+																									<tbody>
+																										<?php $set = 1;
+																										while ($set <= 3) { ?>
+																																	<tr <?php if ($set == 3) { ?> class="bottom" <?php } ?>>
+																																		<?php if ($set == 1) { ?>
+																																									<td class="ex_options left bottom" rowspan="3">
+																																										<strong>Set Options:</strong><br />
+																																										<select name="set_type[]" class="set_type">
+																																											<option value="sets_reps" selected="selected">Sets x Reps</option>
+																																											<option value="sets_time">Sets x Time</option>
+																																										</select><br />
+																																										<strong>Weight Options:</strong><br />
+																																										<select name="weight_option[]" class="weight_option">
+																																											<option value="weighted" selected="selected">Weighted</option>
+																																											<option value="bodyweight"> Bodyweight only</option>
+																																										</select>
+																																									</td><?php } ?>
+																																		<td><span class="set_number"><?= $set ?></span><input name="sets[]" type="hidden"
+																																				value="<?= $set ?>" /></td>
+																																		<td><select name="reps[]" class="reps">
+																																				<?php for ($x = 1; $x <= 30; $x++) { ?>
+																																											<option value="<?= $x ?>" <?php if (10 == $x) { ?> selected="selected" <?php } ?>>
+																																												<?= $x ?></option>
+																																				<?php } ?>
+																																			</select>
+																																			<select name="time[]" class="time">
+																																				<?php for ($x = 15; $x <= 300; $x += 15) { ?>
+																																											<option value="<?= $x ?>" <?php if (30 == $x) { ?> selected="selected" <?php } ?>>
+																																												<?= secToMinute($x) ?></option>
+																																				<?php } ?>
+																																			</select>
+																																		</td>
+																																		<td class="right">
+																																			<select name="rest[]" class="rest">
+																																				<?php for ($x = 0; $x <= 300; $x += 15) { ?>
+																																											<option value="<?= $x ?>" <?php if (30 == $x) { ?> selected="selected" <?php } ?>>
+																																												<?= $x ?></option>
+																																				<?php } ?>
+																																			</select>
+																																		</td>
+																																		<td class="right">
+																																			<span class="weight_input_box"><input type="text" name="weight[]" class="weight" value="" />
+																																				lbs.</span>
+																																			<span class="bodyweight">Body Weight Only</span>
+																																		</td>
+																																	</tr>
+																																	<?php $set++;
+																										} ?>
+																									<tbody class="spacer">
+																										<tr>
+																											<td colspan="6">&nbsp;</td>
+																										</tr>
+																									</tbody>
+																									<tbody class="footer">
+																										<tr>
+																											<td colspan="6" class="left">
+																												<strong>OPTIONS</strong>
+																												<a href="#" class="add_set">Add Set</a> | <a href="#" class="remove_set">Remove Set</a> | <a
+																													href="#" class="select_exercise<?= $e_type->id ?>" id="exercise_10000">Select
+																													Exercise</a> | <a href="#" class="remove_exercise">Remove Exercise</a>
+																											</td>
+																										</tr>
+																									</tbody>
+																								</table>
+																							</li>
+																						</ul><?php
 		}
 	}
 
@@ -1700,7 +1712,9 @@ class Member extends Controller
 			} else {
 				$this->data['error'] = $this->upload->display_errors();
 
-				$this->load->view('base/header');
+				$this->header_data['meta_keywords'] = 'TRNHRD';
+				$this->header_data['meta_description'] = 'Accomplish your fitness goals with our affordable, certified personal trainer in New York. Find out how Trnhrd helps you create challenging workouts more easily.';
+				$this->load->view('base/header', $this->header_data);
 				$this->load->view('base/integration_start');
 				$this->load->view('member/edit_photo', $this->data);
 				$this->load->view('base/integration_end');
@@ -1709,7 +1723,10 @@ class Member extends Controller
 		} else {
 			$this->data['error'] = $this->upload->display_errors();
 			$this->data['judge'] = $this->ion_auth->get_user($this->uri->segment(3));
-			$this->load->view('base/header', array('main_menu' => 'admin'));
+			$this->header_data['meta_keywords'] = 'TRNHRD';
+			$this->header_data['meta_description'] = 'Accomplish your fitness goals with our affordable, certified personal trainer in New York. Find out how Trnhrd helps you create challenging workouts more easily.';
+			$this->header_data['main_menu'] = 'admin';
+			$this->load->view('base/header', $this->header_data);
 			$this->load->view('base/integration_start');
 			$this->load->view('member/edit_photo', $this->data);
 			$this->load->view('base/integration_end');
@@ -1720,7 +1737,7 @@ class Member extends Controller
 	//log the user in
 	function login()
 	{
-		$this->data['title'] = "Login";
+		$this->data['page_title'] = "Login";
 
 		//validate form input
 		$this->form_validation->set_rules('username', 'Username', 'required');
@@ -1761,6 +1778,10 @@ class Member extends Controller
 				'id' => 'password',
 				'type' => 'password',
 			);
+			$this->data['meta_keywords'] = 'TRNHRD';
+			$this->data['meta_description'] = 'Accomplish your fitness goals with our affordable, certified personal trainer in New York. Find out how Trnhrd helps you create challenging workouts more easily.';
+
+			$this->data['footer_visibility'] = 'no';
 			$this->load->view('base/header', $this->data);
 			$this->load->view('base/login', $this->data);
 			$this->load->view('base/footer', $this->data);
@@ -1906,6 +1927,8 @@ class Member extends Controller
 			} else {
 				$this->data['trainer'] = false;
 			}
+			$this->data['meta_keywords'] = 'TRNHRD';
+			$this->data['meta_description'] = 'Accomplish your fitness goals with our affordable, certified personal trainer in New York. Find out how Trnhrd helps you create challenging workouts more easily.';
 
 			$this->load->view('base/header', $this->data);
 			$this->load->view('base/integration_start');
@@ -1959,6 +1982,8 @@ class Member extends Controller
 				'type' => 'hidden',
 				'value' => $this->uri->segment(3),
 			);
+			$this->data['meta_keywords'] = 'TRNHRD';
+			$this->data['meta_description'] = 'Accomplish your fitness goals with our affordable, certified personal trainer in New York. Find out how Trnhrd helps you create challenging workouts more easily.';
 
 			$this->load->view('base/header', $this->data);
 			$this->load->view('base/integration_start');
@@ -2051,6 +2076,8 @@ class Member extends Controller
 					);
 				}
 			}
+			$this->data['meta_keywords'] = 'TRNHRD';
+			$this->data['meta_description'] = 'Accomplish your fitness goals with our affordable, certified personal trainer in New York. Find out how Trnhrd helps you create challenging workouts more easily.';
 
 			$this->load->view('base/header', $this->data);
 			$this->load->view('base/integration_start');
@@ -2137,9 +2164,11 @@ class Member extends Controller
 				$this->data['workouts'][date('j', strtotime($workout->workout_date))] = $title . ' not generated yet, complete previous workouts first';
 			}
 		}
+		$this->header_data['meta_keywords'] = 'TRNHRD';
+		$this->header_data['meta_description'] = 'Accomplish your fitness goals with our affordable, certified personal trainer in New York. Find out how Trnhrd helps you create challenging workouts more easily.';
 
 		$this->load->library('calendar', $prefs);
-		$this->load->view('base/header');
+		$this->load->view('base/header', $this->header_data);
 		$this->load->view('base/integration_start');
 		$this->load->view('member/calendar', $this->data);
 		$this->load->view('base/integration_end');
@@ -2234,9 +2263,12 @@ class Member extends Controller
 				$this->data['workouts'][date('j', strtotime($workout->workout_date))] = $title . ' not generated yet, client created workout';
 			}
 		}
+		$this->header_data['meta_keywords'] = 'TRNHRD';
+		$this->header_data['meta_description'] = 'Accomplish your fitness goals with our affordable, certified personal trainer in New York. Find out how Trnhrd helps you create challenging workouts more easily.';
+		$this->header_data['assets'] = 'logbook';
 
 		$this->load->library('calendar', $prefs);
-		$this->load->view('base/header', array('assets' => 'calendar'));
+		$this->load->view('base/header', $this->header_data);
 		$this->load->view('base/integration_start');
 		$this->load->view('member/client_calendar', $this->data);
 		$this->load->view('base/integration_end');
@@ -2265,8 +2297,11 @@ class Member extends Controller
 		$this->data['title'] = date('l F jS', strtotime($this->data['year'] . '-' . $this->data['month'] . '-' . $this->data['day']));
 		$this->data['workout'] = $this->workouts->get_logbook_workout($this->data['user']->id, date('Y-m-d', strtotime($this->data['year'] . '-' . $this->data['month'] . '-' . $this->data['day'])));
 		$this->data['past_workouts'] = $this->workouts->get_past_workouts($this->data['user']->id);
+		$this->header_data['meta_keywords'] = 'TRNHRD';
+		$this->header_data['meta_description'] = 'Accomplish your fitness goals with our affordable, certified personal trainer in New York. Find out how Trnhrd helps you create challenging workouts more easily.';
+		$this->header_data['assets'] = 'logbook';
 
-		$this->load->view('base/header', array('assets' => 'logbook'));
+		$this->load->view('base/header', $this->header_data);
 		$this->load->view('base/integration_start');
 		$this->load->view('member/log_book', $this->data);
 		$this->load->view('base/integration_end');
@@ -2343,8 +2378,10 @@ class Member extends Controller
 		$this->data['title'] = date('l F jS', strtotime($this->data['year'] . '-' . $this->data['month'] . '-' . $this->data['day']));
 		$this->data['workout'] = $this->workouts->get_logbook_workout($this->data['current_client']->id, date('Y-m-d', strtotime($this->data['year'] . '-' . $this->data['month'] . '-' . $this->data['day'])));
 		$this->data['past_workouts'] = $this->workouts->get_past_workouts($this->data['current_client']->id);
-
-		$this->load->view('base/header', array('assets' => 'logbook'));
+		$this->header_data['meta_keywords'] = 'TRNHRD';
+		$this->header_data['meta_description'] = 'Accomplish your fitness goals with our affordable, certified personal trainer in New York. Find out how Trnhrd helps you create challenging workouts more easily.';
+		$this->header_data['assets'] = 'logbook';
+		$this->load->view('base/header', $this->header_data);
 		$this->load->view('base/integration_start');
 		$this->load->view('member/client_log_book', $this->data);
 		$this->load->view('base/integration_end');
@@ -2400,9 +2437,10 @@ class Member extends Controller
 				'type' => 'hidden',
 				'value' => $user->id,
 			);
-
+			$this->data['meta_keywords'] = 'TRNHRD';
+			$this->data['meta_description'] = 'Accomplish your fitness goals with our affordable, certified personal trainer in New York. Find out how Trnhrd helps you create challenging workouts more easily.';
 			//render
-			$this->load->view('base/header');
+			$this->load->view('base/header', $this->data);
 			$this->load->view('base/integration_start');
 			$this->load->view('member/change_password', $this->data);
 			$this->load->view('base/integration_end');
@@ -2527,9 +2565,11 @@ class Member extends Controller
 				'class' => 'midsize',
 				'size' => 25
 			);
+			$this->data['meta_keywords'] = 'TRNHRD';
+			$this->data['meta_description'] = 'Accomplish your fitness goals with our affordable, certified personal trainer in New York. Find out how Trnhrd helps you create challenging workouts more easily.';
 
 			//render
-			$this->load->view('base/header');
+			$this->load->view('base/header', $this->data);
 			$this->load->view('base/integration_start');
 			$this->load->view('member/edit_account', $this->data);
 			$this->load->view('base/integration_end');
@@ -2567,7 +2607,9 @@ class Member extends Controller
 			);
 			//set any errors and display the form
 			$this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
-			$this->load->view('base/header');
+			$this->data['meta_keywords'] = 'TRNHRD';
+			$this->data['meta_description'] = 'Accomplish your fitness goals with our affordable, certified personal trainer in New York. Find out how Trnhrd helps you create challenging workouts more easily.';
+			$this->load->view('base/header', $this->data);
 			$this->load->view('base/integration_start');
 			$this->load->view('member/forgot_password', $this->data);
 			$this->load->view('base/integration_end');
@@ -2724,6 +2766,7 @@ class Member extends Controller
 				'value' => $this->form_validation->set_value('first_name'),
 				'class' => 'form-control',
 				'required' => 'required',
+				'placeholder' => 'First name',
 				'size' => 25
 			);
 			$this->data['last_name'] = array(
@@ -2733,6 +2776,7 @@ class Member extends Controller
 				'value' => $this->form_validation->set_value('last_name'),
 				'class' => 'form-control',
 				'required' => 'required',
+				'placeholder' => 'Last name',
 				'size' => 25
 			);
 			$this->data['city'] = array(
@@ -2742,9 +2786,12 @@ class Member extends Controller
 				'value' => $this->form_validation->set_value('city'),
 				'class' => 'form-control',
 				'required' => 'required',
+				'placeholder' => 'City',
+				'style' => 'padding-inline-start: 35px;',
 				'size' => 25
 			);
 			$this->data['state_options'] = array(
+				'' => "State",
 				'AL' => "Alabama",
 				'AK' => "Alaska",
 				'AZ' => "Arizona",
@@ -2805,6 +2852,8 @@ class Member extends Controller
 				'value' => $this->form_validation->set_value('zip'),
 				'class' => 'form-control',
 				'required' => 'required',
+				'placeholder' => 'Zip',
+				'style' => 'padding-inline-start: 35px;',
 				'size' => 25
 			);
 			$this->data['username'] = array(
@@ -2814,6 +2863,8 @@ class Member extends Controller
 				'value' => $this->form_validation->set_value('username'),
 				'class' => 'form-control',
 				'required' => 'required',
+				'placeholder' => 'Username',
+				'style' => 'padding-inline-start: 35px;',
 				'size' => 40
 			);
 			$this->data['email'] = array(
@@ -2823,6 +2874,8 @@ class Member extends Controller
 				'value' => $this->form_validation->set_value('email'),
 				'class' => 'form-control',
 				'required' => 'required',
+				'placeholder' => 'Email',
+				'style' => 'padding-inline-start: 35px;',
 				'size' => 40
 			);
 			$this->data['password'] = array(
@@ -2831,6 +2884,8 @@ class Member extends Controller
 				'type' => 'password',
 				'value' => $this->form_validation->set_value('password'),
 				'class' => 'form-control',
+				'placeholder' => 'Password',
+				'style' => 'padding-inline-start: 35px;',
 				'required' => 'required',
 			);
 			$this->data['password_confirm'] = array(
@@ -2839,6 +2894,8 @@ class Member extends Controller
 				'type' => 'password',
 				'value' => $this->form_validation->set_value('password_confirm'),
 				'class' => 'form-control',
+				'placeholder' => 'Confirm Password',
+				'style' => 'padding-inline-start: 35px;',
 				'required' => 'required',
 			);
 
@@ -2858,6 +2915,7 @@ class Member extends Controller
 			// $this->load->view('base/integration_start');
 			// $this->load->view('member/register', $this->data);
 			// $this->load->view('base/integration_end');
+			$this->data['footer_visibility'] = 'no';
 
 			$this->load->view('base/register', $this->data);
 

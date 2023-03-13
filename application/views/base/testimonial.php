@@ -1,8 +1,6 @@
 <!-- CONTENT -->
 <!-- Intro Section -->
-<section
-  class="inner-intro bg-img-3 light-color overlay-before parallax-background"
->
+<section class="inner-intro bg-img-3 light-color overlay-before parallax-background">
   <div class="container">
     <div class="row title">
       <div class="title_row">
@@ -35,11 +33,7 @@
       <div class="col-md-6 col-lg-6">
         <div class="about-block gray-bg padding-40 clearfix">
           <div class="client-avtar">
-            <img
-              src="/assets/images/user2-160x160.jpg"
-              class="img-responsive"
-              alt="Responsive image"
-            />
+            <img src="/assets/images/user2-160x160.jpg" class="img-responsive" alt="Responsive image" />
           </div>
           <div class="text-box">
             <div class="text-content">
@@ -62,11 +56,7 @@
       <div class="col-md-6 col-lg-6">
         <div class="about-block dark-gray-bg padding-40 clearfix">
           <div class="client-avtar left-pos">
-            <img
-              src="/assets/images/user2-160x160.jpg"
-              class="img-responsive"
-              alt="Responsive image"
-            />
+            <img src="/assets/images/user2-160x160.jpg" class="img-responsive" alt="Responsive image" />
           </div>
           <div class="text-box">
             <div class="text-content">
@@ -91,11 +81,7 @@
       <div class="col-md-6 col-lg-6">
         <div class="about-block dark-gray-bg padding-40 clearfix">
           <div class="client-avtar">
-            <img
-              src="/assets/images/user2-160x160.jpg"
-              class="img-responsive"
-              alt="Responsive image"
-            />
+            <img src="/assets/images/user2-160x160.jpg" class="img-responsive" alt="Responsive image" />
           </div>
           <div class="text-box">
             <div class="text-content">
@@ -118,11 +104,7 @@
       <div class="col-md-6 col-lg-6">
         <div class="about-block gray-bg padding-40 clearfix">
           <div class="client-avtar left-pos">
-            <img
-              src="/assets/images/user2-160x160.jpg"
-              class="img-responsive"
-              alt="Responsive image"
-            />
+            <img src="/assets/images/user2-160x160.jpg" class="img-responsive" alt="Responsive image" />
           </div>
           <div class="text-box">
             <div class="text-content">
@@ -147,11 +129,7 @@
       <div class="col-md-6 col-lg-6">
         <div class="about-block gray-bg padding-40 clearfix">
           <div class="client-avtar">
-            <img
-              src="/assets/images/user2-160x160.jpg"
-              class="img-responsive"
-              alt="Responsive image"
-            />
+            <img src="/assets/images/user2-160x160.jpg" class="img-responsive" alt="Responsive image" />
           </div>
           <div class="text-box">
             <div class="text-content">
@@ -174,11 +152,7 @@
       <div class="col-md-6 col-lg-6">
         <div class="about-block dark-gray-bg padding-40 clearfix">
           <div class="client-avtar left-pos">
-            <img
-              src="/assets/images/user2-160x160.jpg"
-              class="img-responsive"
-              alt="Responsive image"
-            />
+            <img src="/assets/images/user2-160x160.jpg" class="img-responsive" alt="Responsive image" />
           </div>
           <div class="text-box">
             <div class="text-content">

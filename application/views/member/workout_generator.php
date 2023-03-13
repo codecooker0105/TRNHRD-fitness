@@ -4,10 +4,10 @@
 </div>
 
 <form action="/member/process_workout_generator" id="workout_generator_form" method="post">
-<input type="hidden" name="workout_id" id="workout_id" value="<? if(isset($workout_id)){ ?><?=$workout_id?><? } ?>" />
-<input type="hidden" name="trainer_workout_id" id="trainer_workout_id" value="<? if(isset($trainer_workout_id)){ ?><?=$trainer_workout_id?><? } ?>" />
-<input type="hidden" name="group_workout_id" id="group_workout_id" value="<? if(isset($group_workout_id)){ ?><?=$group_workout_id?><? } ?>" />
-<input type="hidden" name="trainer_group_workout_id" id="trainer_group_workout_id" value="<? if(isset($trainer_group_workout_id)){ ?><?=$trainer_group_workout_id?><? } ?>" />
+<input type="hidden" name="workout_id" id="workout_id" value="<?php if(isset($workout_id)){ ?><?=$workout_id?><?php } ?>" />
+<input type="hidden" name="trainer_workout_id" id="trainer_workout_id" value="<?php if(isset($trainer_workout_id)){ ?><?=$trainer_workout_id?><?php } ?>" />
+<input type="hidden" name="group_workout_id" id="group_workout_id" value="<?php if(isset($group_workout_id)){ ?><?=$group_workout_id?><?php } ?>" />
+<input type="hidden" name="trainer_group_workout_id" id="trainer_group_workout_id" value="<?php if(isset($trainer_group_workout_id)){ ?><?=$trainer_group_workout_id?><?php } ?>" />
 
 <div id="generator_left">
 	
@@ -16,10 +16,10 @@
     <p>Workout Title (Optional) <input type="text" name="workout_title" value="" id="workout_title" /></p>
     <h2 class="library_header">Workout Dates</h2>
     <p>You can select either a specific date or a range of dates.<br />
-    <input type="text" value="<? if(isset($workout_date)){ ?><?=$workout_date?><? } ?>" id="date" class="date" /></p>
+    <input type="text" value="<?php if(isset($workout_date)){ ?><?=$workout_date?><?php } ?>" id="date" class="date" /></p>
     <div id="week_days">
     <p><strong>Days of Week:<br /></strong>
-		<? foreach($weekdays as $day => $checkbox){
+		<?php foreach($weekdays as $day => $checkbox){
 			?> <?php echo form_checkbox($checkbox);?> <?=$weekday_title[$day]?> &nbsp;<?
 		} ?>
     </p>
@@ -32,17 +32,17 @@
     <tr class="d-flex">
     	<td valign="top" class="w-100">
     	<p><strong>Available Equipment.</strong><br />
-		<? foreach($equipment as $id => $title){    
+		<?php foreach($equipment as $id => $title){    
             ?><?php echo form_checkbox($available_equipment[$id]);?> <?=$title?><br /><?
         } ?>
         </p>
         </td>
         <td valign="top" class="w-100">
             <strong>Select focus:</strong><br />
-            <? echo form_dropdown('progression_id',$progressions,$progression_id,'class="progression"'); ?>
+            <?php echo form_dropdown('progression_id',$progressions,$progression_id,'class="progression"'); ?>
             <br />
             <strong>Select workout type:</strong><br />
-            <? echo form_dropdown('skeleton_workout_id',$skeleton_workouts,$skeleton_workout_id,'class="skeleton"'); ?><br />
+            <?php echo form_dropdown('skeleton_workout_id',$skeleton_workouts,$skeleton_workout_id,'class="skeleton"'); ?><br />
         </td>
     </tr>
     </table>
@@ -58,7 +58,7 @@
 		<?php if($clients){
 			?><option value=""><strong>Single Clients</strong></option><?
 			foreach($clients as $client){
-				?><option value="<?=$client->user_id?>" <? if(isset($client_id) && $client_id == $client->user_id){ ?> selected="selected"<? } ?>>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?=$client->first_name . ' ' . $client->last_name?></option><?
+				?><option value="<?=$client->user_id?>" <?php if(isset($client_id) && $client_id == $client->user_id){ ?> selected="selected"<?php } ?>>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?=$client->first_name . ' ' . $client->last_name?></option><?
 			}
 		} ?>
         <?php if($trainer_groups){
@@ -87,7 +87,7 @@
     <div class="add_section ui-widget ui-helper-clearfix ui-state-default ui-corner-all pointer"><span class="ui-icon ui-icon-plus pointer"></span>Add Section</div>
 
     <p>&nbsp;</p>
-    <input type="submit" class="large_submit" value="<? if(isset($workout_id)){ ?>Update Workout<? }else{ ?>Save Workout<? } ?>" />
+    <input type="submit" class="large_submit" value="<?php if(isset($workout_id)){ ?>Update Workout<?php }else{ ?>Save Workout<?php } ?>" />
     
 </div>
 
@@ -100,22 +100,22 @@
         foreach($exercise_library['muscles'] as $muscle){
             if($muscle['no_exercises'] == 0){
 				?><li><a href="#" class="muscle_title off"><?=$muscle['title']?></a>
-				<? if(isset($muscle['levels'])){ ?>
+				<?php if(isset($muscle['levels'])){ ?>
                     <ul class="levels">
-                    <? foreach($muscle['levels'] as $level){
+                    <?php foreach($muscle['levels'] as $level){
 						if($level['no_exercises'] == 0){
                         ?><li><a href="#" class="level_title off"><span><?=$level['title']?></span></a>
-                            <? if(isset($level['exercises'])){ ?>
+                            <?php if(isset($level['exercises'])){ ?>
                                 <ul class="exercises" id="exercise-video">
-                                <? foreach($level['exercises'] as $exercise){
+                                <?php foreach($level['exercises'] as $exercise){
                                     ?><li class="exercise"><div class="ui-widget ui-helper-clearfix ui-state-default ui-corner-all move"><span class="ui-icon ui-icon-arrow-4 move "></span><span class="ex_title"><?=$exercise['title']?></span></div><a id="<?=$exercise['id']?>" href="/member/popup_video/<?=$exercise['id']?>" class="play-exercise"><div class="ui-widget ui-helper-clearfix ui-state-default ui-corner-all play"><span class="ui-icon ui-icon-play"></span></div></a></li><?
                                 } ?>
                                 </ul>
-                            <? } ?></li><?
+                            <?php } ?></li><?
 						}
                     } ?>
                     </ul>
-                <? } ?>
+                <?php } ?>
                 </li><?
 			}
         }

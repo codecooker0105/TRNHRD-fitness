@@ -1,23 +1,23 @@
 <div id="user_left">
 	<!-- <div class="logged_in_name">
-    	<div class="screenname"><? echo $user->first_name; ?></div>
+    	<div class="screenname"><?php echo $user->first_name; ?></div>
         <img src="/images/template/right_screenname.gif" />
     </div> -->
     
     <div id="user_photo_area">
     	<div id="photo">
-        <? if($user->photo != ""){ ?>
-        	<a href="/member/edit_photo"><img src="/images/member_photos/<? echo $user->photo; ?>" /></a>
-        <? }else{ ?>
+        <?php if($user->photo != ""){ ?>
+        	<a href="/member/edit_photo"><img src="/images/member_photos/<?php echo $user->photo; ?>" /></a>
+        <?php }else{ ?>
         	<a href="/member/edit_photo"><img src="/images/template/no_photo.jpg" /></a>
-        <? } ?>
+        <?php } ?>
         </div>
         <div id="current_date" class="name-date">
-            <p class="uname p-0"><? echo $user->first_name; ?></p>
+            <p class="uname p-0"><?php echo $user->first_name; ?></p>
             <div class="day-date">
             <i class="far fa-calendar-alt"></i> &nbsp;
-                <span id="month"><? echo date("F"); ?></span>
-                <span id="day"><? echo date("j"); ?></span>
+                <span id="month"><?php echo date("F"); ?></span>
+                <span id="day"><?php echo date("j"); ?></span>
             </div>
         </div>
     </div>
@@ -35,14 +35,14 @@
     <div class="left_block">
     	<div class="header"><span class="link-heading"><a href="/member/stats" class="popup_stats">My Stats <i class="fas fa-link"></i></a></span><a href="/member/edit_stats" class="small_edit edit-text-btn">Edit</a></div>
         <div class="inner_block">
-        <? if(count($stats) == 0){
+        <?php if(count($stats) == 0){
 			?><p>Would you like to track some stats for your own personal goals? <a href="/member/edit_stats">Add them here</a></p><?
 		}else{
 			foreach($stats as $stat){ ?>
                 <h3><?=$stat['title']?> - <a href="#" class="add_current_stat" id="stat<?=$stat['id']?>">Update Current</a></h3>
                 <p class="stat"><span class="current_stat"><?=$stat['current']?> <?=$stat['measurement_type']?></span> Current <?=$stat['title']?><br />
                 <span class="starting_stat"><?=$stat['starting']?> <?=$stat['measurement_type']?></span> Starting <?=$stat['title']?></p>			
-            <? }
+            <?php }
 		}?>
         </div>
     </div>
@@ -83,17 +83,17 @@
         </ul>
     </div>-->
 </div>
-<? //print_r($weathers); ?>
+<?php //print_r($weathers); ?>
 <div id="user_right">	
 	<div id="weather">
     	<ul id="weather_tabs">
-        	<? $count = 0;
+        	<?php $count = 0;
 			if(count($weathers) > 0){ 
 				foreach($weathers as $zip => $weather){ 
 					if ($weather == 'error'){
-						?><li><a href="#" id="tab<?=$zip?>"  class="tab_link<? if($count == 0){ ?> on<? } ?>" ><span>N/A</span></a></li><?
+						?><li><a href="#" id="tab<?=$zip?>"  class="tab_link<?php if($count == 0){ ?> on<?php } ?>" ><span>N/A</span></a></li><?
 					}else{
-						?><li><a href="#" id="tab<?=$zip?>"  class="tab_link<? if($count == 0){ ?> on<? } ?>" ><span><?=substr($weather->weather->forecast_information->city['data'],0,strripos($weather->weather->forecast_information->city['data'],','))?></span></a></li><?
+						?><li><a href="#" id="tab<?=$zip?>"  class="tab_link<?php if($count == 0){ ?> on<?php } ?>" ><span><?=substr($weather->weather->forecast_information->city['data'],0,strripos($weather->weather->forecast_information->city['data'],','))?></span></a></li><?
 					}
 				$count++;
 				}
@@ -101,17 +101,17 @@
             <li><a href="#" id="add_weather"><span>Add</span></a></li>
         </ul>
         <div id="inner_weather">
-			<? $count = 0;
+			<?php $count = 0;
             if(count($weathers) > 0){
 				foreach($weathers as $zip => $weather){ 
-					?><div id="weather_tab<?=$zip?>"  class="tab<? if($count == 0){ ?> on<? } ?>" >
-						<? if ($weather == 'error'){
+					?><div id="weather_tab<?=$zip?>"  class="tab<?php if($count == 0){ ?> on<?php } ?>" >
+						<?php if ($weather == 'error'){
 							?><strong>Weather not available at the moment</strong><?
 						}else{ ?>
 							<h4><?=$weather->weather->forecast_information->city['data']?> - <a class="confirmDeleteLink" href="<?=$zip?>">Remove</a></h4>
                             <table width="100%">
                             <tr>
-                                <td><!--<img src="/assets/weather/icons/61x61/<? //=$weather->cc->icon?>.png" />--><img src="http://www.google.com<?=$weather->weather->current_conditions->icon['data']?>" /></td>
+                                <td><!--<img src="/assets/weather/icons/61x61/<?php //=$weather->cc->icon?>.png" />--><img src="http://www.google.com<?=$weather->weather->current_conditions->icon['data']?>" /></td>
                                 <td valign="top"><span class="cc_temp"><?=$weather->cc->tmp?>&deg;F</span></td>
                                 <td valign="top">Current: <?=$weather->weather->current_conditions->temp_f['data']?><br />
                                                 <?=$weather->weather->current_conditions->wind_condition['data']?><br />
@@ -121,21 +121,21 @@
                             </table>
                             <table width="100%">
                             <tr>
-                            <? $day_count = 0;
+                            <?php $day_count = 0;
                              foreach($weather->weather->forecast_conditions as $day){ 
                                 $day_count++;
                                 if($day_count < 5){ ?>
                                 <td valign="top" align="center">
                                     <?=$day->day_of_week['data']?><br />
-                                    <!--<img src="/assets/weather/icons/61x61/<? //=$day->part[0]->icon?>.png" height="50" width="50" />-->
+                                    <!--<img src="/assets/weather/icons/61x61/<?php //=$day->part[0]->icon?>.png" height="50" width="50" />-->
                                     <img src="http://www.google.com<?=$day->icon['data']?>" height="50" width="50" /><br />
                                     <?=$day->high['data']?>&deg; | <?=$day->low['data']?>&deg;
                                 </td>
-                            <? }
+                            <?php }
                             } ?>
                             </tr>
                             </table>
-                        <? } ?>
+                        <?php } ?>
 					</div><?
 				$count++;
 				}
@@ -148,7 +148,7 @@
     
     <div class="right_block">
     	<div class="header"><h2 class="library_header">My Progress</h2><a href="/member/edit_progression_plan" class="med_view_edit edit-text-btn">View/Edit</a></div><br/>
-        <h2 class="current-plan">Current Plan: <? if(isset($current_progression_plan->title)){ ?><?=$current_progression_plan->title?><? }else{ ?>None Selected<? } ?></h2>
+        <h2 class="current-plan">Current Plan: <?php if(isset($current_progression_plan->title)){ ?><?=$current_progression_plan->title?><?php }else{ ?>None Selected<?php } ?></h2>
     </div>
     
     <div class="right_block">
@@ -161,21 +161,21 @@
 			?><h2><?=$todays_workout['title']?></h2><?
 			foreach($todays_workout['sections'] as $section){
 				?><li><a href="#" class="section_title off"><?=$section['title']?></a>
-                <? if(isset($section['exercises'])){ ?>
+                <?php if(isset($section['exercises'])){ ?>
                 	<ul class="section">
-                    <? foreach($section['exercises'] as $exercise){
+                    <?php foreach($section['exercises'] as $exercise){
 						?><li><a href="#" class="type_title off"><span><?=$exercise['type_title']?></span></a>
                 			<ul class="type"><li class="exercise_type"><a href="/member/popup_video/<?=$exercise['id']?>" class="play-exercise"><?=$exercise['title']?></a></li></ul></li><?
 					} ?>
                     </ul>
-                <? } ?>
+                <?php } ?>
                 </li><?
 			}
 		} ?>
         </ul>
     </div>
     
-    <? if($member_group == 'trainer'){ ?>
+    <?php if($member_group == 'trainer'){ ?>
     <div class="right_block">
     	<div class="header"><h2 class="library_header">Clients</h2><a href="/member/clients" class="med_view_edit  edit-text-btn">View/Edit</a></div>
         <p>&nbsp;</p>
@@ -197,20 +197,20 @@
 		} ?>
         </table>
     </div>
-    <? } ?>
+    <?php } ?>
     
-    <? if($member_group == 'member' && $trainer){ ?>
+    <?php if($member_group == 'member' && $trainer){ ?>
     <div class="right_block">
     	<div class="header"><h2 class="library_header">My Trainer</h2><a href="/member/edit_trainer" class="med_view_edit">View/Edit</a></div>
         <p>&nbsp;</p>
-        <? if($trainer->photo != ""){ ?>
-        	<img src="/images/member_photos/<? echo $trainer->photo; ?>" />
-        <? }else{ ?>
+        <?php if($trainer->photo != ""){ ?>
+        	<img src="/images/member_photos/<?php echo $trainer->photo; ?>" />
+        <?php }else{ ?>
         	<img src="/images/template/no_photo.jpg" />
-        <? } ?>
+        <?php } ?>
         <?=$trainer->first_name?> <?=$trainer->last_name?>
     </div>
-    <? } ?>
+    <?php } ?>
 </div>
 
 <div id="dialog" title="Confirmation Required" style="display:none;">
@@ -220,9 +220,9 @@
 <div id="featured_exercise_dialog" title="Add Featured Exercise" style="display:none;">
   What workout would you like to add this featured exercise to?
   <select id="featured_exercise_upcoming_workouts">
-  	<? foreach($upcoming_workouts as $workout){ ?>
+  	<?php foreach($upcoming_workouts as $workout){ ?>
     	<option value="<?=$workout->id?>"><?=$workout->title?> (<?=date('n/d/y',strtotime($workout->workout_date))?>)</option>
-    <? } ?>
+    <?php } ?>
   </select>
   <div id="featured_exercise_choices">
   	<h3>Select an option</h3>

@@ -1,4 +1,5 @@
-<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
+<?php if (!defined('BASEPATH'))
+	exit('No direct script access allowed');
 /**
  * Name:  Workouts Model
  *
@@ -719,36 +720,340 @@ class Workouts extends CI_Model
 		return $library;
 	}
 
-	
-	public function get_exercise($ex_id){
+
+	public function get_skeleton_generator($options)
+	{
+		$hybrid_workout = $this->db->where('id', $options['id'])->limit(1)->get('skeleton_workouts')->row();
+		$hybrid_workout_sections = $this->db->select(array('skeleton_section_types.title', 'skeleton_section_types.type', 'skeleton_section.*'))->join('skeleton_section_types', 'skeleton_section_types.id = skeleton_section.section_type_id')->where('skeleton_id', $hybrid_workout->id)->order_by('display_order')->get('skeleton_section');
+		$section_count = 1;
+		$exercise_count = 1;
+		foreach ($hybrid_workout_sections->result() as $section) { ?>
+			<li class="section">
+				<div class="ui-widget ui-helper-clearfix ui-state-default ui-corner-all move"><span
+						class="ui-icon ui-icon-arrow-4 move"></span></div>
+				<input type="hidden" value="<?= $section->section_type_id ?>" name="section_id" class="section_id" />
+				<?php if ($section->type == 'rest' || $section->type == 'active-rest') { ?>
+					<span class="rest"><?= $section->title ?> - <select name="section_rest[]" class="section_rest">
+							<?php for ($i = 15; $i <= 300; $i += 15) { ?>
+								<option value="<?= $i ?>" <?php if ($section->section_rest == $i) { ?> selected="selected" <?php } ?>>
+									<?= secToMinute($i) ?></option>
+							<?php } ?>
+						</select></span>
+				<?php } else { ?>
+					<a href="#" class="section_title off"><?= $section->title ?></a>
+				<?php } ?>
+				<div class="remove_section ui-widget ui-helper-clearfix ui-state-default ui-corner-all remove"><span
+						class="ui-icon ui-icon-closethick remove"></span>Remove Section</div>
+				<div class="add_exercise ui-widget ui-helper-clearfix ui-state-default ui-corner-all pointer"><span
+						class="ui-icon ui-icon-plus pointer"></span>Add Exercise Type</div>
+
+				<ul class="workout_categories">
+					<?php
+					$hybrid_workout_exercise_types = $this->db->select(array('exercise_types.title', 'skeleton_category.*'))->join('exercise_types', 'exercise_types.id = skeleton_category.exercise_type_id')->where('section_id', $section->id)->order_by('display_order')->get('skeleton_category');
+					foreach ($hybrid_workout_exercise_types->result() as $category) {
+						?>
+						<li class="category">
+							<div class="ui-state-default ui-corner-all move"><span class="ui-icon ui-icon-arrow-4 move"></span></div><a
+								href="#" class="workout_category_title"><?= $category->title ?></a>
+							<?php
+							$exercise = $this->get_random_exercise(array('user_id' => $options['user_id'], 'available_equipment' => $options['available_equipment'], 'exercise_type' => $category->exercise_type_id));
+							if ($exercise) {
+								$exercise_stats = $this->get_exercise_counts(array('user_id' => $options['user_id'], 'progression_id' => $options['progression_id'], 'exercise_id' => $exercise->id, 'weight_type' => $exercise->weight_type, 'section_type' => $section->type));
+							} else {
+								$exercise_stats = $this->get_exercise_counts(array('user_id' => $options['user_id'], 'progression_id' => $options['progression_id'], 'section_type' => $section->type));
+							}
+
+							$sets = explode('|', $exercise_stats['sets']);
+							$reps = explode('|', $exercise_stats['reps']);
+							$weight = explode('|', $exercise_stats['weight']);
+							$time = explode('|', $exercise_stats['time']);
+							$rest = explode('|', $exercise_stats['rest']);
+							?>
+							<ul class="workout_exercises">
+
+								<li class="exercise_type">
+									<input type="hidden" value="<?= $category->exercise_type_id ?>" name="category_id" class="category_id" />
+									<input type="hidden" name="exercise_id" value="<?php if (isset($exercise->id)) { ?><?= $exercise->id ?><?php } ?>"
+										class="exercise_id" />
+									<input type="hidden" name="ex_type" value="<?php if (isset($exercise->id)) { ?><?= $exercise->type ?><?php } ?>"
+										class="ex_type" />
+
+									<table width="100%" cellspacing="0" cellpadding="0">
+										<thead>
+											<tr>
+												<th class="left"><a
+														href="/member/popup_video/<?php if (isset($exercise->id)) { ?><?= $exercise->id ?><?php } ?>"
+														class="play-exercise"><?php if (isset($exercise->id)) { ?><?= $exercise->title ?><?php } ?></a></th>
+												<th>Set</th>
+												<th>Reps/Time</th>
+												<th>Rest</th>
+												<th class="right">Weight</th>
+											</tr>
+										</thead>
+										<tbody>
+											<?php $set = 1;
+											foreach ($sets as $index => $set) { ?>
+												<tr <?php if (($index + 1) == count($sets)) { ?> class="bottom" <?php } ?>>
+													<?php if (($index + 1) == 1) { ?>
+														<td class="ex_options left bottom" rowspan="<?= count($sets) ?>">
+															<strong>Set Options:</strong><br />
+															<select name="set_type[]" class="set_type">
+																<option value="sets_reps" <?php if (isset($exercise->id) && $exercise->type == 'sets_reps') { ?>
+																		selected="selected" <?php } ?>>Sets x Reps</option>
+																<option value="sets_time" <?php if (isset($exercise->id) && $exercise->type == 'sets_time') { ?>
+																		selected="selected" <?php } ?>>Sets x Time</option>
+															</select><br />
+															<strong>Weight Options:</strong><br />
+															<select name="weight_option[]" class="weight_option">
+																<option value="weighted" <?php if ($exercise_stats['weight_option'] != 'bodyweight') { ?>
+																		selected="selected" <?php } ?>>Weighted</option>
+																<option value="bodyweight" <?php if ($exercise_stats['weight_option'] == 'bodyweight') { ?>
+																		selected="selected" <?php } ?>> Bodyweight only</option>
+															</select>
+														</td>
+													<?php } ?>
+													<td><span class="set_number">
+															<?= $index + 1 ?>
+														</span><input name="sets[]" type="hidden" value="<?= $set ?>" class="sets" /></td>
+													<td><select name="reps[]" class="reps">
+															<?php for ($x = 1; $x <= 30; $x++) { ?>
+																<option value="<?= $x ?>" <?php if ($reps[$index] == $x) { ?> selected="selected" <?php } ?>><?= $x ?>
+																</option>
+															<?php } ?>
+														</select>
+														<select name="time[]" class="time">
+															<?php for ($x = 15; $x <= 300; $x += 15) { ?>
+																<option value="<?= $x ?>" <?php if ($time[$index] == $x) { ?> selected="selected" <?php } ?>>
+																	<?= secToMinute($x) ?></option>
+															<?php } ?>
+														</select>
+													</td>
+													<td class="right">
+														<select name="rest[]" class="rest">
+															<?php for ($x = 0; $x <= 300; $x += 15) { ?>
+																<option value="<?= $x ?>" <?php if ($rest[$index] == $x) { ?> selected="selected" <?php } ?>><?= $x ?>
+																</option>
+															<?php } ?>
+														</select>
+													</td>
+													<td class="right">
+														<span class="weight_input_box"><input type="text" name="weight[]" class="weight"
+																value="<?php if (isset($weight[$index]) && $weight[$index] != 'bw') { ?><?= $weight[$index] ?><?php } ?>" />
+															lbs.</span>
+														<span class="bodyweight">Body Weight Only</span>
+													</td>
+												</tr>
+												<?php $set++;
+											} ?>
+										<tbody class="spacer">
+											<tr>
+												<td colspan="5">&nbsp;</td>
+											</tr>
+										</tbody>
+										<tbody class="footer">
+											<tr>
+												<td colspan="5" class="left">
+													<strong>OPTIONS</strong>
+													<a href="#" class="add_set">Add Set</a> | <a href="#" class="remove_set">Remove Set</a> | <a href="#"
+														class="select_exercise<?= $category->exercise_type_id ?>" id="exercise_<?= $exercise_count ?>">Select
+														Exercise</a> | <a href="#" class="remove_exercise">Remove Exercise</a>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+
+									</form>
+								</li>
+							</ul>
+						</li>
+						<?php
+						$exercise_count++;
+					}
+					?>
+				</ul>
+			</li>
+			<?php
+		}
+	}
+
+	public function get_exercise($ex_id)
+	{
 		$this->crud->use_table('exercises');
 		$exercise = $this->crud->retrieve(array('id' => $ex_id))->row();
-		if(count($exercise) == 1){
+		if (count($exercise) == 1) {
 			return $exercise;
-		}else{
+		} else {
 			return false;
 		}
 	}
 
+	public function get_workout_for_generator($options)
+	{
+		$hybrid_workout = $this->db->where('id', $options['id'])->limit(1)->get('user_workouts')->row();
+		$hybrid_workout_sections = $this->db->select(array('skeleton_section_types.title', 'skeleton_section_types.type', 'user_workout_sections.*'))->join('skeleton_section_types', 'skeleton_section_types.id = user_workout_sections.section_type_id')->where('workout_id', $hybrid_workout->id)->order_by('display_order')->get('user_workout_sections');
+		$section_count = 1;
+		$exercise_count = 1;
+		foreach ($hybrid_workout_sections->result() as $section) { ?>
+			<li class="section">
+				<div class="ui-widget ui-helper-clearfix ui-state-default ui-corner-all move"><span
+						class="ui-icon ui-icon-arrow-4 move"></span></div>
+				<input type="hidden" value="<?= $section->section_type_id ?>" name="section_id" class="section_id" />
+				<?php if ($section->type == 'rest' || $section->type == 'active-rest') { ?>
+					<span class="rest"><?= $section->title ?> - <select name="section_rest[]" class="section_rest">
+							<?php for ($i = 15; $i <= 300; $i += 15) { ?>
+								<option value="<?= $i ?>" <?php if ($section->section_rest == $i) { ?> selected="selected" <?php } ?>>
+									<?= secToMinute($i) ?></option>
+							<?php } ?>
+						</select></span>
+				<?php } else { ?>
+					<a href="#" class="section_title off"><?= $section->title ?></a>
+				<?php } ?>
+				<div class="remove_section ui-widget ui-helper-clearfix ui-state-default ui-corner-all remove"><span
+						class="ui-icon ui-icon-closethick remove"></span>Remove Section</div>
+				<div class="add_exercise ui-widget ui-helper-clearfix ui-state-default ui-corner-all pointer"><span
+						class="ui-icon ui-icon-plus pointer"></span>Add Exercise Type</div>
 
-	public function get_exercise_library_bu(){
-		$experience_levels = $this->db->order_by('id','asc')->get('experience_level');
-		$exercise_types = $this->db->order_by('title','asc')->get('exercise_types');
+				<ul class="workout_categories">
+					<?php
+					$hybrid_workout_exercise_types = $this->db->select(array('exercises.*', 'exercises.id as ex_id', 'exercise_types.title as type_title', 'user_workout_exercises.*'))->join('exercise_types', 'exercise_types.id = user_workout_exercises.exercise_type_id')->join('exercises', 'exercises.id = user_workout_exercises.exercise_id')->where('workout_section_id', $section->id)->order_by('display_order')->get('user_workout_exercises');
+					foreach ($hybrid_workout_exercise_types->result() as $exercise) {
+						?>
+						<li class="category">
+							<div class="ui-state-default ui-corner-all move"><span class="ui-icon ui-icon-arrow-4 move"></span></div><a
+								href="#" class="workout_category_title"><?= $exercise->type_title ?></a>
+							<?php
+							if ($exercise) {
+								//$exercise_stats = $this->get_exercise_counts($options['user_id'],$options['progression_id'],$exercise->id);
+								?>
+								<ul class="workout_exercises">
+
+									<li class="exercise_type">
+										<input type="hidden" value="<?= $exercise->exercise_type_id ?>" name="category_id" class="category_id" />
+										<input type="hidden" name="exercise_id" value="<?= $exercise->ex_id ?>" class="exercise_id" />
+										<input type="hidden" name="ex_type" value="<?= $exercise->type ?>" class="ex_type" />
+
+										<table width="100%" cellspacing="0" cellpadding="0">
+											<thead>
+												<tr>
+													<th class="left"><a href="/member/popup_video/<?= $exercise->ex_id ?>"
+															class="play-exercise"><?= $exercise->title ?></a></th>
+													<th>Set</th>
+													<th>Reps/Time</th>
+													<th>Rest</th>
+													<th class="right">Weight</th>
+												</tr>
+											</thead>
+											<tbody>
+												<?php
+												$ex_sets = explode('|', $exercise->sets);
+												$ex_reps = explode('|', $exercise->reps);
+												$ex_rest = explode('|', $exercise->rest);
+												$ex_weight = explode('|', $exercise->weight);
+												$ex_time = explode('|', $exercise->time);
+												foreach ($ex_sets as $index => $set) { ?>
+													<tr <?php if ($set == count($ex_sets)) { ?> class="bottom" <?php } ?>>
+														<?php if ($set == 1) { ?>
+															<td class="ex_options left bottom" rowspan="<?= count($ex_sets) ?>">
+																<strong>Set Options:</strong><br />
+																<select name="set_type[]" class="set_type">
+																	<option value="sets_reps" <?php if ($exercise->type == 'sets_reps') { ?> selected="selected" <?php } ?>>
+																		Sets x Reps</option>
+																	<option value="sets_time" <?php if ($exercise->type == 'sets_time') { ?> selected="selected" <?php } ?>>
+																		Sets x Time</option>
+																</select><br />
+																<strong>Weight Options:</strong><br />
+																<select name="weight_option[]" class="weight_option">
+																	<option value="weighted" <?php if ($exercise->weight_option != 'bodyweight') { ?> selected="selected"
+																		<?php } ?>>Weighted</option>
+																	<option value="bodyweight" <?php if ($exercise->weight_option == 'bodyweight') { ?> selected="selected"
+																		<?php } ?>> Bodyweight only</option>
+																</select>
+															</td>
+														<?php } ?>
+														<td><span class="set_number">
+																<?= $set ?>
+															</span><input name="sets[]" type="hidden" value="<?= $set ?>" class="sets" /></td>
+														<td><select name="reps[]" class="reps">
+																<?php for ($x = 1; $x <= 30; $x++) { ?>
+																	<option value="<?= $x ?>" <?php if ($ex_reps[$index] == $x) { ?> selected="selected" <?php } ?>><?= $x ?>
+																	</option>
+																<?php } ?>
+															</select>
+															<select name="time[]" class="time">
+																<?php for ($x = 15; $x <= 300; $x += 15) { ?>
+																	<option value="<?= $x ?>" <?php if ($ex_time[$index] == $x) { ?> selected="selected" <?php } ?>>
+																		<?= secToMinute($x) ?></option>
+																<?php } ?>
+															</select>
+														</td>
+														<td class="right">
+															<select name="rest[]" class="rest">
+																<?php for ($x = 0; $x <= 300; $x += 15) { ?>
+																	<option value="<?= $x ?>" <?php if ($ex_rest[$index] == $x) { ?> selected="selected" <?php } ?>><?= $x ?>
+																	</option>
+																<?php } ?>
+															</select>
+														</td>
+														<td class="right">
+															<span class="weight_input_box"><input type="text" name="weight[]" class="weight"
+																	value="<?= $ex_weight[$index] ?>" /> lbs.</span>
+															<span class="bodyweight">Body Weight Only</span>
+														</td>
+													</tr>
+												<?php } ?>
+											<tbody class="spacer">
+												<tr>
+													<td colspan="5">&nbsp;</td>
+												</tr>
+											</tbody>
+											<tbody class="footer">
+												<tr>
+													<td colspan="5" class="left">
+														<strong>OPTIONS</strong>
+														<a href="#" class="add_set">Add Set</a> | <a href="#" class="remove_set">Remove Set</a> | <a href="#"
+															class="select_exercise<?= $exercise->exercise_type_id ?>" id="exercise_<?= $exercise_count ?>">Select
+															Exercise</a> | <a href="#" class="remove_exercise">Remove Exercise</a>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+
+										</form>
+									</li>
+								</ul>
+								<?php
+							} ?>
+						</li>
+						<?php
+						$exercise_count++;
+					}
+					?>
+				</ul>
+			</li>
+			<?php
+		}
+	}
+
+
+	public function get_exercise_library_bu()
+	{
+		$experience_levels = $this->db->order_by('id', 'asc')->get('experience_level');
+		$exercise_types = $this->db->order_by('title', 'asc')->get('exercise_types');
 		$type_count = 0;
-		foreach($exercise_types->result() as $type){
-			$library['types'][$type_count] = array('title' => $type->title,'no_exercises' => true);
+		foreach ($exercise_types->result() as $type) {
+			$library['types'][$type_count] = array('title' => $type->title, 'no_exercises' => true);
 			$level_count = 0;
-			foreach($experience_levels->result() as $level){
-				$library['types'][$type_count]['levels'][$level_count] = array('title' => $level->title,'no_exercises' => true);
-				$exercises = $this->get_exercises(array('exercise_type' => $type->id,'experience_level' => $level->id));
+			foreach ($experience_levels->result() as $level) {
+				$library['types'][$type_count]['levels'][$level_count] = array('title' => $level->title, 'no_exercises' => true);
+				$exercises = $this->get_exercises(array('exercise_type' => $type->id, 'experience_level' => $level->id));
 				$exercise_count = 0;
-				if($exercises->num_rows() == 0){
+				if ($exercises->num_rows() == 0) {
 
-				}else{
-					foreach($exercises->result() as $exercise){
+				} else {
+					foreach ($exercises->result() as $exercise) {
 						$library['types'][$type_count]['no_exercises'] = false;
 						$library['types'][$type_count]['levels'][$level_count]['no_exercises'] = false;
-						$library['types'][$type_count]['levels'][$level_count]['exercises'][$exercise_count] = array('title' => $exercise->title,'id' => $exercise->id);
+						$library['types'][$type_count]['levels'][$level_count]['exercises'][$exercise_count] = array('title' => $exercise->title, 'id' => $exercise->id);
 						$exercise_count++;
 					}
 				}
@@ -759,37 +1064,38 @@ class Workouts extends CI_Model
 		return $library;
 	}
 
-	function get_stats_chart($user_id){
-		if($_POST['interval'] == 'daily'){
+	function get_stats_chart($user_id)
+	{
+		if ($_POST['interval'] == 'daily') {
 			$this->crud->use_table('user_stats');
-			$stats = $this->crud->retrieve(array('user_id' => $user_id),'','',array('title' => 'asc'))->result_array();
-			foreach($stats as $stat){
+			$stats = $this->crud->retrieve(array('user_id' => $user_id), '', '', array('title' => 'asc'))->result_array();
+			foreach ($stats as $stat) {
 				$this->db->select('AVG(stat_value) as average, DATE_FORMAT(date_taken,\'%W, %M %e, %Y\') as day', FALSE);
 				$this->db->from('user_stats_values');
 				$this->db->join('user_stats', 'user_stats.id = user_stats_values.stat_id');
-				$this->db->where('stat_id',$stat['id']);
+				$this->db->where('stat_id', $stat['id']);
 				$this->db->group_by(array("year(date_taken)", "week(date_taken)", "day(date_taken)"));
 				$return_stats[] = $this->db->get()->result_array();
 			}
-		}elseif($_POST['interval'] == 'weekly'){
+		} elseif ($_POST['interval'] == 'weekly') {
 			$this->crud->use_table('user_stats');
-			$stats = $this->crud->retrieve(array('user_id' => $user_id),'','',array('title' => 'asc'))->result_array();
-			foreach($stats as $stat){
+			$stats = $this->crud->retrieve(array('user_id' => $user_id), '', '', array('title' => 'asc'))->result_array();
+			foreach ($stats as $stat) {
 				$this->db->select('title, AVG(stat_value) as average, DATE_FORMAT(DATE_ADD(date_taken, INTERVAL(1-DAYOFWEEK(date_taken)) DAY),\'%W, %M %e, %Y\') as week_start', FALSE);
 				$this->db->from('user_stats_values');
 				$this->db->join('user_stats', 'user_stats.id = user_stats_values.stat_id');
-				$this->db->where('stat_id',$stat['id']);
+				$this->db->where('stat_id', $stat['id']);
 				$this->db->group_by(array("year(date_taken)", "week(date_taken)"));
 				$return_stats[] = $this->db->get()->result_array();
 			}
-		}elseif($_POST['interval'] == 'monthly'){
+		} elseif ($_POST['interval'] == 'monthly') {
 			$this->crud->use_table('user_stats');
-			$stats = $this->crud->retrieve(array('user_id' => $user_id),'','',array('title' => 'asc'))->result_array();
-			foreach($stats as $stat){
+			$stats = $this->crud->retrieve(array('user_id' => $user_id), '', '', array('title' => 'asc'))->result_array();
+			foreach ($stats as $stat) {
 				$this->db->select('title, AVG(stat_value) as average, DATE_FORMAT(DATE_ADD(date_taken, INTERVAL(1-DAYOFMONTH(date_taken)) DAY),\'%W, %M %e, %Y\') as month_start', FALSE);
 				$this->db->from('user_stats_values');
 				$this->db->join('user_stats', 'user_stats.id = user_stats_values.stat_id');
-				$this->db->where('stat_id',$stat['id']);
+				$this->db->where('stat_id', $stat['id']);
 				$this->db->group_by(array("year(date_taken)", "month(date_taken)"));
 				$return_stats[] = $this->db->get()->result_array();
 			}

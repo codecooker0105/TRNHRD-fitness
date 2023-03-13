@@ -1,23 +1,26 @@
 <?php
 
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 require APPPATH . "libraries/sendgrid-php/sendgrid-php.php";
 
 if (!class_exists('Controller')) {
 
-    class Controller extends CI_Controller {
-        
+    class Controller extends CI_Controller
+    {
+
     }
 
 }
 
-class Member extends Controller {
+class Member extends Controller
+{
 
     protected $ci;
 
-    function __construct() {
+    function __construct()
+    {
         parent::__construct();
-        $this->ci = & get_instance();
+        $this->ci = &get_instance();
         $this->load->library('ion_auth');
         $this->ci->load->model('ion_auth_model');
         $this->load->library('session');
@@ -29,7 +32,8 @@ class Member extends Controller {
     }
 
     //redirect if needed, otherwise display the user list
-    function index() {
+    function index()
+    {
         //set the flash data error message if there is one
         $this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
 
@@ -84,7 +88,8 @@ class Member extends Controller {
         $this->load->view('footer');
     }
 
-    function get_weather_ajax() {
+    function get_weather_ajax()
+    {
         if (!$this->ion_auth->logged_in()) {
             //redirect them to the login page
             redirect('member/login', 'refresh');
@@ -103,7 +108,8 @@ class Member extends Controller {
         }
     }
 
-    function stats() {
+    function stats()
+    {
         if (!$this->ion_auth->logged_in()) {
             //redirect them to the login page
             redirect('members/login', 'refresh');
@@ -116,12 +122,14 @@ class Member extends Controller {
         }
     }
 
-    function get_stats_chart() {
+    function get_stats_chart()
+    {
         $chart = $this->workouts->get_stats_chart($this->session->userdata('user_id'));
         //$this->load->view('dashboard/profit_numbers',$profits);
     }
 
-    function clients() {
+    function clients()
+    {
 
         $data = $_POST;
         $mandatory_fields = array('user_id');
@@ -144,7 +152,7 @@ class Member extends Controller {
                 $this->api_model->wd_result(array('status' => 0, 'message' => 'There Are No Clients'));
             }
 
-//            $this->crud->use_table('trainer_client_groups');
+            //            $this->crud->use_table('trainer_client_groups');
 //            $this->data['trainer_groups'] = $this->crud->retrieve(array('trainer_id' => $data['user_id']))->result_array();
         } else {
             $this->api_model->wd_result(array('status' => 0, 'message' => 'Trainers does not exist with given ID'));
@@ -152,7 +160,8 @@ class Member extends Controller {
     }
 
     //create  new exercise
-    function create_trainer_group() {
+    function create_trainer_group()
+    {
         $data = $_POST;
         $mandatory_fields = array('user_id', 'title', 'exp_level_id');
         $this->api_model->validate($mandatory_fields, $data);
@@ -168,7 +177,8 @@ class Member extends Controller {
                 //set the flash data error message if there is one
                 $this->api_model->wd_result(array('status' => 0, 'message' => strip_tags((validation_errors()) ? validation_errors() : $this->session->flashdata('message'))));
             } else {
-                $insert_values = array('title' => $this->input->post('title'),
+                $insert_values = array(
+                    'title' => $this->input->post('title'),
                     'trainer_id' => $data['user_id'],
                     'exp_level_id' => $this->input->post('exp_level_id'),
                     'available_equipment' => $this->input->post('available_equipment')
@@ -186,7 +196,7 @@ class Member extends Controller {
                             $this->crud->update(array('client_id' => $client, 'trainer_id' => $data['user_id']), array('trainer_group_id' => $group_id));
                         }
                     }
-//                    $data['clients'] = $this->api_model->get_clients($data['user_id']);
+                    //                    $data['clients'] = $this->api_model->get_clients($data['user_id']);
 //                    $data['trainer_groups'] = $this->api_model->get_groups($data['user_id']);
                     $this->api_model->wd_result(array('status' => 1, 'message' => 'New group saved'));
                 } else {
@@ -198,7 +208,8 @@ class Member extends Controller {
         }
     }
 
-    function edit_trainer_group() {
+    function edit_trainer_group()
+    {
         $data = $_POST;
         $mandatory_fields = array('user_id', 'group_id', 'title', 'exp_level_id');
         $this->api_model->validate($mandatory_fields, $data);
@@ -214,7 +225,8 @@ class Member extends Controller {
                 //set the flash data error message if there is one
                 $this->api_model->wd_result(array('status' => 0, 'message' => strip_tags((validation_errors()) ? validation_errors() : $this->session->flashdata('message'))));
             } else {
-                $update_values = array('title' => $this->input->post('title'),
+                $update_values = array(
+                    'title' => $this->input->post('title'),
                     'trainer_id' => $data['user_id'],
                     'exp_level_id' => $this->input->post('exp_level_id'),
                     'available_equipment' => $this->input->post('available_equipment')
@@ -245,7 +257,8 @@ class Member extends Controller {
         }
     }
 
-    function edit_stats() {
+    function edit_stats()
+    {
         if (!$this->ion_auth->logged_in()) {
             //redirect them to the login page
             redirect('member/login', 'refresh');
@@ -265,7 +278,8 @@ class Member extends Controller {
         }
     }
 
-    function add_stat() {
+    function add_stat()
+    {
         $data = $_POST;
         $mandatory_fields = array('user_id', 'title', 'measurement_type');
         $this->api_model->validate($mandatory_fields, $data);
@@ -279,7 +293,8 @@ class Member extends Controller {
 
             if ($this->form_validation->run() == true) {
 
-                $insert_data = array('user_id' => $data['user_id'],
+                $insert_data = array(
+                    'user_id' => $data['user_id'],
                     'title' => $this->input->post('title'),
                     'measurement_type' => $this->input->post('measurement_type')
                 );
@@ -290,7 +305,8 @@ class Member extends Controller {
                 $stat = $this->crud->retrieve($insert_data, 1)->row();
 
                 if ($this->input->post('starting') != '') {
-                    $insert_data = array('stat_id' => $stat->id,
+                    $insert_data = array(
+                        'stat_id' => $stat->id,
                         'stat_value' => $this->input->post('starting')
                     );
 
@@ -314,7 +330,8 @@ class Member extends Controller {
         }
     }
 
-    function my_stat() {
+    function my_stat()
+    {
         $data = $_POST;
         $mandatory_fields = array('user_id');
         $this->api_model->validate($mandatory_fields, $data);
@@ -332,7 +349,8 @@ class Member extends Controller {
         }
     }
 
-    function view_stat() {
+    function view_stat()
+    {
         $data = $_POST;
         $mandatory_fields = array('user_id', 'stat_id');
         $this->api_model->validate($mandatory_fields, $data);
@@ -360,7 +378,8 @@ class Member extends Controller {
         }
     }
 
-    function add_featured_exercise_to_workout() {
+    function add_featured_exercise_to_workout()
+    {
         $data = $_POST;
         $mandatory_fields = array('user_id', 'exercise', 'workout_id', 'choice');
         $this->api_model->validate($mandatory_fields, $data);
@@ -404,7 +423,8 @@ class Member extends Controller {
         }
     }
 
-    function get_similiar_workout_exercises() {
+    function get_similiar_workout_exercises()
+    {
         $data = $_POST;
         $mandatory_fields = array('user_id', 'exercise', 'workout_id');
         $this->api_model->validate($mandatory_fields, $data);
@@ -422,7 +442,7 @@ class Member extends Controller {
 
                 $exercise_id = $this->input->post('exercise');
                 $workout_id = $this->input->post('workout_id');
-//                $exercise_types_result = $this->db->select('exercise_link_types.type_id')->where('exercise_id', $exercise_id)->get('exercise_link_types')->result_array();
+                //                $exercise_types_result = $this->db->select('exercise_link_types.type_id')->where('exercise_id', $exercise_id)->get('exercise_link_types')->result_array();
 //                if (count($exercise_types_result) > 0) {
 //                    $exercise_types = '';
 //                    $types = count($exercise_types_result);
@@ -453,10 +473,10 @@ class Member extends Controller {
 //                }
 
                 $workout_sections = $this->db->select('uws.id,sst.title as section_title')
-                                ->join('skeleton_section_types sst', 'uws.section_type_id = sst.id')
-                                ->where('uws.workout_id', $workout_id)
-                                ->order_by("display_order", "asc")
-                                ->get('user_workout_sections uws')->result_array();
+                    ->join('skeleton_section_types sst', 'uws.section_type_id = sst.id')
+                    ->where('uws.workout_id', $workout_id)
+                    ->order_by("display_order", "asc")
+                    ->get('user_workout_sections uws')->result_array();
                 $this->data['sections'] = $workout_sections;
 
                 $this->api_model->wd_result(array('status' => 1, 'data' => $this->data));
@@ -476,7 +496,8 @@ class Member extends Controller {
         }
     }
 
-    function add_current_stat() {
+    function add_current_stat()
+    {
         $data = $_POST;
         $mandatory_fields = array('user_id', 'stat_id', 'date_taken', 'stat_value');
         $this->api_model->validate($mandatory_fields, $data);
@@ -493,13 +514,15 @@ class Member extends Controller {
 
             if ($this->form_validation->run() == true) {
 
-                $select_data = array('user_id' => $data['user_id'],
+                $select_data = array(
+                    'user_id' => $data['user_id'],
                     'id' => $data['stat_id']
                 );
 
                 $this->crud->use_table('user_stats');
                 if ($stat = $this->crud->retrieve($select_data, 1)->row()) {
-                    $insert_data = array('stat_id' => $this->input->post('stat_id'),
+                    $insert_data = array(
+                        'stat_id' => $this->input->post('stat_id'),
                         'date_taken' => date('Y-m-d', strtotime($this->input->post('date_taken'))),
                         'stat_value' => $this->input->post('stat_value')
                     );
@@ -522,7 +545,8 @@ class Member extends Controller {
         }
     }
 
-    function remove_stat() {
+    function remove_stat()
+    {
         $data = $_POST;
         $mandatory_fields = array('user_id', 'stat_id');
         $this->api_model->validate($mandatory_fields, $data);
@@ -543,7 +567,8 @@ class Member extends Controller {
         }
     }
 
-    function add_weather() {
+    function add_weather()
+    {
         if (!$this->ion_auth->logged_in()) {
             redirect('member/login', 'refresh');
         }
@@ -561,7 +586,8 @@ class Member extends Controller {
                 $default = 'false';
             }
 
-            $insert_data = array('user_id' => $this->session->userdata('user_id'),
+            $insert_data = array(
+                'user_id' => $this->session->userdata('user_id'),
                 'zip' => $this->input->post('zip'),
                 'default' => $default
             );
@@ -584,7 +610,8 @@ class Member extends Controller {
         }
     }
 
-    function remove_weather() {
+    function remove_weather()
+    {
         if (!$this->ion_auth->logged_in()) {
             redirect('member/login', 'refresh');
         }
@@ -605,7 +632,8 @@ class Member extends Controller {
         }
     }
 
-    function remove_workout() {
+    function remove_workout()
+    {
         if (!$this->ion_auth->logged_in()) {
             redirect('member/login', 'refresh');
         }
@@ -627,7 +655,8 @@ class Member extends Controller {
         }
     }
 
-    function remove_group_workout() {
+    function remove_group_workout()
+    {
         if (!$this->ion_auth->logged_in()) {
             redirect('member/login', 'refresh');
         }
@@ -653,7 +682,8 @@ class Member extends Controller {
         }
     }
 
-    function remove_trainer_workout() {
+    function remove_trainer_workout()
+    {
         if (!$this->ion_auth->logged_in()) {
             redirect('member/login', 'refresh');
         }
@@ -680,7 +710,8 @@ class Member extends Controller {
         }
     }
 
-    function remove_trainer_group_workout() {
+    function remove_trainer_group_workout()
+    {
         if (!$this->ion_auth->logged_in()) {
             redirect('member/login', 'refresh');
         }
@@ -706,7 +737,8 @@ class Member extends Controller {
         }
     }
 
-    function request_client() {
+    function request_client()
+    {
         $data = $_POST;
         $mandatory_fields = array('user_id', 'name', 'email');
         $this->api_model->validate($mandatory_fields, $data);
@@ -734,7 +766,8 @@ class Member extends Controller {
                     } elseif ($current_clients = $this->crud->retrieve(array('email' => $this->input->post('email'), 'trainer_id' => $data['user_id']), 1)->row()) {
                         $error_message = "You have already requested to train this client";
                     } else {
-                        $insert_data = array('name' => $this->input->post('name'),
+                        $insert_data = array(
+                            'name' => $this->input->post('name'),
                             'trainer_id' => $data['user_id'],
                             'email' => $this->input->post('email'),
                             'email_message' => $this->input->post('email_message')
@@ -787,7 +820,8 @@ class Member extends Controller {
         }
     }
 
-    function accept_tos() {
+    function accept_tos()
+    {
         if (!$this->ion_auth->logged_in()) {
             redirect('member/login', 'refresh');
         }
@@ -806,7 +840,8 @@ class Member extends Controller {
             //set the flash data error message if there is one
             $this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
 
-            $this->data['terms_accept'] = array('name' => 'terms_accept',
+            $this->data['terms_accept'] = array(
+                'name' => 'terms_accept',
                 'id' => 'terms_accept',
                 'value' => 'accept',
                 'class' => 'required'
@@ -818,7 +853,8 @@ class Member extends Controller {
         }
     }
 
-    function workout_generator() {
+    function workout_generator()
+    {
         if (!$this->ion_auth->logged_in()) {
             //redirect them to the login page
             redirect('member/login', 'refresh');
@@ -860,13 +896,15 @@ class Member extends Controller {
             foreach ($weekdays as $day => $title) {
                 $this->data['weekday_title'][$day] = $title;
                 if (is_array($user_workoutdays) && in_array($day, $user_workoutdays)) {
-                    $this->data['weekdays'][$day] = array('name' => 'workoutdays[]',
+                    $this->data['weekdays'][$day] = array(
+                        'name' => 'workoutdays[]',
                         'checked' => TRUE,
                         'value' => $day,
                         'class' => 'days'
                     );
                 } else {
-                    $this->data['weekdays'][$day] = array('name' => 'workoutdays[]',
+                    $this->data['weekdays'][$day] = array(
+                        'name' => 'workoutdays[]',
                         'checked' => FALSE,
                         'value' => $day,
                         'class' => 'days'
@@ -880,14 +918,16 @@ class Member extends Controller {
             foreach ($query->result() as $equipment) {
                 $this->data['equipment'][$equipment->id] = $equipment->title;
                 if (is_array($user_equipment) && in_array($equipment->id, $user_equipment)) {
-                    $this->data['available_equipment'][$equipment->id] = array('name' => 'available_equipment[]',
+                    $this->data['available_equipment'][$equipment->id] = array(
+                        'name' => 'available_equipment[]',
                         'checked' => TRUE,
                         'value' => $equipment->id,
                         'class' => 'equipment',
                         'id' => 'equipment' . $equipment->id
                     );
                 } else {
-                    $this->data['available_equipment'][$equipment->id] = array('name' => 'available_equipment[]',
+                    $this->data['available_equipment'][$equipment->id] = array(
+                        'name' => 'available_equipment[]',
                         'checked' => FALSE,
                         'value' => $equipment->id,
                         'class' => 'equipment',
@@ -919,7 +959,8 @@ class Member extends Controller {
         }
     }
 
-    function process_generator() {
+    function process_generator()
+    {
         $data = $_POST;
         $mandatory_fields = array('user_id');
         $this->api_model->validate($mandatory_fields, $data);
@@ -1052,7 +1093,8 @@ class Member extends Controller {
                                             $rest = substr($value[4], 0, (strlen($value[4]) - 1));
                                             $weight = substr($value[5], 0, (strlen($value[5]) - 1));
                                             $time = substr($value[6], 0, (strlen($value[6]) - 1));
-                                            $exercise_values = array('exercise_id' => $value[1],
+                                            $exercise_values = array(
+                                                'exercise_id' => $value[1],
                                                 'workout_id' => $workout_id,
                                                 'display_order' => $index2,
                                                 'exercise_type_id' => $value[0],
@@ -1063,7 +1105,8 @@ class Member extends Controller {
                                                 'weight' => $weight,
                                                 'time' => $time,
                                                 'set_type' => $value[7],
-                                                'weight_option' => $value[8]);
+                                                'weight_option' => $value[8]
+                                            );
                                             $this->db->insert('user_workout_exercises', $exercise_values);
                                         }
                                     }
@@ -1120,7 +1163,8 @@ class Member extends Controller {
                                     $rest = substr($value[4], 0, (strlen($value[4]) - 1));
                                     $weight = substr($value[5], 0, (strlen($value[5]) - 1));
                                     $time = substr($value[6], 0, (strlen($value[6]) - 1));
-                                    $exercise_values = array('exercise_id' => $value[1],
+                                    $exercise_values = array(
+                                        'exercise_id' => $value[1],
                                         'workout_id' => $workout_id,
                                         'display_order' => $index2,
                                         'exercise_type_id' => $value[0],
@@ -1131,7 +1175,8 @@ class Member extends Controller {
                                         'weight' => $weight,
                                         'time' => $time,
                                         'set_type' => $value[7],
-                                        'weight_option' => $value[8]);
+                                        'weight_option' => $value[8]
+                                    );
                                     $this->db->insert('user_workout_exercises', $exercise_values);
                                 }
                             }
@@ -1150,7 +1195,8 @@ class Member extends Controller {
         }
     }
 
-    function save_logbook_stats() {
+    function save_logbook_stats()
+    {
         $data = $_POST;
         $mandatory_fields = array('user_id', 'date', 'workout_id');
         $this->api_model->validate($mandatory_fields, $data);
@@ -1167,14 +1213,16 @@ class Member extends Controller {
                 if ($uwe_row) {
                     foreach ($uwe['sets'] as $index => $set) {
                         unset($insert_data);
-                        $insert_data = array('uw_id' => $uw_id,
+                        $insert_data = array(
+                            'uw_id' => $uw_id,
                             'uwe_id' => $uwe['uwe_id'],
                             'workout_date' => $workout_date,
                             'user_id' => $data['user_id'],
                             'progression_id' => $uw_row->progression_id,
                             'exercise_id' => $uwe_row->exercise_id,
                             'difficulty' => $uwe['difficulty'],
-                            'set' => $set);
+                            'set' => $set
+                        );
 
                         if (isset($uwe['reps'][$index])) {
                             $insert_data['reps'] = $uwe['reps'][$index];
@@ -1214,7 +1262,8 @@ class Member extends Controller {
         $this->api_model->wd_result(array('status' => 0, 'message' => 'Your workout stats failed to save'));
     }
 
-    function save_log_stats() {
+    function save_log_stats()
+    {
         $workout_date = $this->input->post('workout_date');
         $exercise_id = $this->input->post('exercise_id');
         $uw_id = $this->input->post('uw_id');
@@ -1240,7 +1289,8 @@ class Member extends Controller {
             } else {
                 $set_time = null;
             }
-            $data = array('uw_id' => $uw_id,
+            $data = array(
+                'uw_id' => $uw_id,
                 'uwe_id' => $uwe_id,
                 'workout_date' => $workout_date,
                 'user_id' => $this->session->userdata('user_id'),
@@ -1249,12 +1299,14 @@ class Member extends Controller {
                 'set' => $set,
                 'weight' => $set_weight,
                 'time' => $set_time,
-                'reps' => $reps[$set]);
+                'reps' => $reps[$set]
+            );
             $this->db->insert('user_workout_stats', $data);
         }
     }
 
-    function get_client() {
+    function get_client()
+    {
         if ($this->input->post('id') != '') {
             $id = $this->input->post('id');
         } else {
@@ -1265,7 +1317,8 @@ class Member extends Controller {
         echo json_encode($client);
     }
 
-    function generator_get_client() {
+    function generator_get_client()
+    {
         if ($this->input->post('id') != '') {
             $id = $this->input->post('id');
         } else {
@@ -1287,7 +1340,7 @@ class Member extends Controller {
         }
     }
 
-//        function skeleton_json() {
+    //        function skeleton_json() {
 //            if ($this->input->post('id') != '') {
 //                $id = $this->input->post('id');
 //            } else {
@@ -1314,7 +1367,8 @@ class Member extends Controller {
 //            return $this->workouts->get_skeleton_generator(array('id' => $id, 'progression_id' => $progression_id, 'user_id' => $user_id, 'available_equipment' => $available_equipment));
 //        }
 
-    function get_workout_for_generator() {
+    function get_workout_for_generator()
+    {
         if ($this->input->post('group_id') != '') {
             $id = $this->input->post('group_id');
         } elseif ($this->input->post('id') != '') {
@@ -1326,7 +1380,8 @@ class Member extends Controller {
         return $this->workouts->get_workout_for_generator(array('id' => $id));
     }
 
-    function get_workout_details_for_generator() {
+    function get_workout_details_for_generator()
+    {
         if (!$this->ion_auth->logged_in()) {
             redirect('member/login', 'refresh');
         }
@@ -1364,21 +1419,23 @@ class Member extends Controller {
         }
     }
 
-    function popup_video() {
+    function popup_video()
+    {
         $this->crud->use_table('exercises');
         $this->data['exercise'] = $this->crud->retrieve(array('id' => $this->uri->segment(3)), 1)->row();
         $this->load->view('member/video_player', $this->data);
     }
 
-    function edit_photo() {
+    function edit_photo()
+    {
         $user = $this->ion_auth->get_user();
         $this->data['user'] = $user;
         $s = strtoupper(md5(uniqid(rand(), true)));
         $guid = substr($s, 0, 8) . '-' .
-                substr($s, 8, 4) . '-' .
-                substr($s, 12, 4) . '-' .
-                substr($s, 16, 4) . '-' .
-                substr($s, 20);
+            substr($s, 8, 4) . '-' .
+            substr($s, 12, 4) . '-' .
+            substr($s, 16, 4) . '-' .
+            substr($s, 20);
         $config['file_name'] = $guid . '.jpg';
         $config['overwrite'] = true;
 
@@ -1444,7 +1501,8 @@ class Member extends Controller {
     }
 
     //log the user in
-    function login() {
+    function login()
+    {
         $data = $_POST;
         $mandatory_fields = array('username', 'password');
         $this->api_model->validate($mandatory_fields, $data);
@@ -1468,9 +1526,9 @@ class Member extends Controller {
                     $this->api_model->updateDeviceField($loggedin_user['id'], $deviceUpdate);
                 }
                 $user = $this->api_model->user_detail_by_user_id($loggedin_user['id']);
-//                $user = $this->ion_auth->get_user($loggedin_user['id']);
+                //                $user = $this->ion_auth->get_user($loggedin_user['id']);
                 $this->api_model->wd_result(array('status' => 1, 'message' => "You Are Login Successfully", 'data' => $user));
-//                redirect('member', 'refresh');
+                //                redirect('member', 'refresh');
             } else {
                 $this->api_model->wd_result(array('status' => 0, 'message' => 'In-Correct Login'));
             }
@@ -1479,14 +1537,15 @@ class Member extends Controller {
         }
     }
 
-    function first_run() {
+    function first_run()
+    {
         $data = $_POST;
         $mandatory_fields = array('user_id', 'progression_plan_id', 'workoutdays', 'exp_level_id', 'available_equipment');
         $this->api_model->validate($mandatory_fields, $data);
 
         //validate form input
         $this->form_validation->set_rules('exp_level_id', 'Experience Level', 'required');
-//        $this->data['user'] = $this->ion_auth->get_user();
+        //        $this->data['user'] = $this->ion_auth->get_user();
 //        $this->crud->use_table('trainer_clients');
 //        $trainer_client = $this->crud->retrieve(array('client_id' => $this->data['user']->id, 'status' => 'confirmed'))->row();
 //        if (!$trainer_client) {
@@ -1516,7 +1575,7 @@ class Member extends Controller {
                         $this->workouts->assign_available_exercises($data['user_id']);
                         $this->workouts->progression_change_workouts($data['user_id']);
                         $user = $this->api_model->user_detail_by_user_id($data['user_id']);
-//                        $user = $this->ion_auth->get_user($data['user_id']);
+                        //                        $user = $this->ion_auth->get_user($data['user_id']);
                         $this->api_model->wd_result(array('status' => 1, 'message' => strip_tags($this->ion_auth->messages()), 'data' => $user));
                     } else { //if the login was un-successful
                         //redirect them back to the login page
@@ -1524,7 +1583,7 @@ class Member extends Controller {
                     }
                 }
             } else {
-//                $user = $this->ion_auth->get_user();
+                //                $user = $this->ion_auth->get_user();
                 $user = $this->api_model->user_detail_by_user_id($data['user_id']);
                 $user_values = array(
                     'exp_level_id' => $this->input->post('exp_level_id'),
@@ -1541,7 +1600,7 @@ class Member extends Controller {
             }
         }
 
-        if ($this->form_validation->run() == false || $other_error == true) {  //the user is not logging in so display the login page
+        if ($this->form_validation->run() == false || $other_error == true) { //the user is not logging in so display the login page
             //set the flash data error message if there is one
             if ($other_error) {
                 $this->api_model->wd_result(array('status' => 0, 'message' => $error_message));
@@ -1551,7 +1610,8 @@ class Member extends Controller {
         }
     }
 
-    function confirm_trainer_request() {
+    function confirm_trainer_request()
+    {
         $data = $_POST;
         $mandatory_fields = array('user_id', 'request_id', 'decision');
         $this->api_model->validate($mandatory_fields, $data);
@@ -1577,7 +1637,7 @@ class Member extends Controller {
                 }
             }
 
-            if ($this->form_validation->run() == false || $other_error == true) {  //the user is not logging in so display the login page
+            if ($this->form_validation->run() == false || $other_error == true) { //the user is not logging in so display the login page
                 //set the flash data error message if there is one
                 if ($other_error) {
                     $this->api_model->wd_result(array('status' => 0, 'message' => $error_message));
@@ -1590,7 +1650,8 @@ class Member extends Controller {
         }
     }
 
-    function edit_progression_plan() {
+    function edit_progression_plan()
+    {
 
         $data = $_POST;
         $mandatory_fields = array('user_id', 'progression_plan_id', 'workoutdays');
@@ -1627,7 +1688,7 @@ class Member extends Controller {
             }
         }
 
-        if ($this->form_validation->run() == false || $other_error == true) {  //the user is not logging in so display the login page
+        if ($this->form_validation->run() == false || $other_error == true) { //the user is not logging in so display the login page
             //set the flash data error message if there is one
             if ($other_error) {
                 $this->api_model->wd_result(array('status' => 0, 'message' => strip_tags($error_message)));
@@ -1637,7 +1698,7 @@ class Member extends Controller {
         }
     }
 
-//        function calendar() {
+    //        function calendar() {
 //            $prefs = array(
 //                'show_next_prev' => TRUE,
 //                'next_prev_url' => '/member/calendar/'
@@ -1720,7 +1781,8 @@ class Member extends Controller {
 //            $this->load->view('footer');
 //        }
 
-    function calendar() {
+    function calendar()
+    {
         $data = $_POST;
         $mandatory_fields = array('user_id');
         $this->api_model->validate($mandatory_fields, $data);
@@ -1752,7 +1814,8 @@ class Member extends Controller {
         $this->api_model->wd_result(array('status' => 1, 'data' => $response));
     }
 
-    function calendar_per_month() {
+    function calendar_per_month()
+    {
         $data = $_POST;
         $mandatory_fields = array('user_id');
         $this->api_model->validate($mandatory_fields, $data);
@@ -1793,7 +1856,8 @@ class Member extends Controller {
         $this->api_model->wd_result(array('status' => 1, 'data' => $response));
     }
 
-    function client_calendar() {
+    function client_calendar()
+    {
         if ($this->uri->segment(3) != '') {
             $this->data['user'] = $this->ion_auth->get_user();
             $this->crud->use_table('trainer_clients');
@@ -1887,7 +1951,8 @@ class Member extends Controller {
         $this->load->view('footer');
     }
 
-    function log_book() {
+    function log_book()
+    {
         $data = $_POST;
         $mandatory_fields = array('user_id');
         $this->api_model->validate($mandatory_fields, $data);
@@ -1903,7 +1968,7 @@ class Member extends Controller {
         } else {
             $workout = $this->workouts_api->get_logbook_workout($this->data['user']->id, date('Y-m-d', strtotime($this->data['date'])));
         }
-//            $response['title'] = date('l F jS', strtotime($this->data['year'] . '-' . $this->data['month'] . '-' . $this->data['date']));
+        //            $response['title'] = date('l F jS', strtotime($this->data['year'] . '-' . $this->data['month'] . '-' . $this->data['date']));
 //            $this->data['past_workouts'] = $this->workouts_api->get_past_workouts($this->data['user']->id);
         if ($workout) {
             $uwe = array();
@@ -1945,14 +2010,16 @@ class Member extends Controller {
         }
     }
 
-    function workout_playlist() {
+    function workout_playlist()
+    {
         $this->data['user'] = $this->ion_auth->get_user();
         $this->data['workout'] = $this->workouts->get_logbook_workout($this->data['user']->id, '', $this->uri->segment(3));
 
         $this->load->view('member/workout_playlist', $this->data);
     }
 
-    function print_log_book() {
+    function print_log_book()
+    {
         $this->data['user'] = $this->ion_auth->get_user();
         if ($this->uri->segment(4) == '') {
             $this->data['month'] = date('m');
@@ -1979,7 +2046,8 @@ class Member extends Controller {
         $this->load->view('print_footer');
     }
 
-    function client_log_book() {
+    function client_log_book()
+    {
         if ($this->uri->segment(3) != '') {
             $this->data['user'] = $this->ion_auth->get_user();
             $this->crud->use_table('trainer_clients');
@@ -2019,7 +2087,8 @@ class Member extends Controller {
     }
 
     //log the user out
-    function logout() {
+    function logout()
+    {
         $this->data['title'] = "Logout";
 
         //log the user out
@@ -2030,7 +2099,8 @@ class Member extends Controller {
     }
 
     //change password
-    function change_password() {
+    function change_password()
+    {
 
         $data = $_POST;
         $mandatory_fields = array('user_id', 'old_password', 'new_password');
@@ -2038,7 +2108,7 @@ class Member extends Controller {
 
         $this->form_validation->set_rules('old_password', 'Old password', 'required');
         $this->form_validation->set_rules('new_password', 'New Password', 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']');
-//        $this->form_validation->set_rules('new_confirm', 'Confirm New Password', 'required');
+        //        $this->form_validation->set_rules('new_confirm', 'Confirm New Password', 'required');
 
         $user = $this->ion_auth->get_user($data['user_id']);
 
@@ -2057,7 +2127,7 @@ class Member extends Controller {
 
             if ($change) { //if the password was successfully changed
                 $this->api_model->wd_result(array('status' => 1, 'message' => strip_tags($this->ion_auth->messages())));
-//                $this->logout();
+                //                $this->logout();
             } else {
                 $this->api_model->wd_result(array('status' => 0, 'message' => strip_tags($this->ion_auth->errors())));
             }
@@ -2065,8 +2135,9 @@ class Member extends Controller {
     }
 
     //change password
-    function edit_account() {
-//        $this->form_validation->set_rules('first_name', 'First Name', 'required|xss_clean');
+    function edit_account()
+    {
+        //        $this->form_validation->set_rules('first_name', 'First Name', 'required|xss_clean');
 //        $this->form_validation->set_rules('last_name', 'Last Name', 'required|xss_clean');
         $data = $_POST;
         $mandatory_fields = array('user_id');
@@ -2098,10 +2169,10 @@ class Member extends Controller {
             if (isset($_FILES['photo']['name']) && !empty($_FILES['photo']['name'])) {
                 $s = strtoupper(md5(uniqid(rand(), true)));
                 $guid = substr($s, 0, 8) . '-' .
-                        substr($s, 8, 4) . '-' .
-                        substr($s, 12, 4) . '-' .
-                        substr($s, 16, 4) . '-' .
-                        substr($s, 20);
+                    substr($s, 8, 4) . '-' .
+                    substr($s, 12, 4) . '-' .
+                    substr($s, 16, 4) . '-' .
+                    substr($s, 20);
                 $config['file_name'] = $guid . '.jpg';
                 $config['overwrite'] = true;
 
@@ -2115,7 +2186,7 @@ class Member extends Controller {
                 if ($this->upload->do_upload('photo')) {
                     $upload_data = $this->upload->data();
 
-//                    $this->load->library('image_lib');
+                    //                    $this->load->library('image_lib');
 //                    $orig_image = $_SERVER['DOCUMENT_ROOT'] . '/hybrid_fitness/images/member_photos/' . $upload_data['file_name'];
 //                    $sm_image = $_SERVER['DOCUMENT_ROOT'] . '/hybrid_fitness/images/member_photos/sm_' . $upload_data['file_name'];
 //
@@ -2142,9 +2213,9 @@ class Member extends Controller {
 //                    $this->image_lib->clear();
 //                    $this->image_lib->initialize($config);
 
-//                    if ($this->image_lib->resize()) {
-                        $update_data['photo'] = $upload_data['file_name'];
-//                    } else {
+                    //                    if ($this->image_lib->resize()) {
+                    $update_data['photo'] = $upload_data['file_name'];
+                    //                    } else {
 //                        $this->api_model->wd_result(array('status' => 0, 'message' => strip_tags($this->upload->display_errors())));
 //                    }
                 } else {
@@ -2156,7 +2227,7 @@ class Member extends Controller {
 
             if ($change) { //if the password was successfully changed
                 $user = $this->api_model->user_detail_by_user_id($data['user_id']);
-//                $user = $this->ion_auth->get_user($data['user_id']);
+                //                $user = $this->ion_auth->get_user($data['user_id']);
                 $this->api_model->wd_result(array('status' => 1, 'message' => 'User Edited Successfully', 'data' => $user));
             } else {
                 $this->api_model->wd_result(array('status' => 0, 'message' => strip_tags($this->ion_auth->errors())));
@@ -2165,7 +2236,8 @@ class Member extends Controller {
     }
 
     //forgot password
-    function forgot_password() {
+    function forgot_password()
+    {
         $data = $_POST;
         $mandatory_fields = array('email');
         $this->api_model->validate($mandatory_fields, $data);
@@ -2177,15 +2249,15 @@ class Member extends Controller {
             $this->api_model->wd_result(array('status' => 0, 'message' => strip_tags((validation_errors()) ? validation_errors() : $this->session->flashdata('message'))));
         } else {
 
-//           if ($this->ci->ion_auth_model->forgotten_password($this->input->post('email'))) {   //changed
+            //           if ($this->ci->ion_auth_model->forgotten_password($this->input->post('email'))) {   //changed
             // Get user information
-            $user = $this->ion_auth->get_user_by_email($this->input->post('email'));  //changed to get_user_by_identity from email
+            $user = $this->ion_auth->get_user_by_email($this->input->post('email')); //changed to get_user_by_identity from email
 
             if ($user) {
                 $generatedOTP = $this->api_model->generate_otp($user->id);
                 $basicUserDetail = $this->api_model->basic_user_detail_by_user_id($user->id);
 
-//                $message = $this->ci->load->view('member/email/forgot_password_otp.tpl.php', $data, true);
+                //                $message = $this->ci->load->view('member/email/forgot_password_otp.tpl.php', $data, true);
 //                $this->ci->email->clear();
 //                $config['mailtype'] = $this->ci->config->item('email_type', 'ion_auth');
 //                $this->ci->email->initialize($config);
@@ -2230,7 +2302,8 @@ class Member extends Controller {
         }
     }
 
-    function match_otp() {
+    function match_otp()
+    {
         $data = $_POST;
         $mandatory_fields = array('otp');
         $this->api_model->validate($mandatory_fields, $data);
@@ -2243,7 +2316,8 @@ class Member extends Controller {
         }
     }
 
-    function reset_password() {
+    function reset_password()
+    {
         $data = $_POST;
         $mandatory_fields = array('user_id', 'new_password');
         $this->api_model->validate($mandatory_fields, $data);
@@ -2273,7 +2347,8 @@ class Member extends Controller {
 //        }
 //    }
     //activate the user
-    function activate($id, $code = false) {
+    function activate($id, $code = false)
+    {
         if ($code !== false)
             $activation = $this->ion_auth->activate($id, $code);
         else if ($this->ion_auth->is_admin())
@@ -2292,7 +2367,8 @@ class Member extends Controller {
     }
 
     //deactivate the user
-    function deactivate($id = NULL) {
+    function deactivate($id = NULL)
+    {
         // no funny business, force to integer
         $id = (int) $id;
 
@@ -2325,7 +2401,8 @@ class Member extends Controller {
     }
 
     //create a new user
-    function register() {
+    function register()
+    {
         $data = $_POST;
 
         //validate form input
@@ -2335,7 +2412,7 @@ class Member extends Controller {
         $this->form_validation->set_rules('terms_accept', 'Terms of Use', 'required|xss_clean');
         $this->form_validation->set_rules('email', 'Email Address', 'required|valid_email');
         $this->form_validation->set_rules('password', 'Password', 'required|min_length[' . $this->config->item('min_password_length', 'ion_auth') . ']|max_length[' . $this->config->item('max_password_length', 'ion_auth') . ']');
-//        $this->form_validation->set_rules('password_confirm', 'Password Confirmation', 'required');
+        //        $this->form_validation->set_rules('password_confirm', 'Password Confirmation', 'required');
 
         if ($this->form_validation->run() == true) {
             $group = $this->input->post('member_type');
@@ -2347,9 +2424,10 @@ class Member extends Controller {
             $email = $this->input->post('email');
             $password = $this->input->post('password');
 
-            $additional_data = array('first_name' => $this->input->post('first_name'),
+            $additional_data = array(
+                'first_name' => $this->input->post('first_name'),
                 'last_name' => $this->input->post('last_name'),
-//                'city' => $this->input->post('city'),
+                //                'city' => $this->input->post('city'),
 //                'state' => $this->input->post('state'),
 //                'zip' => $this->input->post('zip')
             );
@@ -2368,14 +2446,15 @@ class Member extends Controller {
                 $this->api_model->updateDeviceField($loggedin_user['id'], $deviceUpdate);
             }
             $user = $this->api_model->user_detail_by_user_id($loggedin_user['id']);
-//            $user = $this->ion_auth->get_user($loggedin_user['id']);
+            //            $user = $this->ion_auth->get_user($loggedin_user['id']);
             $this->api_model->wd_result(array('status' => 1, 'message' => "Your account has been created", 'data' => $user));
         } else {
             $this->api_model->wd_result(array('status' => 0, 'message' => strip_tags((validation_errors() ? validation_errors() : ($this->ion_auth->errors() ? $this->ion_auth->errors() : $this->session->flashdata('message'))))));
         }
     }
 
-    function _get_csrf_nonce() {
+    function _get_csrf_nonce()
+    {
         $this->load->helper('string');
         $key = random_string('alnum', 8);
         $value = random_string('alnum', 20);
@@ -2385,34 +2464,38 @@ class Member extends Controller {
         return array($key => $value);
     }
 
-    function _valid_csrf_nonce() {
-        if ($this->input->post($this->session->flashdata('csrfkey')) !== FALSE &&
-                $this->input->post($this->session->flashdata('csrfkey')) == $this->session->flashdata('csrfvalue')) {
+    function _valid_csrf_nonce()
+    {
+        if (
+            $this->input->post($this->session->flashdata('csrfkey')) !== FALSE &&
+            $this->input->post($this->session->flashdata('csrfkey')) == $this->session->flashdata('csrfvalue')
+        ) {
             return TRUE;
         } else {
             return FALSE;
         }
     }
 
-    function first_run_get_array() {
+    function first_run_get_array()
+    {
         $this->crud->use_table('experience_level');
         $query = $this->crud->retrieve();
         $this->data['exp_level_id'] = $query->result();
-//        foreach ($query->result() as $level) {
+        //        foreach ($query->result() as $level) {
 //            $this->data['exp_level_id'][$level->id] = $level->title;
 //        }
 
         $this->crud->use_table('progression_plans');
         $query = $this->crud->retrieve();
         $this->data['progression_plan_id'] = $query->result();
-//        foreach ($query->result() as $plan) {
+        //        foreach ($query->result() as $plan) {
 //            $this->data['progression_plan_id'][$plan->id] = $plan->title . ' (' . $plan->days_week . ' a week)';
 //        }
 
         $this->crud->use_table('equipment');
         $query = $this->crud->retrieve();
         $this->data['available_equipment'] = $query->result();
-//        foreach ($query->result() as $equipment) {
+        //        foreach ($query->result() as $equipment) {
 //            $this->data['available_equipment'][$equipment->id] = $equipment->title;
 //        }
 
@@ -2422,26 +2505,28 @@ class Member extends Controller {
             $workoutdaysObject[$count] = new stdClass();
             $workoutdaysObject[$count]->id = $key;
             $workoutdaysObject[$count]->value = $value;
-            $count ++;
+            $count++;
         }
         $this->data['workoutdays'] = $workoutdaysObject;
 
         $this->api_model->wd_result($this->data);
     }
 
-    function state_array() {
+    function state_array()
+    {
         $state = $this->api_model->state;
         $count = 0;
         foreach ($state as $key => $value) {
             $stateObject[$count] = new stdClass();
             $stateObject[$count]->id = $key;
             $stateObject[$count]->title = $value;
-            $count ++;
+            $count++;
         }
         $this->api_model->wd_result(array('state' => $stateObject));
     }
 
-    function view_profile() {
+    function view_profile()
+    {
         $data = $_GET;
         $mandatory_fields = array('user_id');
         $this->api_model->validate($mandatory_fields, $data);
@@ -2455,7 +2540,8 @@ class Member extends Controller {
         }
     }
 
-    function trainers() {
+    function trainers()
+    {
 
         $data = $_POST;
         $mandatory_fields = array('user_id');
@@ -2477,14 +2563,15 @@ class Member extends Controller {
                 $this->api_model->wd_result(array('status' => 0, 'message' => 'There Are No Trainers'));
             }
 
-//            $this->crud->use_table('trainer_client_groups');
+            //            $this->crud->use_table('trainer_client_groups');
 //            $this->data['trainer_groups'] = $this->crud->retrieve(array('trainer_id' => $data['user_id']))->result_array();
         } else {
             $this->api_model->wd_result(array('status' => 0, 'message' => 'Member does not exist with given ID'));
         }
     }
 
-    function view_trainer_client_group() {
+    function view_trainer_client_group()
+    {
         $data = $_POST;
         $mandatory_fields = array('user_id', 'group_id');
         $this->api_model->validate($mandatory_fields, $data);
@@ -2503,7 +2590,8 @@ class Member extends Controller {
         }
     }
 
-    function remove_group() {
+    function remove_group()
+    {
         $data = $_POST;
         $mandatory_fields = array('user_id', 'group_id');
         $this->api_model->validate($mandatory_fields, $data);
@@ -2525,7 +2613,8 @@ class Member extends Controller {
         }
     }
 
-    function remove_client() {
+    function remove_client()
+    {
         $data = $_POST;
         $mandatory_fields = array('user_id', 'client_id');
         $this->api_model->validate($mandatory_fields, $data);
@@ -2542,7 +2631,8 @@ class Member extends Controller {
         }
     }
 
-    function remove_trainer() {
+    function remove_trainer()
+    {
         $data = $_POST;
         $mandatory_fields = array('user_id', 'trainer_id');
         $this->api_model->validate($mandatory_fields, $data);
@@ -2559,7 +2649,8 @@ class Member extends Controller {
         }
     }
 
-    function workout_generator_array() {
+    function workout_generator_array()
+    {
         $data = $_POST;
         $mandatory_fields = array('user_id');
         $this->api_model->validate($mandatory_fields, $data);
@@ -2591,7 +2682,7 @@ class Member extends Controller {
                 $workoutdaysObject[$count] = new stdClass();
                 $workoutdaysObject[$count]->id = $key;
                 $workoutdaysObject[$count]->value = $value;
-                $count ++;
+                $count++;
             }
             $data['workoutdays'] = $workoutdaysObject;
 
@@ -2601,7 +2692,8 @@ class Member extends Controller {
         }
     }
 
-    function skeleton_json() {
+    function skeleton_json()
+    {
         $data = $_POST;
         $mandatory_fields = array('user_id', 'skeleton_workout_id', 'progression_id');
         $this->api_model->validate($mandatory_fields, $data);
@@ -2639,7 +2731,8 @@ class Member extends Controller {
         }
     }
 
-    function skeleton_section_types_array() {
+    function skeleton_section_types_array()
+    {
         $section_array = $this->workouts_api->skeleton_section_types();
         if ($section_array) {
             $this->api_model->wd_result(array('status' => 1, 'data' => $section_array));
@@ -2648,7 +2741,8 @@ class Member extends Controller {
         }
     }
 
-    function exercise_types_array() {
+    function exercise_types_array()
+    {
         $section_array = $this->workouts_api->exercise_types();
         if ($section_array) {
             $this->api_model->wd_result(array('status' => 1, 'data' => $section_array));
@@ -2657,7 +2751,8 @@ class Member extends Controller {
         }
     }
 
-    function exercises() {
+    function exercises()
+    {
         $data = $_POST;
         $mandatory_fields = array('user_id', 'progression_id', 'exercise_type_id', 'section_id');
         $this->api_model->validate($mandatory_fields, $data);
@@ -2672,11 +2767,11 @@ class Member extends Controller {
                 $user_id = $data['user_id'];
             }
 
-//            $section_record = $this->workouts_api->skeleton_section_types_by_Id($data['section_id']);
+            //            $section_record = $this->workouts_api->skeleton_section_types_by_Id($data['section_id']);
 
             $exercise_type_list = $this->workouts_api->exercisesByExerciseTypeId($data['exercise_type_id'], $data['user_id']);
             if ($exercise_type_list) {
-//                foreach ($exercise_type_list as $exercise_type_list_key => $exercise_type_list_value) {
+                //                foreach ($exercise_type_list as $exercise_type_list_key => $exercise_type_list_value) {
 //                    $exercise_type_list[$exercise_type_list_key]->exercise_stats = $this->workouts_api->get_exercise_counts(array('user_id' => $user_id, 'progression_id' => $data['progression_id'], 'exercise_id' => $exercise_type_list_value->id, 'weight_type' => $exercise_type_list_value->weight_type, 'section_type' => $section_record->type));
 //                }
                 $this->api_model->wd_result(array('status' => 1, 'data' => $exercise_type_list));
@@ -2688,7 +2783,8 @@ class Member extends Controller {
         }
     }
 
-    public function featured_exercise() {
+    public function featured_exercise()
+    {
         $data = $_POST;
         $mandatory_fields = array('user_id');
         $this->api_model->validate($mandatory_fields, $data);
@@ -2703,7 +2799,8 @@ class Member extends Controller {
         }
     }
 
-    public function add_additional_video() {
+    public function add_additional_video()
+    {
         $data = $_POST;
         $mandatory_fields = array('user_id', 'exercise_id');
         $this->api_model->validate($mandatory_fields, $data);
@@ -2732,7 +2829,8 @@ class Member extends Controller {
         }
     }
 
-    public function delete_additional_video() {
+    public function delete_additional_video()
+    {
         $data = $_POST;
         $mandatory_fields = array('user_id', 'exercise_id');
         $this->api_model->validate($mandatory_fields, $data);
@@ -2752,7 +2850,8 @@ class Member extends Controller {
         }
     }
 
-    public function add_custom_exercise() {
+    public function add_custom_exercise()
+    {
         $data = $_POST;
         $mandatory_fields = array('user_id', 'exercise_type', 'exercise_name');
         $this->api_model->validate($mandatory_fields, $data);
@@ -2794,12 +2893,14 @@ class Member extends Controller {
         }
     }
 
-    public function prebuild_videos_list() {
+    public function prebuild_videos_list()
+    {
         $prebuild_videos = $this->api_model->prebuild_videos_list();
         $this->api_model->wd_result(array('status' => 1, 'data' => $prebuild_videos));
     }
 
-    public function add_additional_exercise_video() {
+    public function add_additional_exercise_video()
+    {
         $data = $_POST;
         $mandatory_fields = array('user_id', 'title', 'exercise_id');
         $this->api_model->validate($mandatory_fields, $data);
@@ -2846,7 +2947,8 @@ class Member extends Controller {
         }
     }
 
-    public function list_of_videos() {
+    public function list_of_videos()
+    {
         $data = $_POST;
         $mandatory_fields = array('user_id');
         $this->api_model->validate($mandatory_fields, $data);
@@ -2862,7 +2964,8 @@ class Member extends Controller {
         }
     }
 
-    public function make_priority_to_video() {
+    public function make_priority_to_video()
+    {
         $data = $_POST;
         $mandatory_fields = array('user_id', 'mobile_video', 'exercise_id', 'title');
         $this->api_model->validate($mandatory_fields, $data);

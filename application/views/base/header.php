@@ -12,7 +12,7 @@
 
 
     <title>
-        <?php echo $page_title; ?>
+        <?php echo isset($page_title) ? $page_title : 'TRNHRD'; ?>
     </title>
     <link rel="shortcut icon" type="image/x-icon" href="/assets/fav.png" />
     <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,700" rel="stylesheet" />
@@ -104,24 +104,24 @@
                         <div class="col-md-10 nav-bg">
                             <nav class="navigation">
                                 <ul>
-                                    <li class="<?php if ($url_segment == 'index')
+                                    <li class="<?php if (isset($url_segment) && $url_segment == 'index')
                                         echo 'selected'; ?>">
                                         <a href="/">Home</a>
                                     </li>
-                                    <li class="<?php if ($url_segment == 'about')
+                                    <li class="<?php if (isset($url_segment) && $url_segment == 'about')
                                         echo 'selected'; ?>">
                                         <a href="/about">About us</a>
                                     </li>
-                                    <li class="<?php if ($url_segment == 'testimonial')
+                                    <li class="<?php if (isset($url_segment) && $url_segment == 'testimonial')
                                         echo 'selected'; ?>">
                                         <a href="/testimonial">Testimonial</a>
                                     </li>
-                                    <li class="<?php if ($url_segment == 'contact')
+                                    <li class="<?php if (isset($url_segment) && $url_segment == 'contact')
                                         echo 'selected'; ?>">
                                         <a href="/contact">Contact</a>
                                     </li>
                                     <?php if ($this->ion_auth->logged_in()) { ?>
-                                        <li class="no_login_btn">
+                                        <li class="no_login_btn blank_btn">
                                             <a href="/member/logout" class="signup">Logout</a>
                                         </li>
                                     <?php } else {

@@ -6,15 +6,15 @@
 	
     <?php echo form_open("admin/edit_user/".$this->uri->segment(3));?>
     <?php echo form_input($user_id);?>
-  <table width="100%">
+    <table width="100%">
     <tr>
         <td>Member Type:</td>
-        <td><? echo form_dropdown('group_id',$group_options,$group_value,'class="mediumsize"'); ?></td>
+        <td><?php echo form_dropdown('group_id',$group_options,$group_value,'class="mediumsize"'); ?></td>
 
     </tr>
     <tr>
         <td>Trainer:</td>
-        <td><? echo form_dropdown('trainer_id',$trainer_options,$trainer_value,'class="mediumsize"'); ?></td>
+        <td><?php echo form_dropdown('trainer_id',$trainer_options,$trainer_value,'class="mediumsize"'); ?></td>
 
     </tr>
     <tr>
@@ -35,7 +35,7 @@
     </tr>
     <tr>
         <td>State:</td>
-        <td><? echo form_dropdown('state',$state_options,$state_value,'class="smallsize"'); ?></td>
+        <td><?php echo form_dropdown('state',$state_options,$state_value,'class="smallsize"'); ?></td>
 
     </tr>
     <tr>

@@ -1,59 +1,61 @@
 <!-- Footer -->
-<footer class="main-footer">
-    <div class="container-fluid">
-        <div class="row footer_logo">
-            <div class="col-12">
-                <img src="/assets/images/logo.png" alt="logo">
+<?php if (!isset($footer_visibility)) { ?>
+    <footer class="main-footer">
+        <div class="container-fluid">
+            <div class="row footer_logo">
+                <div class="col-12">
+                    <img src="/assets/images/logo.png" alt="logo">
+                </div>
             </div>
-        </div>
-        <div class="row footer-links">
-            <div class="col-md-8 offset-md-2">
-                <hr />
-                <div class="row">
-                    <div class="col-md-4 col-4">
-                        <div>
-                            <a href="/">Home</a>
+            <div class="row footer-links">
+                <div class="col-md-8 offset-md-2">
+                    <hr />
+                    <div class="row">
+                        <div class="col-md-4 col-4">
+                            <div>
+                                <a href="/">Home</a>
+                            </div>
+                            <div>
+                                <a href="/about">About Us</a>
+                            </div>
+                            <div>
+                                <a href="/testimonial">Testimonial</a>
+                            </div>
+                            <div>
+                                <a href="/contact">Contact</a>
+                            </div>
                         </div>
-                        <div>
-                            <a href="/about">About Us</a>
+                        <div class="col-md-4 col-4">
+                            <div>
+                                <a href="">FAT & Contact</a>
+                            </div>
+                            <div>
+                                <a href="#">Careers</a>
+                            </div>
+                            <div>
+                                <a href="#">Corporate Wellness</a>
+                            </div>
                         </div>
-                        <div>
-                            <a href="/testimonial">Testimonial</a>
-                        </div>
-                        <div>
-                            <a href="/contact">Contact</a>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-4">
-                        <div>
-                            <a href="">FAT & Contact</a>
-                        </div>
-                        <div>
-                            <a href="#">Careers</a>
-                        </div>
-                        <div>
-                            <a href="#">Corporate Wellness</a>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-4">
-                        <div>
-                            <a href="#">Instagram</a>
-                        </div>
-                        <div>
-                            <a href="#">Facebook</a>
-                        </div>
-                        <div>
-                            <a href="https://twitter.com/HybridFitnessNY" target="_blank">Twitter</a>
-                        </div>
-                        <!-- div id="twitter">
+                        <div class="col-md-4 col-4">
+                            <div>
+                                <a href="#">Instagram</a>
+                            </div>
+                            <div>
+                                <a href="#">Facebook</a>
+                            </div>
+                            <div>
+                                <a href="https://twitter.com/HybridFitnessNY" target="_blank">Twitter</a>
+                            </div>
+                            <!-- div id="twitter">
               <a class="twitter-timeline"  href="https://twitter.com/HybridFitnessNY"  data-widget-id="481213975980302336">Tweets by @HybridFitnessNY</a>
               <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
             </div -->
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-</footer>
+    </footer>
+<?php } ?>
 <!-- Footer_End -->
 
 <!-- Site Wraper End -->
@@ -130,6 +132,19 @@
             prevEl: '.swiper-button-prev',
         },
     });
+</script>
+<script type="text/javascript">
+    function select_member(value) {
+        // Get the value of the selected radio button
+        var selectedOption = document.querySelectorAll('input[name="member_type"]');
+        if (value == 'members') {
+            selectedOption[0].checked = true;
+            selectedOption[1].checked = false;
+        } else {
+            selectedOption[0].checked = false;
+            selectedOption[1].checked = true;
+        }
+    }
 </script>
 
 </body>

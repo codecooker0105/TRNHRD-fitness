@@ -1,113 +1,116 @@
- <div class="reg-form-box">  
+<div class="reg-form-box">
 
-<div class="header-box">
-    <h1 class="main-title">Get Started with Hybrid Fitness!</h1>
-    <h2 class="sub-title">Account Info</h2>
-    <p class="description" >You're ready to get started with your workout goals, but first let's take care of the basics.  Don't worry, all your information is private.</p>
-</div>
-<?php echo form_open("member/register",'id="register_form"');?>
-    <?php echo form_input($hpot);?> 
-<div class="form-field">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="error"><?php echo $message;?></div>
-        </div>
+    <div class="header-box">
+        <h1 class="main-title">Get Started with Hybrid Fitness!</h1>
+        <h2 class="sub-title">Account Info</h2>
+        <p class="description">You're ready to get started with your workout goals, but first let's take care of the
+            basics. Don't worry, all your information is private.</p>
     </div>
-    <div class="row">
-        <div class="col-md-4 col-sm-12">
-            <div class="form-group">
-                <label for="staticEmail2" class="form-label">Member Type:</label>
-                <?php echo form_dropdown('member_type',array('members' => 'General Member','trainers' => 'Trainer'),'');?>
+    <?php echo form_open("member/register", 'id="register_form"'); ?>
+    <?php echo form_input($hpot); ?>
+    <div class="form-field">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="error">
+                    <?php echo $message; ?>
+                </div>
             </div>
         </div>
-        <!-- col-closed -->
-        <div class="col-md-4 col-sm-12">
-            <div class="form-group">
-                <label for="staticEmail2" class="form-label">First Name:</label>
-                <?php echo form_input($first_name);?>
+        <div class="row">
+            <div class="col-md-4 col-sm-12">
+                <div class="form-group">
+                    <label for="staticEmail2" class="form-label">Member Type:</label>
+                    <?php echo form_dropdown('member_type', array('members' => 'General Member', 'trainers' => 'Trainer'), ''); ?>
+                </div>
             </div>
-        </div>
-        <!-- col-closed -->
-        <div class="col-md-4 col-sm-12">
-            <div class="form-group">
-                <label for="staticEmail2" class="form-label">Last Name:</label>
-                <?php echo form_input($last_name);?>
+            <!-- col-closed -->
+            <div class="col-md-4 col-sm-12">
+                <div class="form-group">
+                    <label for="staticEmail2" class="form-label">First Name:</label>
+                    <?php echo form_input($first_name); ?>
+                </div>
             </div>
+            <!-- col-closed -->
+            <div class="col-md-4 col-sm-12">
+                <div class="form-group">
+                    <label for="staticEmail2" class="form-label">Last Name:</label>
+                    <?php echo form_input($last_name); ?>
+                </div>
+            </div>
+            <!-- col-closed -->
         </div>
-        <!-- col-closed -->
-    </div>
-    <!-- row closed -->
+        <!-- row closed -->
 
 
-    <div class="row">
-        <div class="col-md-4 col-sm-12">
-            <div class="form-group">
-                <label for="staticEmail2" class="form-label">City:</label>
-                <?php echo form_input($city);?>
+        <div class="row">
+            <div class="col-md-4 col-sm-12">
+                <div class="form-group">
+                    <label for="staticEmail2" class="form-label">City:</label>
+                    <?php echo form_input($city); ?>
+                </div>
             </div>
-        </div>
-        <!-- col-closed -->
-        <div class="col-md-4 col-sm-12">
-            <div class="form-group">
-                <label for="staticEmail2" class="form-label">State:</label>
-                <? echo form_dropdown('state',$state_options,$state_value,'class="required"'); ?>
+            <!-- col-closed -->
+            <div class="col-md-4 col-sm-12">
+                <div class="form-group">
+                    <label for="staticEmail2" class="form-label">State:</label>
+                    <?php echo form_dropdown('state', $state_options, $state_value, 'class="required"'); ?>
+                </div>
             </div>
-        </div>
-        <!-- col-closed -->
-        <div class="col-md-4 col-sm-12">
-            <div class="form-group">
-                <label for="staticEmail2" class="form-label">Zip:</label>
-                <?php echo form_input($zip);?>
+            <!-- col-closed -->
+            <div class="col-md-4 col-sm-12">
+                <div class="form-group">
+                    <label for="staticEmail2" class="form-label">Zip:</label>
+                    <?php echo form_input($zip); ?>
+                </div>
             </div>
+            <!-- col-closed -->
         </div>
-        <!-- col-closed -->
-    </div>
-    <!-- row closed -->
+        <!-- row closed -->
 
 
 
 
-    <div class="row">
-        <div class="col-md-6 col-sm-12">
-            <div class="form-group">
-                <label for="staticEmail2" class="form-label">Email:</label>
-                <?php echo form_input($email);?>
+        <div class="row">
+            <div class="col-md-6 col-sm-12">
+                <div class="form-group">
+                    <label for="staticEmail2" class="form-label">Email:</label>
+                    <?php echo form_input($email); ?>
+                </div>
             </div>
-        </div>
-        <!-- col-closed -->
-        <div class="col-md-6 col-sm-12">
-            <div class="form-group">
-                <label for="staticEmail2" class="form-label">Username:</label>
-                <?php echo form_input($username);?>
-                <p class="small_print">Must be 6-15 alphanumeric characters and can use the underscore (_)</p>
+            <!-- col-closed -->
+            <div class="col-md-6 col-sm-12">
+                <div class="form-group">
+                    <label for="staticEmail2" class="form-label">Username:</label>
+                    <?php echo form_input($username); ?>
+                    <p class="small_print">Must be 6-15 alphanumeric characters and can use the underscore (_)</p>
+                </div>
             </div>
-        </div>
-        <!-- col-closed -->
-        <div class="col-md-6 col-sm-12">
-            <div class="form-group">
-                <label for="staticEmail2" class="form-label">Password:</label>
-                <?php echo form_input($password);?>
-                <p class="small_print">Must be 6-15 alphanumeric characters and can use following (_ # @ *)</p>
+            <!-- col-closed -->
+            <div class="col-md-6 col-sm-12">
+                <div class="form-group">
+                    <label for="staticEmail2" class="form-label">Password:</label>
+                    <?php echo form_input($password); ?>
+                    <p class="small_print">Must be 6-15 alphanumeric characters and can use following (_ # @ *)</p>
+                </div>
             </div>
-        </div>
-        <!-- col-closed -->
+            <!-- col-closed -->
 
-        <!-- col-closed -->
-        <div class="col-md-6 col-sm-12">
-            <div class="form-group">
-                <label for="staticEmail2" class="form-label">Confirm Password:</label>
-                <?php echo form_input($password_confirm);?>
+            <!-- col-closed -->
+            <div class="col-md-6 col-sm-12">
+                <div class="form-group">
+                    <label for="staticEmail2" class="form-label">Confirm Password:</label>
+                    <?php echo form_input($password_confirm); ?>
+                </div>
             </div>
+            <!-- col-closed -->
         </div>
-        <!-- col-closed -->
-    </div>
-    <!-- row closed -->
+        <!-- row closed -->
 
-    <div class="row">
-        <div class="col-md-12">
-            <div class="form-group">
-                <label for="staticEmail2" class="form-label">Terms of Use:</label>
-                <textarea readonly="readonly" row="20" col="12">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="staticEmail2" class="form-label">Terms of Use:</label>
+                    <textarea readonly="readonly" row="20" col="12">
 USER AGREEMENT: TERMS AND CONDITIONS FOR USING HYBRID FITNESS TRAINING EVOLVED ("HYBRID FITNESS" OR "HF") WEBSITE
 
 By accessing or using HF, you (the user or "You") agree to be bound by the terms and conditions of this online services agreement ("Agreement"). This is a legally binding agreement between You and HF.  This Agreement governs your use of the HF website. If You do not agree to the terms and conditions set forth below, Your sole remedy is stop using HF, its website, and services subject to the terms and conditions of cancellation and termination below.
@@ -189,29 +192,32 @@ Except as provided herein, no civil action with respect to any dispute, claim or
 If any part of this Agreement is held invalid or unenforceable, that part will be construed to reflect the parties' original intent, and the remaining portions will remain in full force and effect. A waiver by either party of any term or condition of this Agreement or any breach thereof, in any one instance, will not waive such term or condition or any subsequent breach thereof. You may assign your rights under this Agreement to any party that consents to, and agrees to be bound by, its terms and conditions; HF may assign its rights under this Agreement without condition. This Agreement will be binding upon and will inure to the benefit of the parties, their successors and permitted assigns.  This Agreement constitutes the entire Agreement between the parties and cannot be changed orally.
 
         </textarea>
+                </div>
             </div>
         </div>
-    </div>
-    <!-- row closed -->
+        <!-- row closed -->
 
-    <div class="row">
-        <div class="col-md-12 col-sm-12">
-            <div class="form-group">
-                <label for="staticEmail2" class="form-label" style=" display: flex;"><?php echo form_checkbox($terms_accept);?> <span class="text-accept">Accept Terms and Conditions of Use?</span></label>
+        <div class="row">
+            <div class="col-md-12 col-sm-12">
+                <div class="form-group">
+                    <label for="staticEmail2" class="form-label" style=" display: flex;">
+                        <?php echo form_checkbox($terms_accept); ?> <span class="text-accept">Accept Terms and Conditions
+                            of Use?</span>
+                    </label>
+                </div>
             </div>
-        </div>
-        <!-- col-closed -->
-        <div class="col-md-12 col-sm-12">
-            <div class="form-group">
-                <input type="submit" class="submit" value="Complete">
+            <!-- col-closed -->
+            <div class="col-md-12 col-sm-12">
+                <div class="form-group">
+                    <input type="submit" class="submit" value="Complete">
+                </div>
             </div>
+            <!-- col-closed -->
         </div>
-        <!-- col-closed -->
-    </div>
-    <!-- row closed -->
+        <!-- row closed -->
 
-</div>
-<?php echo form_close();?>
+    </div>
+    <?php echo form_close(); ?>
 
 
 
