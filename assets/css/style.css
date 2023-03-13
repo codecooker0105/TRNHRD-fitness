@@ -3055,6 +3055,12 @@ a.color-primary {
   left: 0;
   opacity: 0;
 }
+.checkbox-field #terms_accept {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+}
 .custom-check {
   width: 20px;
   height: 20px;
@@ -3072,6 +3078,9 @@ a.color-primary {
   position: absolute;
   top: -3px;
   left: 5px;
+}
+.checkbox-field #terms_accept:checked + .custom-check:before {
+  content: "\f3fd";
 }
 .checkbox-field #check_box:checked + .custom-check:before {
   content: "\f3fd";

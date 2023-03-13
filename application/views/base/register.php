@@ -98,7 +98,8 @@
                     <div class="spacer"></div>
                     <div class="form-group checkbox-field">
                       <label for="terms_accept" class="text-small">
-                        <?php echo form_checkbox($terms_accept); ?>
+                        <?php echo form_checkbox($terms_accept,'1', FALSE, 'id="terms_accept"'); ?>
+                        <span class="ion-ios-checkmark-empty22 custom-check"></span>
                         I have read and agree to TrnHrd <a href="javascript:;"><i>terms & conditions</i></a> and <a
                           href="javascript:;"><i>privacy policy</i></a>
                       </label>
