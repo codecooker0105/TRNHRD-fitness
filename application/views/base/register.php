@@ -103,7 +103,6 @@
                         I have read and agree to TrnHrd <a href="javascript:;"><i>terms & conditions</i></a> and <a
                           href="javascript:;"><i>privacy policy</i></a>
                       </label>
-                      </label>
                     </div>
                     <div class="spacer"></div>
                     <div class="form-group">

@@ -22,7 +22,7 @@
             ?><br />
             <?php echo form_checkbox($available_equipment[$id]); ?>
             <?= $title ?>
-            <?
+            <?php
         } ?>
     </p>
 

@@ -33,7 +33,7 @@
 					?>
 					<?php echo form_checkbox($checkbox); ?>
 					<?= $weekday_title[$day] ?> &nbsp;
-				<?
+				<?php
 				} ?>
 			</p>
 		</div>
@@ -50,7 +50,7 @@
 							?>
 							<?php echo form_checkbox($available_equipment[$id]); ?>
 							<?= $title ?><br />
-						<?
+						<?php
 						} ?>
 					</p>
 				</td>
@@ -78,22 +78,22 @@
 					<?php if ($clients) {
 						?>
 						<option value=""><strong>Single Clients</strong></option>
-						<?
+						<?php
 						foreach ($clients as $client) {
 							?>
 							<option value="<?= $client->user_id ?>" <?php if (isset($client_id) && $client_id == $client->user_id) { ?>
 									selected="selected" <?php } ?>>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= $client->first_name . ' ' . $client->last_name ?></option>
-						<?
+						<?php
 						}
 					} ?>
 					<?php if ($trainer_groups) {
 						?>
 						<option value=""><strong>Client Groups</strong></option>
-						<?
+						<?php
 						foreach ($trainer_groups as $group) {
 							?>
 							<option value="group-<?= $group['id'] ?>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?= $group['title'] ?></option>
-						<?
+						<?php
 						}
 					} ?>
 				</select>
@@ -156,18 +156,18 @@
 																			class="ui-icon ui-icon-play"></span></div>
 																</a>
 															</li>
-														<?
+														<?php
 														} ?>
 													</ul>
 												<?php } ?>
 											</li>
-										<?
+										<?php
 										}
 									} ?>
 								</ul>
 							<?php } ?>
 						</li>
-					<?
+					<?php
 					}
 				}
 			} ?>
@@ -185,7 +185,7 @@
 			while ($row = mysql_fetch_assoc($result)) {
 				?>
 				<option value="<?= $row['id'] ?>"><?= $row['title'] ?></option>
-			<?
+			<?php
 			} ?>
 		</select>
 	</form>
@@ -201,7 +201,7 @@
 			while ($row = mysql_fetch_assoc($result)) {
 				?>
 				<option value="<?= $row['id'] ?>"><?= $row['title'] ?></option>
-			<?
+			<?php
 			} ?>
 		</select>
 	</form>
@@ -218,7 +218,7 @@ while ($row = mysql_fetch_assoc($result)) { ?>
 					?>
 					<li><input type="radio" name="exercise_id" value="<?= $row2['id'] ?>"><?= $row2['title'] ?> - <a
 							href="/member/popup_video/<?= $row2['id'] ?>" class="play-exercise">View Video</a></li>
-				<?
+				<?php
 				} ?>
 			</ul>
 		</form>
@@ -344,7 +344,7 @@ while ($row = mysql_fetch_assoc($result)) { ?>
 			var exerciseid_array = new Array();
 			<?php $result = mysql_query("SELECT * FROM exercises");
 			while ($row = mysql_fetch_assoc($result)) {
-				?>exercise_array['<?= $row['title'] ?>'] = '<?= $row['id'] ?>'; exerciseid_array['<?= $row['id'] ?>'] = '<?= $row['title'] ?>';<?
+				?>exercise_array['<?= $row['title'] ?>'] = '<?= $row['id'] ?>'; exerciseid_array['<?= $row['id'] ?>'] = '<?= $row['title'] ?>';<?php
 			} ?>
 		});
 	})(jQuery);

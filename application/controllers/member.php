@@ -1431,7 +1431,7 @@ class Member extends Controller
 																						<div class="add_exercise ui-widget ui-helper-clearfix ui-state-default ui-corner-all pointer"><span
 																								class="ui-icon ui-icon-plus pointer"></span>Add Exercise Type</div>
 																						<ul class="workout_categories"></ul>
-															<?
+															<?php
 		}
 	}
 
@@ -1476,7 +1476,7 @@ class Member extends Controller
 																					<li class="category">
 																						<div class="ui-state-default ui-corner-all move"><span class="ui-icon ui-icon-arrow-4 move"></span></div><a href="#"
 																							class="workout_category_title"><?= $e_type->title ?></a>
-																						<?
+																						<?php
 																						?>
 																						<ul class="workout_exercises">
 																							<li class="exercise_type">

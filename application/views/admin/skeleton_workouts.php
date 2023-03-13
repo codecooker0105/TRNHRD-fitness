@@ -25,7 +25,4 @@
 			</tr>
 		<?php endforeach; ?>
 	</table>
-
-
-
 </div>

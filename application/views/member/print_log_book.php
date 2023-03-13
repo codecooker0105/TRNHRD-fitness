@@ -28,7 +28,7 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <?
+                                <?php
 								$ex_sets = explode('|',$exercise['sets']);
 								$ex_reps = explode('|',$exercise['reps']);
 								$ex_rest = explode('|',$exercise['rest']);
@@ -80,13 +80,13 @@
                                 </tr>
                                 </tbody>
                                 </table>
-                            </li><?
+                            </li><?php
                 } ?>
                 </ul>
             <?php } ?>
-            </li><?
+            </li><?php
         }
-		?></ul><?
+		?></ul><?php
 	}
     }else{ ?>
     	<p><strong>You had no workout today</strong></p>

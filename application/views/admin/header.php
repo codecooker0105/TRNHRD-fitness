@@ -17,7 +17,7 @@
             $('.play-exercise').colorbox();
         });
     </script>
-    <?
+    <?php
     if (isset($assets)) {
         $this->carabiner->display($assets);
     }

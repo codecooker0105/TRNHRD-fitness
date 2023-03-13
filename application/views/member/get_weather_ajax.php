@@ -39,7 +39,7 @@
                 </tr>
             </table>
         </div>
-        <?
+        <?php
         $count++;
     } ?>
     <div id="weather_logo">

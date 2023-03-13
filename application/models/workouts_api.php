@@ -719,19 +719,19 @@ class Workouts_api extends CI_Model {
             ?>
             <li class="section"><div class="ui-widget ui-helper-clearfix ui-state-default ui-corner-all move"><span class="ui-icon ui-icon-arrow-4 move"></span></div>
                 <input type="hidden" value="//<?= $section->section_type_id ?>" name="section_id" class="section_id" />
-                <? if($section->type == 'rest' || $section->type == 'active-rest'){ ?>
-                <span class="rest">//<?= $section->title ?> - <select name="section_rest[]" class="section_rest"><? for($i=15;$i<=300;$i+=15){ ?><option value="<?= $i ?>" <? if($section->section_rest == $i){ ?> selected="selected"<? } ?>><?= secToMinute($i) ?></option><? } ?></select></span>
-                <? }else{ ?>
+                <?php if($section->type == 'rest' || $section->type == 'active-rest'){ ?>
+                <span class="rest">//<?= $section->title ?> - <select name="section_rest[]" class="section_rest"><?php for($i=15;$i<=300;$i+=15){ ?><option value="<?= $i ?>" <?php if($section->section_rest == $i){ ?> selected="selected"<?php } ?>><?= secToMinute($i) ?></option><?php } ?></select></span>
+                <?php }else{ ?>
                 <a href="#" class="section_title off">//<?= $section->title ?></a>
-                <? } ?>
+                <?php } ?>
                 <div class="remove_section ui-widget ui-helper-clearfix ui-state-default ui-corner-all remove"><span class="ui-icon ui-icon-closethick remove"></span>Remove Section</div>
                 <div class="add_exercise ui-widget ui-helper-clearfix ui-state-default ui-corner-all pointer"><span class="ui-icon ui-icon-plus pointer"></span>Add Exercise Type</div>
 
-                <ul class="workout_categories"><?
+                <ul class="workout_categories"><?php
                     $hybrid_workout_exercise_types = $this->db->select(array('exercise_types.title','skeleton_category.*'))->join('exercise_types', 'exercise_types.id = skeleton_category.exercise_type_id')->where('section_id',$section->id)->order_by('display_order')->get('skeleton_category');
                     $returnArray['hybrid_workout_exercise_types'] = $hybrid_workout_exercise_types;
                     foreach($hybrid_workout_exercise_types->result() as $category){
-                    ?><li class="category"><div class="ui-state-default ui-corner-all move"><span class="ui-icon ui-icon-arrow-4 move"></span></div><a href="#" class="workout_category_title">//<?= $category->title ?></a><?
+                    ?><li class="category"><div class="ui-state-default ui-corner-all move"><span class="ui-icon ui-icon-arrow-4 move"></span></div><a href="#" class="workout_category_title">//<?= $category->title ?></a><?php
                         $exercise = $this->get_random_exercise(array('user_id' => $options['user_id'],'available_equipment' => $options['available_equipment'],'exercise_type' => $category->exercise_type_id));
                         if($exercise){
                         $exercise_stats = $this->get_exercise_counts(array('user_id' => $options['user_id'],'progression_id' => $options['progression_id'],'exercise_id' => $exercise->id,'weight_type' => $exercise->weight_type,'section_type' => $section->type));
@@ -748,13 +748,13 @@ class Workouts_api extends CI_Model {
 
                             <li class="exercise_type">
                                 <input type="hidden" value="//<?= $category->exercise_type_id ?>" name="category_id" class="category_id" />
-                                <input type="hidden" name="exercise_id" value="<? if(isset($exercise->id)){ ?>//<?= $exercise->id ?><? } ?>" class="exercise_id" />
-                                <input type="hidden" name="ex_type" value="<? if(isset($exercise->id)){ ?>//<?= $exercise->type ?><? } ?>" class="ex_type" />
+                                <input type="hidden" name="exercise_id" value="<?php if(isset($exercise->id)){ ?>//<?= $exercise->id ?><?php } ?>" class="exercise_id" />
+                                <input type="hidden" name="ex_type" value="<?php if(isset($exercise->id)){ ?>//<?= $exercise->type ?><?php } ?>" class="ex_type" />
 
                                 <table width="100%" cellspacing="0" cellpadding="0">
                                     <thead>
                                         <tr>
-                                            <th class="left"><a href="/member/popup_video/<? if(isset($exercise->id)){ ?>//<?= $exercise->id ?><? } ?>" class="play-exercise"><? if(isset($exercise->id)){ ?><?= $exercise->title ?><? } ?></a></th>
+                                            <th class="left"><a href="/member/popup_video/<?php if(isset($exercise->id)){ ?>//<?= $exercise->id ?><?php } ?>" class="play-exercise"><?php if(isset($exercise->id)){ ?><?= $exercise->title ?><?php } ?></a></th>
                                             <th>Set</th>
                                             <th>Reps/Time</th>
                                             <th>Rest</th>
@@ -762,46 +762,46 @@ class Workouts_api extends CI_Model {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <? $set = 1;
+                                        <?php $set = 1;
                                         foreach($sets as $index => $set){ ?>
-                                        <tr <? if(($index + 1) == count($sets)){ ?> class="bottom" <? } ?>>
-                                            <? if(($index + 1) == 1){ ?>
+                                        <tr <?php if(($index + 1) == count($sets)){ ?> class="bottom" <?php } ?>>
+                                            <?php if(($index + 1) == 1){ ?>
                                             <td class="ex_options left bottom" rowspan="//<?= count($sets) ?>">
                                                 <strong>Set Options:</strong><br />
                                                 <select name="set_type[]" class="set_type">
-                                                    <option value="sets_reps" <? if(isset($exercise->id) && $exercise->type == 'sets_reps'){ ?> selected="selected"<? } ?>>Sets x Reps</option>
-                                                    <option value="sets_time" <? if(isset($exercise->id) && $exercise->type == 'sets_time'){ ?> selected="selected"<? } ?>>Sets x Time</option>
+                                                    <option value="sets_reps" <?php if(isset($exercise->id) && $exercise->type == 'sets_reps'){ ?> selected="selected"<?php } ?>>Sets x Reps</option>
+                                                    <option value="sets_time" <?php if(isset($exercise->id) && $exercise->type == 'sets_time'){ ?> selected="selected"<?php } ?>>Sets x Time</option>
                                                 </select><br />
                                                 <strong>Weight Options:</strong><br />
                                                 <select name="weight_option[]" class="weight_option">
-                                                    <option value="weighted" <? if($exercise_stats['weight_option'] != 'bodyweight'){ ?> selected="selected"<? } ?>>Weighted</option>
-                                                    <option value="bodyweight" <? if($exercise_stats['weight_option'] == 'bodyweight'){ ?> selected="selected"<? } ?>> Bodyweight only</option>
+                                                    <option value="weighted" <?php if($exercise_stats['weight_option'] != 'bodyweight'){ ?> selected="selected"<?php } ?>>Weighted</option>
+                                                    <option value="bodyweight" <?php if($exercise_stats['weight_option'] == 'bodyweight'){ ?> selected="selected"<?php } ?>> Bodyweight only</option>
                                                 </select>
                                             </td>
-                                            <? } ?>
+                                            <?php } ?>
                                             <td><span class="set_number">//<?= $index + 1 ?></span><input name="sets[]" type="hidden" value="<?= $set ?>" class="sets" /></td>
                                             <td><select name="reps[]" class="reps">
-                                                    <? for($x=1;$x<=30;$x++){ ?>
-                                                    <option value="//<?= $x ?>" <? if($reps[$index] == $x){ ?> selected="selected" <? } ?>><?= $x ?></option>
-                                                    <? } ?>
+                                                    <?php for($x=1;$x<=30;$x++){ ?>
+                                                    <option value="//<?= $x ?>" <?php if($reps[$index] == $x){ ?> selected="selected" <?php } ?>><?= $x ?></option>
+                                                    <?php } ?>
                                                 </select>
                                                 <select name="time[]" class="time">
-                                                    <? for($x=15;$x<=300;$x+=15){ ?>
-                                                    <option value="//<?= $x ?>" <? if($time[$index] == $x){ ?> selected="selected" <? } ?>><?= secToMinute($x) ?></option>
-                                                    <? } ?>
+                                                    <?php for($x=15;$x<=300;$x+=15){ ?>
+                                                    <option value="//<?= $x ?>" <?php if($time[$index] == $x){ ?> selected="selected" <?php } ?>><?= secToMinute($x) ?></option>
+                                                    <?php } ?>
                                                 </select></td>
                                             <td class="right">
                                                 <select name="rest[]" class="rest">
-                                                    <? for($x=0;$x<=300;$x+=15){ ?>
-                                                    <option value="//<?= $x ?>" <? if($rest[$index] == $x){ ?> selected="selected" <? } ?>><?= $x ?></option>
-                                                    <? } ?>
+                                                    <?php for($x=0;$x<=300;$x+=15){ ?>
+                                                    <option value="//<?= $x ?>" <?php if($rest[$index] == $x){ ?> selected="selected" <?php } ?>><?= $x ?></option>
+                                                    <?php } ?>
                                                 </select></td>
                                             <td class="right">
-                                                <span class="weight_input_box"><input type="text" name="weight[]" class="weight" value="<? if(isset($weight[$index]) && $weight[$index] != 'bw'){ ?>//<?= $weight[$index] ?><? } ?>" /> lbs.</span>
+                                                <span class="weight_input_box"><input type="text" name="weight[]" class="weight" value="<?php if(isset($weight[$index]) && $weight[$index] != 'bw'){ ?>//<?= $weight[$index] ?><?php } ?>" /> lbs.</span>
                                                 <span class="bodyweight">Body Weight Only</span>
                                             </td>
                                         </tr>
-                                        <? $set++;
+                                        <?php $set++;
                                         } ?>
                                     <tbody class="spacer">
                                         <tr>
@@ -819,7 +819,7 @@ class Workouts_api extends CI_Model {
                                 </table>
 
                                 </form>
-                            </li></ul></li><?
+                            </li></ul></li><?php
                     $exercise_count++;
                     }
                     ?></ul></li><?php
@@ -927,18 +927,18 @@ class Workouts_api extends CI_Model {
             ?>
             <li class="section"><div class="ui-widget ui-helper-clearfix ui-state-default ui-corner-all move"><span class="ui-icon ui-icon-arrow-4 move"></span></div>
                 <input type="hidden" value="<?= $section->section_type_id ?>" name="section_id" class="section_id" />
-                <? if($section->type == 'rest' || $section->type == 'active-rest'){ ?>
-                <span class="rest"><?= $section->title ?> - <select name="section_rest[]" class="section_rest"><? for($i=15;$i<=300;$i+=15){ ?><option value="<?= $i ?>" <? if($section->section_rest == $i){ ?> selected="selected"<? } ?>><?= secToMinute($i) ?></option><? } ?></select></span>
-                <? }else{ ?>
+                <?php if($section->type == 'rest' || $section->type == 'active-rest'){ ?>
+                <span class="rest"><?= $section->title ?> - <select name="section_rest[]" class="section_rest"><?php for($i=15;$i<=300;$i+=15){ ?><option value="<?= $i ?>" <?php if($section->section_rest == $i){ ?> selected="selected"<?php } ?>><?= secToMinute($i) ?></option><?php } ?></select></span>
+                <?php }else{ ?>
                 <a href="#" class="section_title off"><?= $section->title ?></a>
-                <? } ?>
+                <?php } ?>
                 <div class="remove_section ui-widget ui-helper-clearfix ui-state-default ui-corner-all remove"><span class="ui-icon ui-icon-closethick remove"></span>Remove Section</div>
                 <div class="add_exercise ui-widget ui-helper-clearfix ui-state-default ui-corner-all pointer"><span class="ui-icon ui-icon-plus pointer"></span>Add Exercise Type</div>
 
-                <ul class="workout_categories"><?
+                <ul class="workout_categories"><?php
                     $hybrid_workout_exercise_types = $this->db->select(array('exercises.*','exercises.id as ex_id','exercise_types.title as type_title','user_workout_exercises.*'))->join('exercise_types', 'exercise_types.id = user_workout_exercises.exercise_type_id')->join('exercises', 'exercises.id = user_workout_exercises.exercise_id')->where('workout_section_id',$section->id)->order_by('display_order')->get('user_workout_exercises');
                     foreach($hybrid_workout_exercise_types->result() as $exercise){
-                    ?><li class="category"><div class="ui-state-default ui-corner-all move"><span class="ui-icon ui-icon-arrow-4 move"></span></div><a href="#" class="workout_category_title"><?= $exercise->type_title ?></a><?
+                    ?><li class="category"><div class="ui-state-default ui-corner-all move"><span class="ui-icon ui-icon-arrow-4 move"></span></div><a href="#" class="workout_category_title"><?= $exercise->type_title ?></a><?php
                         if($exercise){
                         //$exercise_stats = $this->get_exercise_counts($options['user_id'],$options['progression_id'],$exercise->id);
                         ?><ul class="workout_exercises">
@@ -959,51 +959,51 @@ class Workouts_api extends CI_Model {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?
+                                        <?php
                                         $ex_sets = explode('|',$exercise->sets);
                                         $ex_reps = explode('|',$exercise->reps);
                                         $ex_rest = explode('|',$exercise->rest);
                                         $ex_weight = explode('|',$exercise->weight);
                                         $ex_time = explode('|',$exercise->time);
                                         foreach($ex_sets as $index => $set){ ?>
-                                        <tr <? if($set == count($ex_sets)){ ?> class="bottom" <? } ?>>
-                                            <? if($set == 1){ ?>
+                                        <tr <?php if($set == count($ex_sets)){ ?> class="bottom" <?php } ?>>
+                                            <?php if($set == 1){ ?>
                                             <td class="ex_options left bottom" rowspan="<?= count($ex_sets) ?>">
                                                 <strong>Set Options:</strong><br />
                                                 <select name="set_type[]" class="set_type">
-                                                    <option value="sets_reps" <? if($exercise->type == 'sets_reps'){ ?> selected="selected"<? } ?>>Sets x Reps</option>
-                                                    <option value="sets_time" <? if($exercise->type == 'sets_time'){ ?> selected="selected"<? } ?>>Sets x Time</option>
+                                                    <option value="sets_reps" <?php if($exercise->type == 'sets_reps'){ ?> selected="selected"<?php } ?>>Sets x Reps</option>
+                                                    <option value="sets_time" <?php if($exercise->type == 'sets_time'){ ?> selected="selected"<?php } ?>>Sets x Time</option>
                                                 </select><br />
                                                 <strong>Weight Options:</strong><br />
                                                 <select name="weight_option[]" class="weight_option">
-                                                    <option value="weighted" <? if($exercise->weight_option != 'bodyweight'){ ?> selected="selected"<? } ?>>Weighted</option>
-                                                    <option value="bodyweight" <? if($exercise->weight_option == 'bodyweight'){ ?> selected="selected"<? } ?>> Bodyweight only</option>
+                                                    <option value="weighted" <?php if($exercise->weight_option != 'bodyweight'){ ?> selected="selected"<?php } ?>>Weighted</option>
+                                                    <option value="bodyweight" <?php if($exercise->weight_option == 'bodyweight'){ ?> selected="selected"<?php } ?>> Bodyweight only</option>
                                                 </select>
                                             </td>
-                                            <? } ?>
+                                            <?php } ?>
                                             <td><span class="set_number"><?= $set ?></span><input name="sets[]" type="hidden" value="<?= $set ?>" class="sets" /></td>
                                             <td><select name="reps[]" class="reps">
-                                                    <? for($x=1;$x<=30;$x++){ ?>
-                                                    <option value="<?= $x ?>" <? if($ex_reps[$index] == $x){ ?> selected="selected" <? } ?>><?= $x ?></option>
-                                                    <? } ?>
+                                                    <?php for($x=1;$x<=30;$x++){ ?>
+                                                    <option value="<?= $x ?>" <?php if($ex_reps[$index] == $x){ ?> selected="selected" <?php } ?>><?= $x ?></option>
+                                                    <?php } ?>
                                                 </select>
                                                 <select name="time[]" class="time">
-                                                    <? for($x=15;$x<=300;$x+=15){ ?>
-                                                    <option value="<?= $x ?>" <? if($ex_time[$index] == $x){ ?> selected="selected" <? } ?>><?= secToMinute($x) ?></option>
-                                                    <? } ?>
+                                                    <?php for($x=15;$x<=300;$x+=15){ ?>
+                                                    <option value="<?= $x ?>" <?php if($ex_time[$index] == $x){ ?> selected="selected" <?php } ?>><?= secToMinute($x) ?></option>
+                                                    <?php } ?>
                                                 </select></td>
                                             <td class="right">
                                                 <select name="rest[]" class="rest">
-                                                    <? for($x=0;$x<=300;$x+=15){ ?>
-                                                    <option value="<?= $x ?>" <? if($ex_rest[$index] == $x){ ?> selected="selected" <? } ?>><?= $x ?></option>
-                                                    <? } ?>
+                                                    <?php for($x=0;$x<=300;$x+=15){ ?>
+                                                    <option value="<?= $x ?>" <?php if($ex_rest[$index] == $x){ ?> selected="selected" <?php } ?>><?= $x ?></option>
+                                                    <?php } ?>
                                                 </select></td>
                                             <td class="right">
                                                 <span class="weight_input_box"><input type="text" name="weight[]" class="weight" value="<?= $ex_weight[$index] ?>" /> lbs.</span>
                                                 <span class="bodyweight">Body Weight Only</span>
                                             </td>
                                         </tr>
-                                        <? } ?>
+                                        <?php } ?>
                                     <tbody class="spacer">
                                         <tr>
                                             <td colspan="5">&nbsp;</td>
@@ -1020,8 +1020,8 @@ class Workouts_api extends CI_Model {
                                 </table>
 
                                 </form>
-                            </li></ul><?
-                        }?></li><?
+                            </li></ul><?php
+                        }?></li><?php
                     $exercise_count++;
                     }
                     ?>

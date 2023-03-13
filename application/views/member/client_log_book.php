@@ -209,16 +209,16 @@
                                                 </li>
                                             </ul>
                                         </li>
-                                        <?
+                                        <?php
                                     } ?>
                                 </ul>
                             <?php } ?>
                         </li>
-                        <?
+                        <?php
                     }
                     ?>
                 </ul>
-                <?
+                <?php
             }
         } else { ?>
             <p><strong>The client has no workout on this day.</strong></p>

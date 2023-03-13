@@ -6,7 +6,7 @@
 				<?= $workout['title'] ?>
 			<?php } ?>
 		</title>
-		<?
+		<?php
 		foreach ($workout['sections'] as $section) {
 			if (isset($section['exercises'])) {
 				foreach ($section['exercises'] as $exercise) {
@@ -20,7 +20,7 @@
 						<jwplayer:provider>http</jwplayer:provider>
 						<jwplayer:http.startparam>start</jwplayer:http.startparam>
 					</item>
-					<?
+					<?php
 				}
 			}
 		} ?>

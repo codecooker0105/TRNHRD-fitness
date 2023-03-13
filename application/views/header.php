@@ -31,7 +31,7 @@
     <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> -->
 
     <script type="text/javascript" src="<?= site_url('js/jquery.colorbox-min.js') ?>"></script>
-    <?
+    <?php
     if (isset($assets)) {
         $this->carabiner->display($assets);
     }

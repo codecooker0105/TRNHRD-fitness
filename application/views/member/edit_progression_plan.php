@@ -17,7 +17,7 @@
 		?><br />
 		<?php echo form_checkbox($checkbox); ?>
 		<?= $weekday_title[$day] ?>
-		<?
+		<?php
 	} ?>
 </p>
 

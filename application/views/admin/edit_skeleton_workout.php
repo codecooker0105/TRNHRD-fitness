@@ -70,7 +70,7 @@
             while ($row = mysql_fetch_assoc($result)) {
                 ?>
                 <option value="<?= $row['id'] ?>"><?= $row['title'] ?></option>
-                <?
+                <?php
             } ?>
         </select>
     </form>
@@ -86,7 +86,7 @@
             while ($row = mysql_fetch_assoc($result)) {
                 ?>
                 <option value="<?= $row['id'] ?>"><?= $row['title'] ?></option>
-                <?
+                <?php
             } ?>
         </select>
     </form>

@@ -36,7 +36,7 @@
     	<div class="header"><span class="link-heading"><a href="/member/stats" class="popup_stats">My Stats <i class="fas fa-link"></i></a></span><a href="/member/edit_stats" class="small_edit edit-text-btn">Edit</a></div>
         <div class="inner_block">
         <?php if(count($stats) == 0){
-			?><p>Would you like to track some stats for your own personal goals? <a href="/member/edit_stats">Add them here</a></p><?
+			?><p>Would you like to track some stats for your own personal goals? <a href="/member/edit_stats">Add them here</a></p><?php
 		}else{
 			foreach($stats as $stat){ ?>
                 <h3><?=$stat['title']?> - <a href="#" class="add_current_stat" id="stat<?=$stat['id']?>">Update Current</a></h3>
@@ -59,7 +59,7 @@
 				<input type="hidden" name="featured_exercise_id" value="<?=$featured_exercise->id?>" />
                 <h3><a href="/member/popup_video/<?=$featured_exercise->id?>" class="play-exercise"><?php echo $featured_exercise->title?></a></h3>
         		<a href="#" class="add_button" id="add_featured_exercise">add to existing workout</a><br />
-				<a href="/member/popup_video/<?=$featured_exercise->id?>" class="play-exercise play_button">launch video</a><?
+				<a href="/member/popup_video/<?=$featured_exercise->id?>" class="play-exercise play_button">launch video</a><?php
 			} ?>
         </div>
     </div>
@@ -69,7 +69,7 @@
         <div class="inner_block">
         	<?php if($featured_workout){ ?>
 				<h3><a href="/member/popup_workout/"><?php echo $featured_workout->title?></a></h3>
-        		<a href="#" class="add_button">use as a workout</a><?
+        		<a href="#" class="add_button">use as a workout</a><?php
 			} ?>
         </div>
         
@@ -91,9 +91,11 @@
 			if(count($weathers) > 0){ 
 				foreach($weathers as $zip => $weather){ 
 					if ($weather == 'error'){
-						?><li><a href="#" id="tab<?=$zip?>"  class="tab_link<?php if($count == 0){ ?> on<?php } ?>" ><span>N/A</span></a></li><?
+						?><li><a href="#" id="tab<?=$zip?>"  class="tab_link<?php if($count == 0){ ?> on<?php } ?>" ><span>N/A</span></a></li><?php
 					}else{
-						?><li><a href="#" id="tab<?=$zip?>"  class="tab_link<?php if($count == 0){ ?> on<?php } ?>" ><span><?=substr($weather->weather->forecast_information->city['data'],0,strripos($weather->weather->forecast_information->city['data'],','))?></span></a></li><?
+						?><li><a href="#" id="tab<?=$zip?>"  class="tab_link<?php if($count == 0){ ?> on<?php } ?>" >
+                        <span><?=substr($weather->weather->forecast_information->city['data'],0,strripos($weather->weather->forecast_information->city['data'],','))?></span>
+                        </a></li><?php
 					}
 				$count++;
 				}
@@ -106,7 +108,7 @@
 				foreach($weathers as $zip => $weather){ 
 					?><div id="weather_tab<?=$zip?>"  class="tab<?php if($count == 0){ ?> on<?php } ?>" >
 						<?php if ($weather == 'error'){
-							?><strong>Weather not available at the moment</strong><?
+							?><strong>Weather not available at the moment</strong><?php
 						}else{ ?>
 							<h4><?=$weather->weather->forecast_information->city['data']?> - <a class="confirmDeleteLink" href="<?=$zip?>">Remove</a></h4>
                             <table width="100%">
@@ -136,7 +138,7 @@
                             </tr>
                             </table>
                         <?php } ?>
-					</div><?
+					</div><?php
 				$count++;
 				}
 			}?>
@@ -156,20 +158,20 @@
         <p>&nbsp;</p>
         <ul id="workout_tree">
 		<?php if($todays_workout && $todays_workout['created'] == 'false'){
-			?><p>You have a workout scheduled for today but it has not been generated yet. Please go through any previous workouts you have completed and enter your stats, so we can create a fully customized workout for you.</p><?
+			?><p>You have a workout scheduled for today but it has not been generated yet. Please go through any previous workouts you have completed and enter your stats, so we can create a fully customized workout for you.</p><?php
 		}elseif($todays_workout){
-			?><h2><?=$todays_workout['title']?></h2><?
+			?><h2><?=$todays_workout['title']?></h2><?php
 			foreach($todays_workout['sections'] as $section){
 				?><li><a href="#" class="section_title off"><?=$section['title']?></a>
                 <?php if(isset($section['exercises'])){ ?>
                 	<ul class="section">
                     <?php foreach($section['exercises'] as $exercise){
 						?><li><a href="#" class="type_title off"><span><?=$exercise['type_title']?></span></a>
-                			<ul class="type"><li class="exercise_type"><a href="/member/popup_video/<?=$exercise['id']?>" class="play-exercise"><?=$exercise['title']?></a></li></ul></li><?
+                			<ul class="type"><li class="exercise_type"><a href="/member/popup_video/<?=$exercise['id']?>" class="play-exercise"><?=$exercise['title']?></a></li></ul></li><?php
 					} ?>
                     </ul>
                 <?php } ?>
-                </li><?
+                </li><?php
 			}
 		} ?>
         </ul>
@@ -192,7 +194,7 @@
 					<td><?=$client->first_name . ' ' . $client->last_name?></td>
                     <td><a href="/member/client_calendar/<?=$client->user_id?>">Calendar</a></td>
                     <td><a href="/member/client_log_book/<?=$client->user_id?>">Log Book</a></td>
-				</tr><?
+				</tr><?php
 			}
 		} ?>
         </table>
