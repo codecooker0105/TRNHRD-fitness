@@ -7,7 +7,7 @@
       <div class="title_row">
         <h1 data-title="Contact"><span>Contact</span></h1>
         <div class="page-breadcrumb">
-          <a>Home</a>
+          <a href="/">Home</a>
           /
           <span>Contact</span>
         </div>
@@ -18,10 +18,10 @@
 <!-- End Intro Section -->
 <!-- Contact Section -->
 <section class="padding ptb-xs-40">
-  <div class="container">
+  <div class="container section-contact">
     <div class="row">
       <div class="col-lg-8">
-        <div class="headeing pb-30">
+        <div class="heading pb-30">
           <h2>Get in Touch</h2>
           <span class="b-line l-left line-h"></span>
         </div>
@@ -64,7 +64,7 @@
       </div>
 
       <div class="col-lg-4 contact mt-sm-30 mt-xs-30">
-        <div class="headeing pb-20">
+        <div class="heading pb-20">
           <h2>Contact Info</h2>
           <span class="b-line l-left line-h"></span>
         </div>

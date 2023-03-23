@@ -134,6 +134,7 @@
   background-color: #e8a20d;
   color: #222d35;
   font-weight: 700 !important;
+  text-transform: capitalize;
 }
 
 #wrapper .main-banner .tp-bullets {

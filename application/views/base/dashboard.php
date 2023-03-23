@@ -12,7 +12,7 @@
 
 <section class="dashboard">
   <div class="row" style="margin: 0;">
-    <div class="col-lg-2" style="background: white;">
+    <div class="col-lg-2 col-md-2" style="background: white;padding: 0;">
       <div class="account-profile">
         <div>
           <?php if ($user->photo != "") { ?>
@@ -21,21 +21,20 @@
             <img src="/images/template/no_photo.jpg" class="avatar-img" alt="avatar" />
           <?php } ?>
         </div>
-        <h5>Weight Loss: <span>3.5 KG</span></h5>
+        <h4>Weight Loss: <span>3.5 KG</span></h4>
         <div class="bottom-line"></div>
         <div class="acount-profile-content">
           <div class="widget_shop">
             <div id="MainMenu2">
               <div class="list-group panel">
                 <div id="demo3">
-                  <a href="/member/log_book" class="list-group-item">Logbook</i></a>
-                  <a href="/member/calendar" class="list-group-item">Calendar</i></a>
-                  <a href="/member/workout_generator" class="list-group-item">WorkOut Generator</i></a>
-                  <a href="#category2" class="list-group-item" data-toggle="collapse" data-parent="#2">Account
-                    Functions<i class="fa fa-caret-down"></i></a>
-                  <div class="collapse list-group-submenu" id="category2">
+                  <a href="/member/log_book" class="list-parent list-group-item">Logbook</a>
+                  <!-- <a href="/member/calendar" class="list-group-item">Calendar</a> -->
+                  <!-- <a href="/member/workout_generator" class="list-group-item">WorkOut Generator</a> -->
+                  <div class="list-parent list-group-item">Account Functions</div>
+                  <div class="list-group-submenu">
                     <a href="/member/edit_account" class="list-group-item">Edit Account Profile</a>
-                    <a href="/member/edit_photo" class="list-group-item">Edit Avatar</a>
+                    <!-- <a href="/member/edit_photo" class="list-group-item">Edit Avatar</a> -->
                     <a href="/member/change_password" class="list-group-item">Change password</a>
                   </div>
                 </div>
@@ -46,7 +45,7 @@
         </div>
       </div>
     </div>
-    <div class="col-lg-8 today_workout">
+    <div class="col-lg-8 col-md-8 today_workout">
       <?php if ($member_group == 'member' && $trainer) { ?>
         <h3>Todays work out loaded</h3>
       <?php } ?>
@@ -54,7 +53,7 @@
         <h3>Workouts</h3>
       <?php } ?>
       <div class="row">
-        <div class="col-lg-8">
+        <div class="col-lg-8 col-md-8">
           <div class=" recent-workout">
             <h4>Recent workout</h4>
             <hr style="background-color: lightgray;" />
@@ -62,40 +61,49 @@
 
               <div class="textimonial_show">
                 <div class="testimonial-block cyan-background">
-                  <div>
-                    <img class="img-circle img-border" src="/assets/images/testimonial/2.jpg" alt="" />
+                  <div class="title">
+                    <h4>Nicole Booth</h4>
                   </div>
-                  <div>
-                    <h3>Recent workout</h3>
-                    <p>
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                      Quam quos aperiam ipsam modi dolor suscipit asperiores
-                      perspiciatis.
-                    </p>
+                  <div class="content">
+                    <div>
+                      <img class="img-circle img-border" src="/assets/images/testimonial/2.jpg" alt="" />
+                    </div>
+                    <div class="content-body">
+                      <h3>Recent workout</h3>
+                      <p>
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                        Quam quos aperiam ipsam modi dolor suscipit asperiores
+                        perspiciatis.
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
 
               <div class="textimonial_show">
                 <div class="testimonial-block cyan-background">
-                  <div>
-                    <img class="img-circle img-border" src="/assets/images/testimonial/2.jpg" alt="" />
+                  <div class="title">
+                    <h4>Nicole Booth</h4>
                   </div>
-                  <div>
-                    <h3>Recent workout</h3>
-                    <p>
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                      Quam quos aperiam ipsam modi dolor suscipit asperiores
-                      perspiciatis.
-                    </p>
+                  <div class="content">
+                    <div>
+                      <img class="img-circle img-border" src="/assets/images/testimonial/2.jpg" alt="" />
+                    </div>
+                    <div class="content-body">
+                      <h3>Recent workout</h3>
+                      <p>
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                        Quam quos aperiam ipsam modi dolor suscipit asperiores
+                        perspiciatis.
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="col-lg-4">
-
+        <div class="col-lg-4 col-md-4">
           <?php if ($member_group == 'member' && $trainer) { ?>
             <div class="past-workout">
               <h4>Past workout</h4>
@@ -146,52 +154,74 @@
             <div class="past-workout">
               <h4>Exercise Library</h4>
               <hr style="background-color: lightgray;" />
-              <a class="add-exercise" href="#">add exercise</a>
-              <div class="item-workout">
-                <div class="item-workout-avtar">
-                  <img src="/assets/images/about-1.jpg" alt="">
+              <div class="content">
+                <a class="add-exercise" href="#">add exercise</a>
+                <div class="item-workout">
+                  <div class="item-workout-avtar">
+                    <img src="/assets/images/about-1.jpg" alt="">
+                  </div>
+                  <div class="item-workout-content text-center">
+                    <h5>Workout name</h5>
+                  </div>
+                  <div class="item-workout-play">
+                    <a href="#">
+                      <img src="/images/template/play.png" alt="">
+                    </a>
+                  </div>
                 </div>
-                <div class="item-workout-content text-center">
-                  <h5>Workout name</h5>
-                </div>
-              </div>
-              <br />
+                <br />
 
-              <div class="item-workout">
-                <div class="item-workout-avtar">
-                  <img src="/assets/images/about-1.jpg" alt="">
+                <div class="item-workout">
+                  <div class="item-workout-avtar">
+                    <img src="/assets/images/about-1.jpg" alt="">
+                  </div>
+                  <div class="item-workout-content text-center">
+                    <h5>Workout name</h5>
+                  </div>
+                  <div class="item-workout-play">
+                    <a href="#">
+                      <img src="/images/template/play.png" alt="">
+                    </a>
+                  </div>
                 </div>
-                <div class="item-workout-content text-center">
-                  <h5>Workout name</h5>
-                </div>
-              </div>
-              <br />
+                <br />
 
-              <div class="item-workout">
-                <div class="item-workout-avtar">
-                  <img src="/assets/images/about-1.jpg" alt="">
+                <div class="item-workout">
+                  <div class="item-workout-avtar">
+                    <img src="/assets/images/about-1.jpg" alt="">
+                  </div>
+                  <div class="item-workout-content text-center">
+                    <h5>Workout name</h5>
+                  </div>
+                  <div class="item-workout-play">
+                    <a href="#">
+                      <img src="/images/template/play.png" alt="">
+                    </a>
+                  </div>
                 </div>
-                <div class="item-workout-content text-center">
-                  <h5>Workout name</h5>
-                </div>
-              </div>
-              <br />
+                <br />
 
-              <div class="item-workout">
-                <div class="item-workout-avtar">
-                  <img src="/assets/images/about-1.jpg" alt="">
+                <div class="item-workout">
+                  <div class="item-workout-avtar">
+                    <img src="/assets/images/about-1.jpg" alt="">
+                  </div>
+                  <div class="item-workout-content text-center">
+                    <h5>Workout name</h5>
+                  </div>
+                  <div class="item-workout-play">
+                    <a href="#">
+                      <img src="/images/template/play.png" alt="">
+                    </a>
+                  </div>
                 </div>
-                <div class="item-workout-content text-center">
-                  <h5>Workout name</h5>
-                </div>
+                <br />
               </div>
-              <br />
             </div>
           <?php } ?>
         </div>
       </div>
     </div>
-    <div class="col-lg-2" style="background: white;">
+    <div class="col-lg-2 col-md-2" style="background: white;">
       <?php if ($member_group == 'member' && $trainer) { ?>
         <div class="account-profile">
           <h3>My Trainer</h3>
@@ -218,7 +248,7 @@
             <?php if ($clients) {
               foreach ($clients as $client) {
                 ?>
-                <div class="item-workout">
+                <div class="item-workout dashboard_client" data-id="<?= $client->id ?>" >
                   <div class="item-workout-avtar">
                     <img src="/images/template/no_photo.jpg" />
                   </div>

@@ -251,5 +251,9 @@
 
       $("#dialog").dialog("open");
     });
+    $(".dashboard_client").live("click", function() {
+      var client_id = $(this).attr("data-id");
+      
+    });
   });
 })(jQuery);

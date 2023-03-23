@@ -22,14 +22,16 @@
                   <div class="form-group">
                     <div class="ui-input-group member-radios">
                       <div>
-                        <input type="radio" class="member-radio" name="member_type" value="members" <?php echo set_radio('member_type', 'client', true) ?> />
+                        <input type="radio" class="member-radio" name="member_type" value="members" <?php echo set_radio('member_type', 'members', true) ?> />
                         <label for="members" onClick="select_member('members')">Client </label>
                       </div>
                       <div>
-                        <input type="radio" class="member-radio" name="member_type" value="trainers" <?php echo set_radio('member_type', 'trainer') ?> />
-                        <label for="trainers" onClick="select_member('trainer')">Trainer </label>
+                        <input type="radio" class="member-radio" name="member_type" value="trainers" <?php echo set_radio('member_type', 'trainers') ?> />
+                        <label for="trainers" onClick="select_member('trainers')">Trainer </label>
                       </div>
                     </div>
+                  </div>
+                  <div class="register-form">
                     <div class="form-group">
                       <div class="ui-input-group" style="display: inline-block; width: 50%;">
                         <!-- <input type="text" required class="form-control" /> -->
@@ -100,14 +102,18 @@
                       <label for="terms_accept" class="text-small">
                         <?php echo form_checkbox($terms_accept,'1', FALSE, 'id="terms_accept"'); ?>
                         <span class="ion-ios-checkmark-empty22 custom-check"></span>
-                        I have read and agree to TrnHrd <a href="javascript:;"><i>terms & conditions</i></a> and <a
-                          href="javascript:;"><i>privacy policy</i></a>
+                        I have read and agree to TrnHrd <a href="javascript:;"><i>terms & conditions</i></a> and 
+                        <a href="javascript:;"><i>privacy policy</i></a>
                       </label>
                     </div>
                     <div class="spacer"></div>
                     <div class="form-group">
                       <input type="submit" class="btn-text log-in" value="Register">
                     </div>
+                    <div class="form-group">
+                      <a class="btn-text already-account" href="/member/login">Already have an account? Login</a>
+                    </div>
+                  </div>
                 </fieldset>
                 <?php echo form_close(); ?>
               </div>

@@ -132,8 +132,7 @@
             prevEl: '.swiper-button-prev',
         },
     });
-</script>
-<script type="text/javascript">
+    
     function select_member(value) {
         // Get the value of the selected radio button
         var selectedOption = document.querySelectorAll('input[name="member_type"]');

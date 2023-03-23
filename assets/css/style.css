@@ -2854,6 +2854,14 @@ figure {
   border: none;
   text-transform: initial;
 }
+.page-signin .checkbox-field i{
+  color: #0275d8;
+}
+.page-signin .already-account {
+  border-radius: 0;
+  width: 100%;
+  text-transform: initial;
+}
 .card {
   position: relative;
   overflow: hidden;
@@ -3061,7 +3069,15 @@ a.color-primary {
   left: 0;
   opacity: 0;
 }
+.page-signin .custom-check {
+  border-color: white;
+}
+.page-signin .register-form {
+  height: 400px;
+  overflow-y: scroll;
+}
 .custom-check {
+  background: #a1a1a1;
   width: 20px;
   height: 20px;
   display: inline-block;
@@ -6516,6 +6532,22 @@ div .secondary_bg {
     margin-bottom: 80px;
   }
 }
+.today_workout .testimonial-block {
+  display: block;
+}
+.dashboard .today_workout .testimonial-block .title h4 {
+  text-align: left;
+  padding: 0;
+  color: #0EAAFB;
+  padding-bottom: 20px;
+}
+.today_workout .testimonial-block .content{
+  display: flex;
+}
+.today_workout .testimonial-block .content .content-body{
+  padding-left: 15px;
+  border-left: 1px solid #707070;
+}
 .cyan-background {
   background: #fff;
   color: #2f3542;
@@ -6537,7 +6569,10 @@ div .secondary_bg {
   margin-top: -25px;
   margin-bottom: 5px;
 }
-.testimonial-block div {
+.testimonial-block .title {
+  width: 100%;
+}
+.testimonial-block .content div {
   width: 50%;
   text-align: left;
 }
@@ -7027,8 +7062,9 @@ div .secondary_bg {
   border-bottom-right-radius: 4px;
   border-bottom-left-radius: 4px;
 }
-.widget_shop .list-group-submenu {
-  margin-left: 20px;
+.widget_shop .list-group-submenu a{
+  text-decoration: underline;
+  padding-left: 30px;
 }
 .widget_shop .list-group-item {
   border: 0;
@@ -7037,24 +7073,12 @@ div .secondary_bg {
   border: 0;
   box-shadow: none;
 }
-.widget_shop a.list-group-item:focus,
-.widget_shop a.list-group-item:hover {
-  background: none;
-}
 .list-group-item {
   list-style: outside none none;
   padding-bottom: 5px;
   padding-left: 20px;
   padding-top: 5px;
   position: relative;
-}
-.list-group-item:before {
-  content: "\f105";
-  display: block;
-  font-family: FontAwesome;
-  left: 0;
-  position: absolute;
-  top: 5px;
 }
 .list-group-item .fa {
   margin-left: 7px;
@@ -7346,16 +7370,17 @@ ul.tags li {
 .dashboard .bottom-line {
   width: 50px;
   height: 3px;
-  background: yellow;
+  background: #EFBC3F;
   margin: auto;
+  margin-bottom: 16px;
 }
 .dashboard .acount-profile-content:before {
   content: "";
   background: #f8dd9c;
   display: block;
   position: absolute;
-  left: 45px;
-  top: -3px;
+  left: 50px;
+  top: -19px;
   width: 30px;
   height: 3px;
 }
@@ -7364,13 +7389,14 @@ ul.tags li {
   background: #f8dd9c;
   display: block;
   position: absolute;
-  right: 45px;
-  top: -3px;
+  right: 50px;
+  top: -19px;
   width: 30px;
   height: 3px;
 }
-.dashboard .account-profile h5 span {
-  color: #17aefb;
+.dashboard .account-profile h4 span {
+  color: #0EAAFB;
+  font-weight: 600;
 }
 .dashboard .avatar-img {
   border-radius: 50%;
@@ -7384,18 +7410,62 @@ ul.tags li {
 }
 .dashboard .today_workout .recent-workout {
   background: white;
-  padding: 10px;
+  border-radius: 5px;
+}
+.dashboard .today_workout .recent-workout h4 {
+  padding-top: 24px;
+  padding-left: 25px;
+  margin: 0;
+  font-weight: 600;
 }
 .dashboard .today_workout .past-workout {
   background: white;
-  padding: 10px;
+  padding: 0;
+}
+.dashboard .today_workout .past-workout h4 {
+  padding-top: 24px;
+  padding-left: 25px;
+  margin: 0;
+  font-weight: 600;
+}
+.dashboard .today_workout .past-workout .content {
+  padding: 0px 24px 10px;
+}
+.dashboard .today_workout .past-workout .content > a{
+  width: 100%;
+  display: flex;
+  background-color: #EFBC3F;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  color: #222D35;
 }
 .dashboard .today_workout .past-workout .item-workout {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
 }
-
+.dashboard .account-profile .past-workout .item-workout {
+  display: flex;
+}
+.dashboard .account-profile .past-workout .item-workout img{
+  width: 70px;
+  border-radius: 50%;
+}
+.dashboard .account-profile .past-workout .item-workout-content {
+  padding-left: 10px;
+  align-items: center;
+  display: flex;
+}
+.dashboard .today_workout .carousel-slider-recent-work .owl-controls .owl-nav .disabled i {
+  color: #A1A1A1;
+  background-color: #74798C;
+}
+.dashboard .today_workout .carousel-slider-recent-work .owl-controls .owl-nav .disabled {
+  border: 1px solid #74798C;
+  opacity: 0.4;
+}
 .dashboard .today_workout .past-workout .item-workout img {
   border-radius: 50%;
   width: 50px;
@@ -7405,7 +7475,7 @@ ul.tags li {
 }
 @media (max-width: 1024px) {
   .dashboard .today_workout .past-workout .item-workout {
-    display: block;
+    display: flex;
     text-align: center;
   }
   .dashboard .account-profile p {
@@ -7413,12 +7483,16 @@ ul.tags li {
   }
 }
 .dashboard .today_workout .past-workout .item-workout .item-workout-content {
-  padding-left: 20px;
+  padding-left: 8px;
+}
+.dashboard .today_workout .past-workout .item-workout .item-workout-play img{
+  width: 20px;
+  height: 20px;
 }
 /******************************************************************************
  widget_shop
  *******************************************************************************/
-
+/* 
 .widget_shop ul {
   padding: 0px;
   margin: 0px;
@@ -7433,7 +7507,7 @@ ul.tags li {
 }
 .widget_shop li {
   line-height: 21px;
-}
+} */
 .widget_shop a,
 .widget_shop a:visited {
   color: #7f7f7f;
@@ -7441,16 +7515,24 @@ ul.tags li {
   -webkit-transition: color 0.2s linear;
   transition: color 0.2s linear;
 }
-.widget_shop a:hover {
+/* .widget_shop a:hover {
   color: #000;
   -webkit-transition: color 0.2s linear;
   transition: color 0.2s linear;
-}
+} */
 .widget_shop .widget_shop-title .title {
   font-weight: 600;
   line-height: 1.3;
   margin: 0 0 12px;
   font-size: 20px;
+}
+.widget_shop .list-parent {
+  background: #EFBC3F55;
+  padding-left: 30px;
+  padding-right: 0;
+  height: 40px;
+  color: #222D35;
+  margin-bottom: 10px;
 }
 .widget_shop .widget_shop-title {
   border-bottom: 1px solid #e1e1e1;
@@ -7462,7 +7544,42 @@ ul.tags li {
   margin: 0 0 16px;
   position: relative;
 }
-
+@media only screen and (min-width: 768px) and (max-width: 991px){
+  .widget_shop .list-parent {
+    padding-left: 15px;
+  }
+  .widget_shop .list-group-submenu a {
+    padding-left: 15px;
+    padding-right: 0;
+  }
+  .dashboard .avatar-img {
+    width: 100px;
+    height: 100px;
+  }
+  .dashboard .account-profile h4{
+    font-size: 14px;
+  }
+  .dashboard .today_workout {
+    padding: 20px;
+  }
+  .dashboard .content .img-circle.img-border {
+    width: 100px !important;
+  }
+  .dashboard .today_workout .past-workout h4 {
+    padding-left: 8px;
+  }
+  .dashboard .today_workout .past-workout .content {
+    padding: 0 8px 10px;
+  }
+}
+@media only screen and (max-width: 768px) {
+  .dashboard .today_workout .row > div:first-child {
+    margin-bottom: 20px;
+  }
+  .dashboard .today_workout {
+    padding: 20px;
+  }
+}
 /* Latest News */
 .latest-posts {
   margin: 0px;
@@ -8516,7 +8633,7 @@ ul.tags li {
 .contact-info .info li .content p {
   margin: 0px;
   color: #696969;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 500;
 }
 .contact-info .event-social {
@@ -9512,4 +9629,82 @@ a.btn.xplus-btn.pricing:hover {
 }
 .project-detail-block {
   padding: 30px;
+}
+/*=======select trainer======*/
+.select-trainer h1{
+  text-align: center;
+  margin-bottom: 35px;
+  font-size: 45px;
+  font-weight: 600;
+}
+.select-trainer h2 {
+  text-align: center;
+  font-size: 32px;
+  max-width: 750px;
+  margin: auto;
+  text-transform: initial;
+  font-weight: 400;
+}
+.select-trainer .title_row {
+  margin: auto;
+  margin-top: 70px;
+}
+.select-trainer .slider_select_trainer {
+  margin-top: 80px;
+  margin-bottom: 57px;
+}
+.select-trainer .select_trainer_button {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.select-trainer .select_trainer_button .submit {
+  background-image: none;
+  background-color: #efbc3f;
+  width: 300px;
+  height: 58px;
+  font-size: 16px;
+  color: #222d35;
+}
+
+.inner-intro .page-breadcrumb {
+  font-size: 18px;
+}
+.sec_hedding h2, .first-run h1 {
+  font-size: 28px;
+}
+.solution_box p, .sec_about_company p, .sec_hedding p, #testimonial-section .about-block .text-box p, .first-run p {
+  font-size: 16px;
+}
+.sec_about_company h2, #testimonial-section .row .heading-box h2, .section-contact .heading h2{
+  font-size: 24px;
+}
+.fact-counter-wrapper .single-fact i{
+  color: white;
+}
+#testimonial-section .row .heading-box .b-line, .section-contact .b-line {
+  background: #EFBC3F;
+}
+#testimonial-section .dark-gray-bg {
+  background: #EFBC3FAA;
+}
+.section-contact .contact-form #submit {
+  background-color: #EFBC3F;
+  border-color: #EFBC3F;
+}
+.first-run .section label {
+  margin: 10px 0;
+  font-size: 18px;
+}
+.first-run .section select {
+  margin: 0;
+  margin-left: 10px;
+}
+.first-run .section {
+  font-size: 16px;
+}
+.first-run input.submit {
+  background-image: none;
+  background-color: #EFBC3F;
+  width: 190px;
 }

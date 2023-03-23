@@ -6,7 +6,7 @@
       <div class="title_row">
         <h1 data-title="About"><span>About</span></h1>
         <div class="page-breadcrumb">
-          <a>Home</a>
+          <a href="/">Home</a>
           /
           <span>About</span>
         </div>
@@ -35,8 +35,8 @@
     <div class="row">
       <div class="col-lg-4">
         <div class="solution_box about_new">
-          <i class="fa fa-check-square-o color_orenge" aria-hidden="true"></i>
-          <h4>Why Choose Us</h4>
+          <i class="far fa-check-square color_orenge" aria-hidden="true"></i>
+          <h3>Why Choose Us</h3>
           <p>
             Lorem Ipsum is simply dummy text of the printing and typesetting
             industry.
@@ -46,8 +46,8 @@
 
       <div class="col-lg-4 mt-sm-30 mt-xs-30">
         <div class="solution_box about_new">
-          <i class="fa fa-paper-plane-o color_orenge" aria-hidden="true"></i>
-          <h4>Our Mission</h4>
+          <i class="far fa-paper-plane color_orenge" aria-hidden="true"></i>
+          <h3>Our Mission</h3>
           <p>
             Lorem Ipsum is simply dummy text of the printing and typesetting
             industry.
@@ -58,7 +58,7 @@
       <div class="col-lg-4 mt-sm-30 mt-xs-30">
         <div class="solution_box about_new">
           <i class="fa fa-cogs color_orenge" aria-hidden="true"></i>
-          <h4>What We Do</h4>
+          <h3>What We Do</h3>
           <p>
             Lorem Ipsum is simply dummy text of the printing and typesetting
             industry.
@@ -75,10 +75,10 @@
   <div class="container">
     <div class="row">
       <div class="col-lg-6 d-flex align-items-center">
-        <div>
-          <h3 class="bigger_text mt-60 mt-xs-0 mt-sm-2">
+        <div class="sec_about_company">
+          <h2 class="bigger_text mt-60 mt-xs-0 mt-sm-2">
             The Company you can trust
-          </h3>
+          </h2>
           <p>
             Lorem Ipsum is simply dummy text of the printing and typesetting
             industry. Lorem Ipsum has been the industry's standard dummy

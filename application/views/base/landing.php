@@ -28,7 +28,7 @@
               </span>
               <h2>TRNHRD</h2>
 
-              <a class="btn-text" href="/member">let's start</a>
+              <a class="btn-text" href="/member/register">let's start</a>
             </div>
           </div>
         </li>
@@ -51,7 +51,7 @@
             <div class="banner-text">
               <span class="sub-text">we are here to help you</span>
               <h2>Professional Fitness Services Provider</h2>
-              <a class="btn-text" href="/member">let's start</a>
+              <a class="btn-text" href="/member/register">let's start</a>
             </div>
           </div>
         </li>
@@ -75,7 +75,7 @@
               <span class="sub-text">we are here to help you</span>
               <h2>We Are Fitness Manager Always at Your Service.</h2>
 
-              <a class="btn-text" href="/member">let's start</a>
+              <a class="btn-text" href="/member/register">let's start</a>
             </div>
           </div>
         </li>
@@ -310,8 +310,6 @@
             <a href="#" class="read-more">Read More</a>
           </div>
         </div>
-
-
       </div>
     </div>
   </div>

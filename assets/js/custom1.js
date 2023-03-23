@@ -274,7 +274,7 @@ $(document).on("ready", function () {
 
   var carouselSliderRecent = $(".carousel-slider-recent-work");
   carouselSliderRecent.owlCarousel({
-    loop: true,
+    loop: false,
     margin: 10,
     nav: true,
     dots: false,
@@ -296,6 +296,36 @@ $(document).on("ready", function () {
         items: 1,
       },
     },
+  });
+
+  var slider_select_trainer = $(".slider_select_trainer");
+  slider_select_trainer.owlCarousel({
+    loop: true,
+    margin: 30,
+    nav: false,
+    dots: false,
+    center: false,
+    autoplay: true,
+    autoplayTimeout: 2000,
+    autoplayHoverPause: true,
+    responsive: {
+      0: {
+        items: 1,
+      },
+      768: {
+        items: 2,
+      },
+      992: {
+        items: 4,
+      },
+      1200: {
+        items: 4,
+      }
+    },
+    navText: [
+      "<i class='ion-ios-arrow-back'></i>",
+      "<i class='ion-ios-arrow-forward'></i>",
+    ],
   });
 
   // Index_testimonail
