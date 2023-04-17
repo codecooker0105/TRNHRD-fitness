@@ -353,3 +353,15 @@ $config['groups']['yui'] = array(
 
 );
 
+$config['groups']['select_trainer'] = array(
+	
+	'js' => array(
+	
+		array('jquery-ui-1.7.3.custom.min.js'),
+		array('select_trainer.js')
+	
+	),	
+	'css' => array(
+		array('sunny/jquery-ui-1.7.3.custom.css')
+	)
+);

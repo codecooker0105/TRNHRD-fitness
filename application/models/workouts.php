@@ -674,12 +674,60 @@ class Workouts extends CI_Model
 
 	public function get_monthly_workouts($month, $year, $user_id)
 	{
-		return $this->db->select(array('user_workouts.*', 'users.*', 'meta.*', 'progressions.title as pro_title'))->join('progressions', 'progressions.id = user_workouts.progression_id', 'left')->join('trainer_workouts', 'trainer_workouts.id = user_workouts.trainer_workout_id', 'left')->join('users', 'trainer_workouts.trainer_id = users.id', 'left')->join('meta', 'meta.user_id = users.id', 'left')->where('user_workouts.user_id', $user_id)->where('workout_date >=', date('Y-m-d', mktime(0, 0, 0, $month, 1, $year)))->where('workout_date <=', date('Y-m-d', strtotime('-1 second', strtotime('+1 month', strtotime($month . '/01/' . $year)))))->order_by("workout_date", "desc")->get('user_workouts');
+		return $this->db->select(array('user_workouts.*', 'users.*', 'meta.*', 'progressions.title as pro_title'))->join('progressions', 'progressions.id = user_workouts.progression_id', 'left')
+		->join('trainer_workouts', 'trainer_workouts.id = user_workouts.trainer_workout_id', 'left')
+		->join('users', 'trainer_workouts.trainer_id = users.id', 'left')
+		->join('meta', 'meta.user_id = users.id', 'left')
+		->where('user_workouts.user_id', $user_id)
+		->where('workout_date >=', date('Y-m-d', mktime(0, 0, 0, $month, 1, $year)))
+		->where('workout_date <=', date('Y-m-d', strtotime('-1 second', strtotime('+1 month', strtotime($month . '/01/' . $year)))))
+		->order_by("workout_date", "desc")
+		->get('user_workouts');
 	}
 
 	public function get_past_workouts($user_id)
 	{
 		return $this->db->select(array('user_workouts.*'))->where('user_id', $user_id)->where('workout_date <', date('Y-m-d'))->order_by("workout_date", "desc")->get('user_workouts')->result();
+	}
+
+	public function get_exercise_group($user_id) {
+		return $this->db->select(array('trainer_client_groups.*'))
+						->where('trainer_id', $user_id)
+						->get('trainer_client_groups')
+						->result();
+	}
+
+	public function get_past_workouts_testimonial($user_id)
+	{
+		return $this->db->select(array('user_workouts.title', 'trainer_workouts.trainer_id', 'meta.first_name', 'meta.last_name'))
+			->join('trainer_workouts', 'trainer_workouts.id = user_workouts.trainer_workout_id', 'left')
+			->join('users', 'users.id = trainer_workouts.trainer_id', 'left')
+			->join('meta', 'meta.user_id = users.id', 'right')
+			->where('user_workouts.user_id', $user_id)
+			->where('user_workouts.workout_date <', date('Y-m-d'))
+			->order_by("workout_date", "desc")
+			->limit(3)
+			->get('user_workouts')
+			->result();
+	}
+
+	public function get_past_5_exercise($user_id, $trainer_id) {
+		
+		return $this->db->select(array('user_workouts.*', 'user_workout_exercises.*', 'exercises.title as exercise_title'))
+			->join('trainer_workouts', 'trainer_workouts.id = user_workouts.trainer_workout_id', 'left')
+			->join('user_workout_exercises', 'user_workout_exercises.workout_id = user_workouts.id', 'left')
+			->join('exercises', 'exercises.id = user_workout_exercises.exercise_id', 'left')
+			->where('trainer_workouts.trainer_id', $trainer_id)
+			->where('user_workouts.user_id', $user_id)
+			->order_by("workout_date", "desc")
+			->limit(5)
+			->get('user_workouts')
+			->result();
+	}
+
+	public function get_past_5_workouts($user_id)
+	{
+		return $this->db->select(array('user_workouts.*'))->where('user_id', $user_id)->where('workout_date <', date('Y-m-d'))->order_by("workout_date", "desc")->limit(5)->get('user_workouts')->result();
 	}
 
 	public function get_upcoming_created_workouts($user_id)

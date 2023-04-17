@@ -7431,7 +7431,7 @@ ul.tags li {
 .dashboard .today_workout .past-workout .content {
   padding: 0px 24px 10px;
 }
-.dashboard .today_workout .past-workout .content > a{
+.dashboard .today_workout .past-workout .content > button{
   width: 100%;
   display: flex;
   background-color: #EFBC3F;
@@ -7441,16 +7441,18 @@ ul.tags li {
   margin-bottom: 20px;
   color: #222D35;
 }
-.dashboard .today_workout .past-workout .item-workout {
+.dashboard .past-workout .item-workout {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
 }
 .dashboard .account-profile .past-workout .item-workout {
   display: flex;
+  justify-content: unset;
 }
 .dashboard .account-profile .past-workout .item-workout img{
   width: 70px;
+  height: 70px;
   border-radius: 50%;
 }
 .dashboard .account-profile .past-workout .item-workout-content {
@@ -9653,6 +9655,18 @@ a.btn.xplus-btn.pricing:hover {
   margin-top: 80px;
   margin-bottom: 57px;
 }
+.select-trainer .slider_select_trainer .top_cours img{
+  height: 200px;
+}
+.select-trainer .courses_detail .read-more {
+  background-color: transparent;
+}
+.select-trainer .select-border {
+  border-color: #efbc3f;
+}
+.select-trainer #infoMessage {
+  margin-top: 20px;
+}
 .select-trainer .select_trainer_button {
   width: 100%;
   display: flex;
@@ -9707,4 +9721,131 @@ a.btn.xplus-btn.pricing:hover {
   background-image: none;
   background-color: #EFBC3F;
   width: 190px;
+}
+.dashboard .client-part {
+  height: 100%;
+}
+.dashboard .client-part .item-workout-content h5 {
+  margin-bottom: 0;
+  width: 140px; 
+}
+.dashboard .past-workout.client-part .item-workout {
+  justify-content: unset;
+  padding-bottom: 10px;
+  padding-left: 20px;
+}
+.dashboard .past-workout.trainer-part .item-workout {
+  padding-bottom: 10px;
+}
+.single-line-text-wrap {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: auto;
+}
+.multi-line-text-wrap {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  max-height: fit-content;
+}
+.header .container-fluid .row {
+  margin: 0;
+}
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1002;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.4);
+}
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 40px;
+  border: 1px solid #888;
+}
+.close_button {
+  color: #aaa;
+  float: right;
+  font-size: 36px;
+  font-weight: bold;
+  border-radius: 50%;
+  top: 10px;
+  right: 20px;
+  position: absolute;
+  text-align: center;
+  width: 24px;
+  height: 24px;
+  background-color: #F95555;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.close_button:hover,
+.close_button:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+#popup_video .modal-content video {
+  height: 400px;
+  width: auto;
+}
+.trainer-part .show_video {
+  background: transparent;
+}
+#popup_add_exercise h3{
+  text-align: center;
+  color: #EFBC3F;
+  font-size: 30px;
+}
+#popup_add_exercise .form-group {
+  display: grid;
+  min-width: 300px;
+}
+#popup_add_exercise .form-group label{
+  margin-bottom: 3px;
+  font-size: 18px;
+}
+#popup_add_exercise .form-group input{
+  padding: 10px 5px;
+  border: solid 1px;
+  border-color: RGBA(161,161,161,0.5);
+  margin: 0;
+}
+#popup_add_exercise .form-group span{
+  font-size: 10px;
+  color: #74798C;
+}
+#popup_add_exercise .form-group select{
+  margin: 0;
+  text-indent: 5px;
+  height: 35px;
+  border-radius: 0;
+  background-color: white !important;
+  border-color: #74798C;
+  color: #74798C;
+}
+#popup_add_exercise .form-group h2{
+  margin-bottom: 4px;
+}
+#popup_add_exercise button {
+  background: #EFBC3F;
+  height: 36px;
+  color: #222D35;
+}
+#popup_add_exercise label.custom-file-upload {
+  background-color: #0EAAFB;
+  padding: 10px 14px;
+  color: white;
+  font-size: 12px;
+  width: 120px;
+  text-align: center;
+}
+#popup_add_exercise input[type="file"] {
+  display: none;
 }

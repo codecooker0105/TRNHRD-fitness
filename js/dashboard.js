@@ -255,5 +255,40 @@
       var client_id = $(this).attr("data-id");
       
     });
+    $(".show_video").click(function() {
+      var exercise_id = $(this).parent().parent().find('.exercise_id')[0].value;
+      $.post(
+        "/member/get_video_url",
+        { exercise_id: exercise_id },
+        function (data) {
+          console.log(data);
+          $("#video_source").attr('src', data);
+          $("#popup_video video")[0].load();
+          $("#popup_video").css("display", "flex");
+        },
+        "json"
+      );
+    });
+    $(".video_close").click(function() {
+      $("#popup_video").css("display", "none");
+    });
+    $(".add-exercise").click(function() {
+      $("#popup_add_exercise").css("display", "flex");
+    });
+    $(".close_add_exercise").click(function() {
+      $("#popup_add_exercise").css("display", "none");
+    });
+    $("#add_exercise_submit").click(function() {
+      $.post(
+        "/member/add_exercies",
+        { exercise_id: exercise_id },
+        function (data) {
+          $("#video_source").attr('src', data);
+          $("#popup_video video")[0].load();
+          $("#popup_video").css("display", "flex");
+        },
+        "json"
+      );
+    });
   });
 })(jQuery);

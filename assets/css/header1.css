@@ -20,7 +20,7 @@
 }
 #header.header-1 {
   background: #222D35;
-  z-index: 9999;
+  z-index: 1000;
   position: relative;
   width: 100%;
 }
