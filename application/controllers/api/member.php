@@ -803,6 +803,7 @@ class Member extends Controller
                     } else {
                         $this->api_model->wd_result(array('status' => 0, 'message' => "Your message failed to send. Please check the email you entered and try again. If you continue to get this message, please contact support.", 'data' => $data));
                     }
+                    $this->send_notifications( $data['clients']['device_token'], "Trnhrd - Trainer Request");
                 } else {
                     //display the edit user form
                     //set the flash data error message if there is one
@@ -1971,6 +1972,18 @@ class Member extends Controller
         //            $response['title'] = date('l F jS', strtotime($this->data['year'] . '-' . $this->data['month'] . '-' . $this->data['date']));
 //            $this->data['past_workouts'] = $this->workouts_api->get_past_workouts($this->data['user']->id);
         if ($workout) {
+
+            if (isset($data['device_type']) && !empty($data['device_type'])) {
+                $deviceUpdate['device_type'] = $data['device_type'];
+            }
+            if (isset($data['device_token']) && !empty($data['device_token'])) {
+                $deviceUpdate['device_token'] = $data['device_token'];
+            }
+            if (isset($deviceUpdate) && !empty($deviceUpdate)) {
+                $this->api_model->updateDeviceField($data['user_id'], $deviceUpdate);
+            }
+
+
             $uwe = array();
             if ($workout['created'] == 'true') {
                 foreach ($workout['sections'] as $section) {
@@ -2996,6 +3009,23 @@ class Member extends Controller
         } else {
             $this->api_model->wd_result(array('status' => 0, 'message' => 'Trainer does not exist with given ID'));
         }
+    }
+
+
+    function send_notifications($device_token, $message)
+    {
+        $this->load->library('apn');
+        $this->apn->connectToPush();
+
+        $send_result = $this->apn->sendMessage($device_token, $message, 1,  'default'  );
+            
+        if($send_result)
+            log_message('debug','Отправлено успешно');
+        else
+            log_message('error',$this->apn->error);
+
+        
+        $this->apn->disconnectPush();
     }
 
 }
