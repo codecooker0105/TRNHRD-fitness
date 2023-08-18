@@ -1265,6 +1265,7 @@ class Member extends Controller
 
     function save_log_stats()
     {
+        $user_id = $this->input->post('user_id');
         $workout_date = $this->input->post('workout_date');
         $exercise_id = $this->input->post('exercise_id');
         $uw_id = $this->input->post('uw_id');
@@ -1276,7 +1277,7 @@ class Member extends Controller
         $sets = $this->input->post('sets');
         $difficulty = $this->input->post('difficulty');
 
-        $this->db->where('user_id', $this->session->userdata('user_id'))->where('uw_id', $uw_id)->where('uwe_id', $uwe_id)->delete('user_workout_stats');
+        $this->db->where('user_id', $user_id)->where('uw_id', $uw_id)->where('uwe_id', $uwe_id)->delete('user_workout_stats');
 
         foreach ($sets as $set) {
             if (isset($weight[$set])) {
@@ -1294,7 +1295,7 @@ class Member extends Controller
                 'uw_id' => $uw_id,
                 'uwe_id' => $uwe_id,
                 'workout_date' => $workout_date,
-                'user_id' => $this->session->userdata('user_id'),
+                'user_id' => $user_id,
                 'exercise_id' => $exercise_id,
                 'difficulty' => $difficulty,
                 'set' => $set,
@@ -3028,4 +3029,62 @@ class Member extends Controller
         $this->apn->disconnectPush();
     }
 
+    public function generateJWT()
+    {
+        $this->load->library('Jwt_creator');
+        $payload = array(
+            "iss" => "KMTJ5J4KWU",
+            "aud" => "audience",
+            "iat" => time(), // Issued at time
+            "exp" => time() + 3600, // Expiration time (1 hour from now)
+        );
+
+        $jwt = $this->jwt_creator->createToken($payload);
+        return $jwt;
+    }
+
+    function sendAPNSPushNotification($deviceToken, $jwtToken) {
+        $url = 'https://api.sandbox.push.apple.com/3/device/' . $deviceToken;
+    
+        $headers = array(
+            'apns-topic: com.hybrid.fitness',
+            'apns-push-type: alert',
+            'authorization: bearer ' . $jwtToken
+        );
+    
+        $data = array(
+            'aps' => array(
+                'alert' => 'test'
+            )
+        );
+    
+        $dataString = json_encode($data);
+    
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HEADER, false);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
+        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_2_0);
+    
+        $response = curl_exec($ch);
+        $info = curl_getinfo($ch);
+        
+        curl_close($ch);
+    
+        return array(
+            'response' => $response,
+            'info' => $info
+        );
+    }
+
+    public function testAPN()
+    {
+        $device_token = '8f7f60f609aba189b8bc216875e9537f95b999267ee760c04cb710039dd8fdab';
+        $jwtToken = $this->generateJWT();
+        $result = $this->sendAPNSPushNotification($device_token, $jwtToken);
+        
+        echo "Response: " . $result['response'] . "\n";
+        echo "HTTP Status Code: " . $result['info']['http_code'] . "\n";
+    }
 }

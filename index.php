@@ -198,6 +198,7 @@ if (defined('ENVIRONMENT'))
  *
  */
 require_once BASEPATH.'core/CodeIgniter'.EXT;
+require APPPATH . '../vendor/autoload.php';
 
 /* End of file index.php */
 /* Location: ./index.php */
