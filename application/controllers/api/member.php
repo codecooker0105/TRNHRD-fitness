@@ -3080,7 +3080,7 @@ class Member extends Controller
 
     public function testAPN()
     {
-        $device_token = '8f7f60f609aba189b8bc216875e9537f95b999267ee760c04cb710039dd8fdab';
+        $device_token = 'token'; //token
         $jwtToken = $this->generateJWT();
         $result = $this->sendAPNSPushNotification($device_token, $jwtToken);
         
