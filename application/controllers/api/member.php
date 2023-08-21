@@ -159,6 +159,36 @@ class Member extends Controller
         }
     }
 
+    function all_clients()
+    {
+        $data = $_POST;
+        $mandatory_fields = array('user_id');
+        $this->api_model->validate($mandatory_fields, $data);
+        $limit = $data['limit'] ? $data['limit'] : 10;
+        $page = $data['page'] ? $data['page'] : 1;
+        $result = $this->api_model->get_all_clients($data['user_id'], $page, $limit);
+        if ($result) {
+            $this->api_model->wd_result(array('status' => 1, 'data' => $result));
+        } else {
+            $this->api_model->wd_result(array('status' => 0, 'message' => 'There Are No Clients'));
+        }
+    }
+
+    function trainer_groups()
+    {
+        $data = $_POST;
+        $mandatory_fields = array('user_id');
+        $this->api_model->validate($mandatory_fields, $data);
+        $limit = $data['limit'] ? $data['limit'] : 10;
+        $page = $data['page'] ? $data['page'] : 1;
+        $result = $this->api_model->get_all_groups($data['user_id'], $page, $limit);
+        if ($data) {
+            $this->api_model->wd_result(array('status' => 1, 'data' => $result));
+        } else {
+            $this->api_model->wd_result(array('status' => 0, 'message' => 'There Are No Clients'));
+        }
+    }
+
     //create  new exercise
     function create_trainer_group()
     {
@@ -2178,6 +2208,9 @@ class Member extends Controller
             }
             if (isset($data['zip'])) {
                 $update_data['zip'] = $data['zip'];
+            }
+            if (isset($data['phone_number'])) {
+                $update_data['phone_number'] = $data['phone_number'];
             }
 
             if (isset($_FILES['photo']['name']) && !empty($_FILES['photo']['name'])) {

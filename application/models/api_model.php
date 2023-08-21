@@ -122,7 +122,7 @@ class Api_model extends CI_Model
 
     public function user_detail_by_user_id($user_id)
     {
-        $this->db->select('users.id,users.group_id,users.username,users.email,users.active,users.device_type,users.device_token,groups.name as group_name, groups.description as group_description,meta.first_name,meta.last_name,meta.city,meta.state,meta.zip,meta.photo,meta.progression_plan_id,meta.progression_plan_day,meta.exp_level_id,meta.available_equipment,meta.workoutdays,meta.tos_agreement');
+        $this->db->select('users.id,users.group_id,users.username,users.email,users.active,users.device_type,users.device_token,groups.name as group_name, groups.description as group_description,meta.first_name,meta.last_name,meta.phone_number,meta.city,meta.state,meta.zip,meta.photo,meta.progression_plan_id,meta.progression_plan_day,meta.exp_level_id,meta.available_equipment,meta.workoutdays,meta.tos_agreement');
         $this->db->from('users');
         $this->db->join('meta', 'users.id = meta.user_id');
         $this->db->join('groups', 'users.group_id = groups.id');
@@ -243,6 +243,13 @@ class Api_model extends CI_Model
         return $client;
     }
 
+    function get_all_clients($trainer_id, $page, $limit)
+    {
+        $query = 'SELECT `users`.`id` As user_id, `users`.`username`, `users`.`email`, IFNULL(`trainer_clients`.`status`, NULL) AS status, `meta`.`first_name`, `meta`.`last_name`, `meta`.`phone_number`, `meta`.`photo`, `meta`.`available_equipment` FROM (`users`) LEFT JOIN `trainer_clients` ON `users`.`id` = `trainer_clients`.`client_id` AND `trainer_clients`.`trainer_id` = ' . $trainer_id . ' JOIN `meta` ON `users`.`id` = `meta`.`user_id` WHERE `users`.`group_id` = 2 ORDER BY `users`.`created_on` desc LIMIT ' . $limit . ' OFFSET ' . ($page-1) * $limit;
+        $result = $this->db->query($query)->result();
+        return $result;
+    }
+
     function get_trainers($member_email)
     {
         $this->db->select('trainer_clients.id,users.email,trainer_clients.status,meta.first_name,meta.last_name,meta.photo,meta.user_id');
@@ -257,6 +264,33 @@ class Api_model extends CI_Model
     function get_groups($trainer_id)
     {
         $groups = $this->db->get_where('trainer_client_groups', ['trainer_id' => $trainer_id])->result_array();
+        if ($groups) {
+            foreach ($groups as $key => $group) {
+                if (isset($group['exp_level_id'])) {
+                    $groups[$key]['exp_level_name'] = "";
+                    if (!empty($group['exp_level_id'])) {
+                        $groups[$key]['exp_level_name'] = $this->exp_level_name_from_id($group['exp_level_id']);
+                    }
+                }
+                if (isset($group['available_equipment'])) {
+                    $groups[$key]['available_equipment_name'] = "";
+                    if (!empty($group['available_equipment'])) {
+                        $groups[$key]['available_equipment_name'] = $this->available_equipment_array_from_id($group['available_equipment']);
+                    }
+                }
+                $this->db->where('trainer_group_id', $group['id']);
+                $groups[$key]['members_count'] = $this->db->count_all_results('trainer_clients');
+            }
+        }
+        return $groups;
+    }
+
+    function get_all_groups($trainer_id, $page, $limit)
+    {
+        $this->db->from('trainer_client_groups');
+        $this->db->where(['trainer_id' => $trainer_id]);
+        $this->db->limit($limit, ($page-1) * $limit);
+        $groups = $this->db->get()->result_array();
         if ($groups) {
             foreach ($groups as $key => $group) {
                 if (isset($group['exp_level_id'])) {
