@@ -833,7 +833,9 @@ class Member extends Controller
                     } else {
                         $this->api_model->wd_result(array('status' => 0, 'message' => "Your message failed to send. Please check the email you entered and try again. If you continue to get this message, please contact support.", 'data' => $data));
                     }
-                    $this->send_notifications( $data['clients']['device_token'], "Trnhrd - Trainer Request");
+                    if($data['clients']['device_token']) {
+                        $this->send_notifications( $data['clients']['device_token'], "Trnhrd - Trainer Request");
+                    }
                 } else {
                     //display the edit user form
                     //set the flash data error message if there is one
@@ -1399,6 +1401,28 @@ class Member extends Controller
 //            return $this->workouts->get_skeleton_generator(array('id' => $id, 'progression_id' => $progression_id, 'user_id' => $user_id, 'available_equipment' => $available_equipment));
 //        }
 
+    function get_all_workout()
+    {
+        $data = $_POST;
+        $mandatory_fields = array('user_id');
+        $this->api_model->validate($mandatory_fields, $data);
+        $limit = $data['limit'] ? $data['limit'] : 10;
+        $page = $data['page'] ? $data['page'] : 1;
+        $user = $this->api_model->user_detail_by_user_id($data['user_id']);
+
+        if ($user && $user->group_id == 3) {
+
+            $all_workouts = $this->workouts_api->overall_workouts($data['user_id'], $page, $limit);
+            if ($all_workouts) {
+                $this->api_model->wd_result(array('status' => 1, 'data' => $all_workouts));
+            } else {
+                $this->api_model->wd_result(array('status' => 0, 'message' => 'No exercise found'));
+            }
+        } else {
+            $this->api_model->wd_result(array('status' => 0, 'message' => 'Trainer does not exist with given ID'));
+        }
+    }
+
     function get_workout_for_generator()
     {
         if ($this->input->post('group_id') != '') {
@@ -1649,7 +1673,7 @@ class Member extends Controller
         $this->api_model->validate($mandatory_fields, $data);
 
         $user = $this->api_model->user_detail_by_user_id($data['user_id']);
-
+        $trainer_user = $this->api_model->user_detail_by_user_id($data['request_id']);
         if ($user && $user->group_id == 2) {
 
             $other_error = false;
@@ -1662,10 +1686,16 @@ class Member extends Controller
                     $this->crud->use_table('trainer_clients');
                     $this->crud->update(array('id' => $this->input->post('request_id')), array('client_id' => $data['user_id'], 'status' => 'confirmed'));
                     $this->api_model->wd_result(array('status' => 1, 'message' => "Request confirmed successfully"));
+                    if($trainer_user['device_token']) {
+                        $this->send_notifications( $trainer_user['device_token'], "Your request confirmed.");
+                    }
                 } else {
                     $this->crud->use_table('trainer_clients');
                     $this->crud->update(array('id' => $this->input->post('request_id')), array('client_id' => $data['user_id'], 'status' => 'denied'));
                     $this->api_model->wd_result(array('status' => 1, 'message' => "Request denied successfully"));
+                    if($trainer_user['device_token']) {
+                        $this->send_notifications( $trainer_user['device_token'], "Your request denied.");
+                    }
                 }
             }
 
@@ -2809,6 +2839,29 @@ class Member extends Controller
         }
     }
 
+    function get_all_exercises()
+    {
+        $data = $_POST;
+        $mandatory_fields = array('user_id');
+        $this->api_model->validate($mandatory_fields, $data);
+
+        $limit = $data['limit'] ? $data['limit'] : 10;
+        $page = $data['page'] ? $data['page'] : 1;
+        $user = $this->api_model->user_detail_by_user_id($data['user_id']);
+
+        if ($user && $user->group_id == 3) {
+
+            $exercise_type_list = $this->workouts_api->get_exercises(array('user_id' => $data['user_id']), $page, $limit);
+            if ($exercise_type_list) {
+                $this->api_model->wd_result(array('status' => 1, 'data' => $exercise_type_list));
+            } else {
+                $this->api_model->wd_result(array('status' => 0, 'message' => 'No exercise found'));
+            }
+        } else {
+            $this->api_model->wd_result(array('status' => 0, 'message' => 'Trainer does not exist with given ID'));
+        }
+    }
+
     function exercises()
     {
         $data = $_POST;
@@ -3048,18 +3101,8 @@ class Member extends Controller
 
     function send_notifications($device_token, $message)
     {
-        $this->load->library('apn');
-        $this->apn->connectToPush();
-
-        $send_result = $this->apn->sendMessage($device_token, $message, 1,  'default'  );
-            
-        if($send_result)
-            log_message('debug','Отправлено успешно');
-        else
-            log_message('error',$this->apn->error);
-
-        
-        $this->apn->disconnectPush();
+        $jwtToken = $this->generateJWT();
+        $result = $this->sendAPNSPushNotification($device_token, $jwtToken, $message);
     }
 
     public function generateJWT()
@@ -3067,16 +3110,14 @@ class Member extends Controller
         $this->load->library('Jwt_creator');
         $payload = array(
             "iss" => "KMTJ5J4KWU",
-            "aud" => "audience",
             "iat" => time(), // Issued at time
-            "exp" => time() + 3600, // Expiration time (1 hour from now)
         );
 
         $jwt = $this->jwt_creator->createToken($payload);
         return $jwt;
     }
 
-    function sendAPNSPushNotification($deviceToken, $jwtToken) {
+    function sendAPNSPushNotification($deviceToken, $jwtToken, $message) {
         $url = 'https://api.sandbox.push.apple.com/3/device/' . $deviceToken;
     
         $headers = array(
@@ -3087,7 +3128,7 @@ class Member extends Controller
     
         $data = array(
             'aps' => array(
-                'alert' => 'test'
+                'alert' => $message
             )
         );
     
@@ -3104,18 +3145,56 @@ class Member extends Controller
         $info = curl_getinfo($ch);
         
         curl_close($ch);
-    
-        return array(
-            'response' => $response,
-            'info' => $info
-        );
+
+        // $url = "ssl://api.sandbox.push.apple.com:443";
+        // $path = "/3/device/" . $device_token;
+
+        // $headers = array(
+        //     "apns-topic: com.hybrid.fitness",
+        //     "apns-push-type: alert",
+        //     "authorization: bearer " . $jwtToken
+        // );
+
+        // $data = array(
+        //     "aps" => array(
+        //         "alert" => $message
+        //     )
+        // );
+
+        // $body = json_encode($data);
+
+        // $request = "POST $path HTTP/1.1\r\n";
+        // $request .= "Host: api.sandbox.push.apple.com\r\n";
+        // $request .= "Content-Type: application/json\r\n";
+        // $request .= "Content-Length: " . strlen($body) . "\r\n";
+        // foreach ($headers as $header) {
+        //     $request .= $header . "\r\n";
+        // }
+        // $request .= "\r\n";
+        // $request .= $body;
+
+        // $context = stream_context_create([
+        //     'ssl' => [
+        //         'crypto_method' => STREAM_CRYPTO_METHOD_TLS_CLIENT,
+        //     ],
+        // ]);
+
+        // $fp = stream_socket_client($url, $errno, $errstr, 30, STREAM_CLIENT_CONNECT, $context);
+        // if (!$fp) {
+        //     echo "Connection failed: $errno - $errstr";
+        // } else {
+        //     fwrite($fp, $request);
+        //     echo stream_get_contents($fp);
+        //     fclose($fp);
+        // }
     }
 
     public function testAPN()
     {
-        $device_token = 'token'; //token
+        $device_token = 'b3786cee91405916a712b887f80e32de04c48bd0b42ce4b32c8ad34acf0c357a'; //token
         $jwtToken = $this->generateJWT();
-        $result = $this->sendAPNSPushNotification($device_token, $jwtToken);
+        echo $jwtToken . '/n';
+        $result = $this->sendAPNSPushNotification($device_token, $jwtToken, 'test');
         
         echo "Response: " . $result['response'] . "\n";
         echo "HTTP Status Code: " . $result['info']['http_code'] . "\n";

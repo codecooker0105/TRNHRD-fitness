@@ -234,7 +234,7 @@ class Api_model extends CI_Model
 
     function get_clients($trainer_id)
     {
-        $this->db->select('trainer_clients.id,users.email,trainer_clients.status,meta.first_name,meta.last_name,meta.photo,meta.user_id,meta.available_equipment');
+        $this->db->select('trainer_clients.id,users.email,users.device_token,trainer_clients.status,meta.first_name,meta.last_name,meta.photo,meta.user_id,meta.available_equipment');
         $this->db->from('users');
         $this->db->join('trainer_clients', 'users.email = trainer_clients.email');
         $this->db->join('meta', 'users.id = meta.user_id');
