@@ -777,9 +777,9 @@ class Member extends Controller
 
         if ($user && $user->group_id == 3) {
 
-            $mailDetail = $this->api_model->user_table_detail_through_email($data['email']);
+            // $mailDetail = $this->api_model->user_table_detail_through_email($data['email']);
 
-            if ($mailDetail && $mailDetail['group_id'] == 2) {
+            // if ($mailDetail && $mailDetail['group_id'] == 2) {
 
                 $error_message = '';
 
@@ -834,7 +834,7 @@ class Member extends Controller
                         $this->api_model->wd_result(array('status' => 0, 'message' => "Your message failed to send. Please check the email you entered and try again. If you continue to get this message, please contact support.", 'data' => $data));
                     }
                     if($data['clients']['device_token']) {
-                        $this->send_notifications( $data['clients']['device_token'], "Trnhrd - Trainer Request");
+                        $this->send_notifications( $data['clients']['device_token'], "Trnhrd - Trainer Request", 0);
                     }
                 } else {
                     //display the edit user form
@@ -845,9 +845,9 @@ class Member extends Controller
                         $this->api_model->wd_result(array('status' => 0, 'message' => strip_tags((validation_errors()) ? ($this->ion_auth->errors() ? $this->ion_auth->errors() : validation_errors()) : $this->session->flashdata('message'))));
                     }
                 }
-            } else {
-                $this->api_model->wd_result(array('status' => 0, 'message' => 'You Can Only Send Request To Members'));
-            }
+            // } else {
+            //     $this->api_model->wd_result(array('status' => 0, 'message' => 'You Can Only Send Request To Members'));
+            // }
         } else {
             $this->api_model->wd_result(array('status' => 0, 'message' => 'Trainers does not exist with given ID'));
         }
@@ -992,6 +992,23 @@ class Member extends Controller
         }
     }
 
+    function delete_workout()
+    {
+        $data = $_POST;
+        $mandatory_fields = array('id', 'user_id');
+        $this->api_model->validate($mandatory_fields, $data);
+
+        $user = $this->api_model->user_detail_by_user_id($data['user_id']);
+        if ($user && $user->group_id == 3) {
+            $user_workout_data = $this->db->select('trainer_workout_id')->where('id', $data['id'])->get('user_workouts')->row();
+            $this->db->delete('trainer_workouts', ['id' => $user_workout_data->trainer_workout_id]);
+            $this->db->delete('user_workouts', ['id' => $data['id']]);
+            $this->api_model->wd_result(array('status' => 1, 'message' => 'Workout deleted successfully'));
+        } else {
+            $this->api_model->wd_result(array('status' => 0, 'message' => 'Trainer does not exist with given ID'));
+        }
+    }
+
     function process_generator()
     {
         $data = $_POST;
@@ -999,230 +1016,247 @@ class Member extends Controller
         $this->api_model->validate($mandatory_fields, $data);
 
         $user = $this->api_model->user_detail_by_user_id($data['user_id']);
+        $senddata['workout_id'] = null;
 
         if ($user && $user->group_id == 3) {
-            $date = $this->input->post('date');
-            $dates = explode(' - ', $date);
-            if (count($dates) > 1) {
-                $start_date = $dates[0];
-                $end_date = $dates[1];
-                $weekdays = explode(',', $this->input->post('days'));
-            } else {
-                $single_date = $date;
-            }
-
-            $user_type = 'single';
-
-            if ($this->input->post('client') != '' && stristr($this->input->post('client'), 'group')) {
-                $user_type = 'group';
-                $id_array = explode('-', $this->input->post('client'));
-                $users = $this->db->select(array('trainer_clients.client_id as id'))->where('trainer_group_id', $id_array[1])->get('trainer_clients')->result();
-                $group = $this->db->where('id', $id_array[1])->where('trainer_id', $data['user_id'])->limit(1)->get('trainer_client_groups')->row();
-            } elseif ($this->input->post('client') != '') {
-                $user = $this->ion_auth->get_user($this->input->post('client'));
-                $users[] = $user;
-            } else {
-                $user = $this->ion_auth->get_user($data['user_id']);
-                $users[] = $user;
-            }
-
-            if ($this->input->post('group_workout_id') != '') {
-                $user_workout = $this->db->where('id', $this->input->post('group_workout_id'))->limit(1)->get('user_workouts')->row();
-                $user_workouts = $this->db->where('trainer_workout_id', $user_workout->trainer_workout_id)->where('workout_date', $user_workout->workout_date)->get('user_workouts')->result_array();
-                foreach ($user_workouts as $group_member_workout) {
-                    $this->db->delete('user_workout_exercises', array('workout_id' => $group_member_workout['id']));
-                    $this->db->delete('user_workout_sections', array('workout_id' => $group_member_workout['id']));
+            if (isset($data['id']) && !empty($data['id'])) {
+                $user_workout_data = $this->db->select('trainer_workout_id')->where('id', $data['id'])->get('user_workouts')->row();
+                if (isset($data['workout_title'])) {
+                    $user_workouts_data = array('title' => $data['workout_title']);
+                    $this->db->where('id', $data['id'])->update('user_workouts', $user_workouts_data);
                 }
-                //$this->db->delete('user_workouts', array('id' => $this->input->post('workout_id')));
-            } elseif ($this->input->post('workout_id') != '') {
-                $this->db->delete('user_workout_exercises', array('workout_id' => $this->input->post('workout_id')));
-                $this->db->delete('user_workout_sections', array('workout_id' => $this->input->post('workout_id')));
-                //$this->db->delete('user_workouts', array('id' => $this->input->post('workout_id')));
-            }
-
-            if ($this->input->post('trainer_workout_id') != '') {
-                $trainer_workouts = $this->db->where('trainer_workout_id', $this->input->post('trainer_workout_id'))->where('workout_date >=', date('Y-m-d'))->get('user_workouts')->result_array();
-                foreach ($trainer_workouts as $client_workout) {
-                    $this->db->delete('user_workout_exercises', array('workout_id' => $client_workout['id']));
-                    $this->db->delete('user_workout_sections', array('workout_id' => $client_workout['id']));
-                    $this->db->delete('user_workouts', array('id' => $client_workout['id']));
+                if (isset($data['client'])) {
+                    $trainer_workouts_data = array('user_id' => $data['client']);
+                    $this->db->where('id', $user_workout_data->trainer_workout_id)->update('trainer_workouts', $trainer_workouts_data);
                 }
-            } elseif ($this->input->post('trainer_group_workout_id') != '') {
-                $trainer_workouts = $this->db->where('trainer_workout_id', $this->input->post('trainer_group_workout_id'))->where('workout_date >=', date('Y-m-d'))->get('user_workouts')->result_array();
-                foreach ($trainer_workouts as $client_workout) {
-                    $this->db->delete('user_workout_exercises', array('workout_id' => $client_workout['id']));
-                    $this->db->delete('user_workout_sections', array('workout_id' => $client_workout['id']));
-                    $this->db->delete('user_workouts', array('id' => $client_workout['id']));
-                }
-            }
-
-            if ($this->input->post('workout_title') != '') {
-                $workout_title = $this->input->post('workout_title');
-            } elseif ($this->input->post('skeleton_workout_id') != '') {
-                $this->crud->use_table('skeleton_workouts');
-                $skeleton_workout = $this->crud->retrieve(array('id' => $this->input->post('skeleton_workout_id')), 1)->row();
-                $workout_title = $skeleton_workout->title;
+                $this->api_model->wd_result(array('status' => 1, 'message' => 'Workout updated successfully'));
             } else {
-                $workout_title = 'Workout';
-            }
-
-            if ($this->input->post('progression_id') != '') {
-                $progression_id = $this->input->post('progression_id');
-            } else {
-                $progression_id = 'NULL';
-            }
-
-
-            if (isset($start_date)) {
-                $end_date = strtotime($end_date);
-                if ($user_type == 'group') {
-                    $trainer_workout_values = array('trainer_id' => $data['user_id'], 'trainer_group_id' => $id_array[1], 'start_date' => date("Y-m-d", strtotime($start_date)), 'end_date' => date("Y-m-d", $end_date), 'days' => implode(',', $weekdays));
+                $date = $this->input->post('date');
+                $dates = explode(' - ', $date);
+                if (count($dates) > 1) {
+                    $start_date = $dates[0];
+                    $end_date = $dates[1];
+                    $weekdays = explode(',', $this->input->post('days'));
                 } else {
-                    $trainer_workout_values = array('trainer_id' => $data['user_id'], 'user_id' => $user->id, 'start_date' => date("Y-m-d", strtotime($start_date)), 'end_date' => date("Y-m-d", $end_date), 'days' => implode(',', $weekdays));
+                    $single_date = $date;
                 }
+
+                $user_type = 'single';
+
+                if ($this->input->post('client') != '' && stristr($this->input->post('client'), 'group')) {
+                    $user_type = 'group';
+                    $id_array = explode('-', $this->input->post('client'));
+                    $users = $this->db->select(array('trainer_clients.client_id as id'))->where('trainer_group_id', $id_array[1])->get('trainer_clients')->result();
+                    $group = $this->db->where('id', $id_array[1])->where('trainer_id', $data['user_id'])->limit(1)->get('trainer_client_groups')->row();
+                } elseif ($this->input->post('client') != '') {
+                    $user = $this->ion_auth->get_user($this->input->post('client'));
+                    $users[] = $user;
+                } else {
+                    $user = $this->ion_auth->get_user($data['user_id']);
+                    $users[] = $user;
+                }
+
+                if ($this->input->post('group_workout_id') != '') {
+                    $user_workout = $this->db->where('id', $this->input->post('group_workout_id'))->limit(1)->get('user_workouts')->row();
+                    $user_workouts = $this->db->where('trainer_workout_id', $user_workout->trainer_workout_id)->where('workout_date', $user_workout->workout_date)->get('user_workouts')->result_array();
+                    foreach ($user_workouts as $group_member_workout) {
+                        $this->db->delete('user_workout_exercises', array('workout_id' => $group_member_workout['id']));
+                        $this->db->delete('user_workout_sections', array('workout_id' => $group_member_workout['id']));
+                    }
+                    //$this->db->delete('user_workouts', array('id' => $this->input->post('workout_id')));
+                } elseif ($this->input->post('workout_id') != '') {
+                    $this->db->delete('user_workout_exercises', array('workout_id' => $this->input->post('workout_id')));
+                    $this->db->delete('user_workout_sections', array('workout_id' => $this->input->post('workout_id')));
+                    //$this->db->delete('user_workouts', array('id' => $this->input->post('workout_id')));
+                }
+
                 if ($this->input->post('trainer_workout_id') != '') {
-                    $trainer_workout_id = $this->input->post('trainer_workout_id');
-                    $this->db->where('id', $trainer_workout_id)->where('trainer_id', $data['user_id'])->update('trainer_workouts', $trainer_workout_values);
+                    $trainer_workouts = $this->db->where('trainer_workout_id', $this->input->post('trainer_workout_id'))->where('workout_date >=', date('Y-m-d'))->get('user_workouts')->result_array();
+                    foreach ($trainer_workouts as $client_workout) {
+                        $this->db->delete('user_workout_exercises', array('workout_id' => $client_workout['id']));
+                        $this->db->delete('user_workout_sections', array('workout_id' => $client_workout['id']));
+                        $this->db->delete('user_workouts', array('id' => $client_workout['id']));
+                    }
                 } elseif ($this->input->post('trainer_group_workout_id') != '') {
-                    $trainer_workout_id = $this->input->post('trainer_group_workout_id');
-                    $this->db->where('id', $trainer_workout_id)->where('trainer_id', $data['user_id'])->update('trainer_workouts', $trainer_workout_values);
-                } else {
-                    $this->db->insert('trainer_workouts', $trainer_workout_values);
-                    $trainer_workout_id = $this->db->insert_id();
+                    $trainer_workouts = $this->db->where('trainer_workout_id', $this->input->post('trainer_group_workout_id'))->where('workout_date >=', date('Y-m-d'))->get('user_workouts')->result_array();
+                    foreach ($trainer_workouts as $client_workout) {
+                        $this->db->delete('user_workout_exercises', array('workout_id' => $client_workout['id']));
+                        $this->db->delete('user_workout_sections', array('workout_id' => $client_workout['id']));
+                        $this->db->delete('user_workouts', array('id' => $client_workout['id']));
+                    }
                 }
 
-                foreach ($users as $user) {
-                    $days = array(1 => 'Monday', 2 => 'Tuesday', 3 => 'Wednesday', 4 => 'Thursday', 5 => 'Friday', 6 => 'Saturday', 7 => 'Sunday');
-                    foreach ($weekdays as $day) {
-                        $current_day = '';
-                        $current_day = strtotime('next ' . $days[$day]);
+                if ($this->input->post('workout_title') != '') {
+                    $workout_title = $this->input->post('workout_title');
+                } elseif ($this->input->post('skeleton_workout_id') != '') {
+                    $this->crud->use_table('skeleton_workouts');
+                    $skeleton_workout = $this->crud->retrieve(array('id' => $this->input->post('skeleton_workout_id')), 1)->row();
+                    $workout_title = $skeleton_workout->title;
+                } else {
+                    $workout_title = 'Workout';
+                }
 
-                        while ($current_day < $end_date) {
+                if ($this->input->post('progression_id') != '') {
+                    $progression_id = $this->input->post('progression_id');
+                } else {
+                    $progression_id = 'NULL';
+                }
 
-                            $workout_values = array('trainer_workout_id' => $trainer_workout_id, 'progression_id' => $progression_id, 'user_id' => $user->id, 'workout_date' => date("Y-m-d", $current_day), 'title' => $workout_title);
-                            if ($user_type == 'group') {
-                                $workout_values['trainer_group_id'] = $id_array[1];
-                            }
-                            $this->db->insert('user_workouts', $workout_values);
-                            $workout_id = $this->db->insert_id();
 
-                            $current_day = strtotime(date("Y-m-d", $current_day) . " +1 week");
+                if (isset($start_date)) {
+                    $end_date = strtotime($end_date);
+                    if ($user_type == 'group') {
+                        $trainer_workout_values = array('trainer_id' => $data['user_id'], 'trainer_group_id' => $id_array[1], 'start_date' => date("Y-m-d", strtotime($start_date)), 'end_date' => date("Y-m-d", $end_date), 'days' => implode(',', $weekdays));
+                    } else {
+                        $trainer_workout_values = array('trainer_id' => $data['user_id'], 'user_id' => $user->id, 'start_date' => date("Y-m-d", strtotime($start_date)), 'end_date' => date("Y-m-d", $end_date), 'days' => implode(',', $weekdays));
+                    }
+                    if ($this->input->post('trainer_workout_id') != '') {
+                        $trainer_workout_id = $this->input->post('trainer_workout_id');
+                        $this->db->where('id', $trainer_workout_id)->where('trainer_id', $data['user_id'])->update('trainer_workouts', $trainer_workout_values);
+                    } elseif ($this->input->post('trainer_group_workout_id') != '') {
+                        $trainer_workout_id = $this->input->post('trainer_group_workout_id');
+                        $this->db->where('id', $trainer_workout_id)->where('trainer_id', $data['user_id'])->update('trainer_workouts', $trainer_workout_values);
+                    } else {
+                        $this->db->insert('trainer_workouts', $trainer_workout_values);
+                        $trainer_workout_id = $this->db->insert_id();
+                    }
 
-                            if (isset($workout_id)) {
-                                foreach ($this->input->post('workout') as $index => $section) {
-                                    $section = explode(';;', $section);
-                                    $s_value = explode("-", $section[0]);
-                                    $section_values = array('workout_id' => $workout_id, 'section_type_id' => $s_value[0], 'display_order' => $index);
-                                    if (isset($s_value[1]) && $s_value[1] != 'undefined') {
-                                        $section_values['section_rest'] = $s_value[1];
-                                    }
-                                    $this->db->insert('user_workout_sections', $section_values);
-                                    $workout_section_id = $this->db->insert_id();
-                                    foreach ($section as $index2 => $cat_exercise) {
-                                        if ($index2 != 0) {
-                                            $value = explode("-", $cat_exercise);
-                                            $sets = substr($value[2], 0, (strlen($value[2]) - 1));
-                                            $reps = substr($value[3], 0, (strlen($value[3]) - 1));
-                                            $rest = substr($value[4], 0, (strlen($value[4]) - 1));
-                                            $weight = substr($value[5], 0, (strlen($value[5]) - 1));
-                                            $time = substr($value[6], 0, (strlen($value[6]) - 1));
-                                            $exercise_values = array(
-                                                'exercise_id' => $value[1],
-                                                'workout_id' => $workout_id,
-                                                'display_order' => $index2,
-                                                'exercise_type_id' => $value[0],
-                                                'workout_section_id' => $workout_section_id,
-                                                'sets' => $sets,
-                                                'reps' => $reps,
-                                                'rest' => $rest,
-                                                'weight' => $weight,
-                                                'time' => $time,
-                                                'set_type' => $value[7],
-                                                'weight_option' => $value[8]
-                                            );
-                                            $this->db->insert('user_workout_exercises', $exercise_values);
+                    foreach ($users as $user) {
+                        $days = array(1 => 'Monday', 2 => 'Tuesday', 3 => 'Wednesday', 4 => 'Thursday', 5 => 'Friday', 6 => 'Saturday', 7 => 'Sunday');
+                        foreach ($weekdays as $day) {
+                            $current_day = '';
+                            $current_day = strtotime('next ' . $days[$day]);
+
+                            while ($current_day < $end_date) {
+
+                                $workout_values = array('trainer_workout_id' => $trainer_workout_id, 'progression_id' => $progression_id, 'user_id' => $data['user_id'], 'workout_date' => date("Y-m-d", $current_day), 'title' => $workout_title);
+                                if ($user_type == 'group') {
+                                    $workout_values['trainer_group_id'] = $id_array[1];
+                                }
+                                $this->db->insert('user_workouts', $workout_values);
+                                $workout_id = $this->db->insert_id();
+
+                                $current_day = strtotime(date("Y-m-d", $current_day) . " +1 week");
+
+                                if (isset($workout_id)) {
+                                    foreach ($this->input->post('workout') as $index => $section) {
+                                        $section = explode(';;', $section);
+                                        $s_value = explode("-", $section[0]);
+                                        $section_values = array('workout_id' => $workout_id, 'section_type_id' => $s_value[0], 'display_order' => $index);
+                                        if (isset($s_value[1]) && $s_value[1] != 'undefined') {
+                                            $section_values['section_rest'] = $s_value[1];
+                                        }
+                                        $this->db->insert('user_workout_sections', $section_values);
+                                        $workout_section_id = $this->db->insert_id();
+                                        foreach ($section as $index2 => $cat_exercise) {
+                                            if ($index2 != 0) {
+                                                $value = explode("-", $cat_exercise);
+                                                $sets = substr($value[2], 0, (strlen($value[2]) - 1));
+                                                $reps = substr($value[3], 0, (strlen($value[3]) - 1));
+                                                $rest = substr($value[4], 0, (strlen($value[4]) - 1));
+                                                $weight = substr($value[5], 0, (strlen($value[5]) - 1));
+                                                $time = substr($value[6], 0, (strlen($value[6]) - 1));
+                                                $exercise_values = array(
+                                                    'exercise_id' => $value[1],
+                                                    'workout_id' => $workout_id,
+                                                    'display_order' => $index2,
+                                                    'exercise_type_id' => $value[0],
+                                                    'workout_section_id' => $workout_section_id,
+                                                    'sets' => $sets,
+                                                    'reps' => $reps,
+                                                    'rest' => $rest,
+                                                    'weight' => $weight,
+                                                    'time' => $time,
+                                                    'set_type' => $value[7],
+                                                    'weight_option' => $value[8]
+                                                );
+                                                $this->db->insert('user_workout_exercises', $exercise_values);
+                                            }
                                         }
                                     }
+                                    $this->db->where('id', $workout_id)->where('user_id', $data['user_id'])->update('user_workouts', array('workout_created' => 'true'));
+                                    $senddata['workout_id'] = $workout_id;
                                 }
-                                $this->db->where('id', $workout_id)->where('user_id', $user->id)->update('user_workouts', array('workout_created' => 'true'));
                             }
                         }
                     }
-                }
-            } else {
-                if ($user_type == 'group') {
-                    $trainer_workout_values = array('trainer_id' => $data['user_id'], 'trainer_group_id' => $id_array[1], 'start_date' => date("Y-m-d", strtotime($single_date)));
                 } else {
-                    $trainer_workout_values = array('trainer_id' => $data['user_id'], 'user_id' => $user->id, 'start_date' => date("Y-m-d", strtotime($single_date)));
-                }
-                $this->db->insert('trainer_workouts', $trainer_workout_values);
-                $trainer_workout_id = $this->db->insert_id();
-                if ($this->input->post('group_workout_id') != '') {
-                    $orig_user_workout = $this->db->where('id', $this->input->post('group_workout_id'))->limit(1)->get('user_workouts')->row();
-                }
-                foreach ($users as $user) {
-
-                    $workout_values = array('user_id' => $user->id, 'trainer_workout_id' => $trainer_workout_id, 'progression_id' => $progression_id, 'title' => $workout_title, 'workout_date' => date('Y-m-d', strtotime($date)));
                     if ($user_type == 'group') {
-                        $workout_values['trainer_group_id'] = $id_array[1];
-                    }
-                    if ($this->input->post('group_workout_id') != '') {
-                        $user_workout = $this->db->where('user_id', $user->id)->where('trainer_workout_id', $orig_user_workout->trainer_workout_id)->where('workout_date', $orig_user_workout->workout_date)->limit(1)->get('user_workouts')->row();
-                        $workout_id = $user_workout->id;
-                        $this->db->where('id', $workout_id)->where('user_id', $user->id)->update('user_workouts', $workout_values);
-                    } elseif ($this->input->post('workout_id') != '') {
-                        $workout_id = $this->input->post('workout_id');
-                        $this->db->where('id', $workout_id)->where('user_id', $user->id)->update('user_workouts', $workout_values);
+                        $trainer_workout_values = array('trainer_id' => $data['user_id'], 'trainer_group_id' => $id_array[1], 'start_date' => date("Y-m-d", strtotime($single_date)));
                     } else {
-                        $this->db->insert('user_workouts', $workout_values);
-                        $workout_id = $this->db->insert_id();
+                        $trainer_workout_values = array('trainer_id' => $data['user_id'], 'user_id' => $user->id, 'start_date' => date("Y-m-d", strtotime($single_date)));
                     }
+                    $this->db->insert('trainer_workouts', $trainer_workout_values);
+                    $trainer_workout_id = $this->db->insert_id();
+                    if ($this->input->post('group_workout_id') != '') {
+                        $orig_user_workout = $this->db->where('id', $this->input->post('group_workout_id'))->limit(1)->get('user_workouts')->row();
+                    }
+                    foreach ($users as $user) {
 
-                    if (isset($workout_id)) {
-                        foreach ($this->input->post('workout') as $index => $section) {
-                            $section = explode(';;', $section);
-                            $s_value = explode("-", $section[0]);
-                            $section_values = array('workout_id' => $workout_id, 'section_type_id' => $s_value[0], 'display_order' => $index);
-                            if (isset($s_value[1])) {
-                                $section_values['section_rest'] = $s_value[1];
-                            }
-                            $this->db->insert('user_workout_sections', $section_values);
-                            $workout_section_id = $this->db->insert_id();
-                            foreach ($section as $index2 => $cat_exercise) {
-                                if ($index2 != 0) {
-                                    $value = explode("-", $cat_exercise);
-                                    $sets = substr($value[2], 0, (strlen($value[2]) - 1));
-                                    $reps = substr($value[3], 0, (strlen($value[3]) - 1));
-                                    $rest = substr($value[4], 0, (strlen($value[4]) - 1));
-                                    $weight = substr($value[5], 0, (strlen($value[5]) - 1));
-                                    $time = substr($value[6], 0, (strlen($value[6]) - 1));
-                                    $exercise_values = array(
-                                        'exercise_id' => $value[1],
-                                        'workout_id' => $workout_id,
-                                        'display_order' => $index2,
-                                        'exercise_type_id' => $value[0],
-                                        'workout_section_id' => $workout_section_id,
-                                        'sets' => $sets,
-                                        'reps' => $reps,
-                                        'rest' => $rest,
-                                        'weight' => $weight,
-                                        'time' => $time,
-                                        'set_type' => $value[7],
-                                        'weight_option' => $value[8]
-                                    );
-                                    $this->db->insert('user_workout_exercises', $exercise_values);
+                        $workout_values = array('user_id' => $data['user_id'], 'trainer_workout_id' => $trainer_workout_id, 'progression_id' => $progression_id, 'title' => $workout_title, 'workout_date' => date('Y-m-d', strtotime($date)));
+                        if ($user_type == 'group') {
+                            $workout_values['trainer_group_id'] = $id_array[1];
+                        }
+                        if ($this->input->post('group_workout_id') != '') {
+                            $user_workout = $this->db->where('user_id', $data['user_id'])->where('trainer_workout_id', $orig_user_workout->trainer_workout_id)->where('workout_date', $orig_user_workout->workout_date)->limit(1)->get('user_workouts')->row();
+                            $workout_id = $user_workout->id;
+                            $this->db->where('id', $workout_id)->where('user_id', $data['user_id'])->update('user_workouts', $workout_values);
+                        } elseif ($this->input->post('workout_id') != '') {
+                            $workout_id = $this->input->post('workout_id');
+                            $this->db->where('id', $workout_id)->where('user_id', $data['user_id'])->update('user_workouts', $workout_values);
+                        } else {
+                            $this->db->insert('user_workouts', $workout_values);
+                            $workout_id = $this->db->insert_id();
+                        }
+
+                        if (isset($workout_id)) {
+                            foreach ($this->input->post('workout') as $index => $section) {
+                                $section = explode(';;', $section);
+                                $s_value = explode("-", $section[0]);
+                                $section_values = array('workout_id' => $workout_id, 'section_type_id' => $s_value[0], 'display_order' => $index);
+                                if (isset($s_value[1])) {
+                                    $section_values['section_rest'] = $s_value[1];
+                                }
+                                $this->db->insert('user_workout_sections', $section_values);
+                                $workout_section_id = $this->db->insert_id();
+                                foreach ($section as $index2 => $cat_exercise) {
+                                    if ($index2 != 0) {
+                                        $value = explode("-", $cat_exercise);
+                                        $sets = substr($value[2], 0, (strlen($value[2]) - 1));
+                                        $reps = substr($value[3], 0, (strlen($value[3]) - 1));
+                                        $rest = substr($value[4], 0, (strlen($value[4]) - 1));
+                                        $weight = substr($value[5], 0, (strlen($value[5]) - 1));
+                                        $time = substr($value[6], 0, (strlen($value[6]) - 1));
+                                        $exercise_values = array(
+                                            'exercise_id' => $value[1],
+                                            'workout_id' => $workout_id,
+                                            'display_order' => $index2,
+                                            'exercise_type_id' => $value[0],
+                                            'workout_section_id' => $workout_section_id,
+                                            'sets' => $sets,
+                                            'reps' => $reps,
+                                            'rest' => $rest,
+                                            'weight' => $weight,
+                                            'time' => $time,
+                                            'set_type' => $value[7],
+                                            'weight_option' => $value[8]
+                                        );
+                                        $this->db->insert('user_workout_exercises', $exercise_values);
+                                    }
                                 }
                             }
+                            $this->db->where('id', $workout_id)->where('user_id', $data['user_id'])->update('user_workouts', array('workout_created' => 'true'));
+                            $senddata['workout_id'] = $workout_id;
                         }
-                        $this->db->where('id', $workout_id)->where('user_id', $user->id)->update('user_workouts', array('workout_created' => 'true'));
                     }
                 }
+                if ($user_type == 'group') {
+                    $this->api_model->wd_result(array('status' => 1, 'message' => "The new workout(s) have been added to " . $group->title . "\'s workout log.", 'workout_id' => $senddata['workout_id']));
+                } else {
+                    $this->api_model->wd_result(array('status' => 1, 'message' => "The new workout(s) have been added to " . $user->first_name . " " . $user->last_name . " 's workout log.", 'workout_id' => $senddata['workout_id']));
+                }
             }
-            if ($user_type == 'group') {
-                $this->api_model->wd_result(array('status' => 1, 'message' => "The new workout(s) have been added to " . $group->title . "\'s workout log."));
-            } else {
-                $this->api_model->wd_result(array('status' => 1, 'message' => "The new workout(s) have been added to " . $user->first_name . " " . $user->last_name . " 's workout log."));
-            }
+            
         } else {
             $this->api_model->wd_result(array('status' => 0, 'message' => 'Trainers does not exist with given ID'));
         }
@@ -1406,7 +1440,7 @@ class Member extends Controller
         $data = $_POST;
         $mandatory_fields = array('user_id');
         $this->api_model->validate($mandatory_fields, $data);
-        $limit = $data['limit'] ? $data['limit'] : 10;
+        $limit = $data['limit'] ? $data['limit'] : 10000000;
         $page = $data['page'] ? $data['page'] : 1;
         $user = $this->api_model->user_detail_by_user_id($data['user_id']);
 
@@ -1687,14 +1721,14 @@ class Member extends Controller
                     $this->crud->update(array('id' => $this->input->post('request_id')), array('client_id' => $data['user_id'], 'status' => 'confirmed'));
                     $this->api_model->wd_result(array('status' => 1, 'message' => "Request confirmed successfully"));
                     if($trainer_user['device_token']) {
-                        $this->send_notifications( $trainer_user['device_token'], "Your request confirmed.");
+                        $this->send_notifications( $trainer_user['device_token'], "Your request confirmed.", 1);
                     }
                 } else {
                     $this->crud->use_table('trainer_clients');
                     $this->crud->update(array('id' => $this->input->post('request_id')), array('client_id' => $data['user_id'], 'status' => 'denied'));
                     $this->api_model->wd_result(array('status' => 1, 'message' => "Request denied successfully"));
                     if($trainer_user['device_token']) {
-                        $this->send_notifications( $trainer_user['device_token'], "Your request denied.");
+                        $this->send_notifications( $trainer_user['device_token'], "Your request denied.", 1);
                     }
                 }
             }
@@ -2845,7 +2879,7 @@ class Member extends Controller
         $mandatory_fields = array('user_id');
         $this->api_model->validate($mandatory_fields, $data);
 
-        $limit = $data['limit'] ? $data['limit'] : 10;
+        $limit = $data['limit'] ? $data['limit'] : 100000000;
         $page = $data['page'] ? $data['page'] : 1;
         $user = $this->api_model->user_detail_by_user_id($data['user_id']);
 
@@ -2961,6 +2995,24 @@ class Member extends Controller
         }
     }
 
+    public function delete_custom_exercise()
+    {
+        $data = $_POST;
+        $mandatory_fields = array('id', 'user_id');
+        $this->api_model->validate($mandatory_fields, $data);
+        $user = $this->api_model->user_detail_by_user_id($data['user_id']);
+
+        if ($user && $user->group_id == 3) {
+            $this->db->delete('exercises', ['id' => $data['id']]);
+            $exercise_type_id = $this->db->select('type_id')->where('exercise_id', $data['id'])->get('exercise_link_types')->row();
+            $this->db->delete('exercise_types', ['id' => $exercise_type_id->type_id]);
+            $this->db->delete('exercise_link_types', ['exercise_id' => $data['id']]);
+            $this->api_model->wd_result(array('status' => 1, 'message' => 'Exercise deleted successfully'));
+        } else {
+            $this->api_model->wd_result(array('status' => 0, 'message' => 'Trainer does not exist with given ID'));
+        }
+    }
+
     public function add_custom_exercise()
     {
         $data = $_POST;
@@ -2968,36 +3020,70 @@ class Member extends Controller
         $this->api_model->validate($mandatory_fields, $data);
 
         $user = $this->api_model->user_detail_by_user_id($data['user_id']);
-        if ($user && $user->group_id == 3) {
-            if (isset($_FILES['video']['name']) && !empty($_FILES['video']['name'])) {
-                if (!is_dir('./video/trainer_exercise/')) {
-                    mkdir('./video/trainer_exercise/', 0777, TRUE);
-                }
-                $config['file_name'] = time() . '.mp4';
-                $config['overwrite'] = true;
-                $config['upload_path'] = './video/trainer_exercise/';
-                $config['allowed_types'] = '*';
-                $this->load->library('upload', $config);
 
-                if ($this->upload->do_upload('video')) {
-                    $this->db->insert('exercises', ['title' => $data['exercise_name'], 'experience_id' => 1, 'description' => '', 'video' => '/video/trainer_exercise/' . $this->upload->data()['file_name'], 'mobile_video' => '/video/trainer_exercise/' . $this->upload->data()['file_name'], 'inserted_as' => 'custom']);
+        if ($user && $user->group_id == 3) {
+            if (isset($data['id']) && !empty($data['id'])) {
+                if (isset($_FILES['video']['name']) && !empty($_FILES['video']['name'])) {
+                    if (!is_dir('./video/trainer_exercise/')) {
+                        mkdir('./video/trainer_exercise/', 0777, TRUE);
+                    }
+                    $config['file_name'] = time() . '.mp4';
+                    $config['overwrite'] = true;
+                    $config['upload_path'] = './video/trainer_exercise/';
+                    $config['allowed_types'] = '*';
+                    $this->load->library('upload', $config);
+    
+                    if ($this->upload->do_upload('video')) {
+                        $exercise_data = array('title' => $data['exercise_name'], 'video' => '/video/trainer_exercise/' . $this->upload->data()['file_name'], 'mobile_video' => '/video/trainer_exercise/' . $this->upload->data()['file_name']);
+                        $this->db->where('id', $data['id'])->update('exercises', $exercise_data);
+                        $exercise_type_id = $this->db->select('type_id')->where('exercise_id', $data['id'])->get('exercise_link_types')->row();
+                        $exercise_types_data = array('title' => $data['exercise_type']);
+                        $this->db->where('id', $exercise_type_id->type_id)->update('exercise_types', $exercise_types_data);
+                        $this->api_model->wd_result(array('status' => 1, 'message' => 'Exercise updated successfully', 'data' => array('exercise_type_id' => $exercise_type_id->type_id, 'exercise_type' => $data['exercise_type'])));
+                    } else {
+                        $this->api_model->wd_result(array('status' => 0, 'message' => strip_tags($this->upload->display_errors())));
+                    }
+                } elseif (isset($data['trainer_exercise']) && !empty($data['trainer_exercise'])) {
+                    $exercise_data = array('title' => $data['exercise_name'], 'video' => $data['trainer_exercise'], 'mobile_video' => $data['trainer_exercise']);
+                    $this->db->where('id', $data['id'])->update('exercises', $exercise_data);
+                    $exercise_type_id = $this->db->select('type_id')->where('exercise_id', $data['id'])->get('exercise_link_types')->row();
+                    $exercise_types_data = array('title' => $data['exercise_type']);
+                    $this->db->where('id', $exercise_type_id->type_id)->update('exercise_types', $exercise_types_data);
+                    $this->api_model->wd_result(array('status' => 1, 'message' => 'Exercise updated successfully', 'data' => array('exercise_type_id' => $exercise_type_id->type_id, 'exercise_type' => $data['exercise_type'])));
+                } else {
+                    $this->api_model->wd_result(array('status' => 0, 'message' => 'Must upload a video'));
+                }
+            } else {
+                if (isset($_FILES['video']['name']) && !empty($_FILES['video']['name'])) {
+                    if (!is_dir('./video/trainer_exercise/')) {
+                        mkdir('./video/trainer_exercise/', 0777, TRUE);
+                    }
+                    $config['file_name'] = time() . '.mp4';
+                    $config['overwrite'] = true;
+                    $config['upload_path'] = './video/trainer_exercise/';
+                    $config['allowed_types'] = '*';
+                    $this->load->library('upload', $config);
+    
+                    if ($this->upload->do_upload('video')) {
+                        $this->db->insert('exercises', ['title' => $data['exercise_name'], 'experience_id' => 1, 'description' => '', 'video' => '/video/trainer_exercise/' . $this->upload->data()['file_name'], 'mobile_video' => '/video/trainer_exercise/' . $this->upload->data()['file_name'], 'inserted_as' => 'custom', 'created_by' => $data['user_id']]);
+                        $exercise_id = $this->db->insert_id();
+                        $this->db->insert('exercise_types', ['title' => $data['exercise_type'], 'inserted_as' => 'custom']);
+                        $exercise_type_id = $this->db->insert_id();
+                        $this->db->insert('exercise_link_types', ['exercise_id' => $exercise_id, 'type_id' => $exercise_type_id]);
+                        $this->api_model->wd_result(array('status' => 1, 'message' => 'Exercise added successfully', 'data' => array('exercise_type_id' => $exercise_type_id, 'exercise_type' => $data['exercise_type'])));
+                    } else {
+                        $this->api_model->wd_result(array('status' => 0, 'message' => strip_tags($this->upload->display_errors())));
+                    }
+                } elseif (isset($data['trainer_exercise']) && !empty($data['trainer_exercise'])) {
+                    $this->db->insert('exercises', ['title' => $data['exercise_name'], 'experience_id' => 1, 'description' => '', 'video' => $data['trainer_exercise'], 'mobile_video' => $data['trainer_exercise'], 'inserted_as' => 'custom', 'created_by' => $data['user_id']]);
                     $exercise_id = $this->db->insert_id();
                     $this->db->insert('exercise_types', ['title' => $data['exercise_type'], 'inserted_as' => 'custom']);
                     $exercise_type_id = $this->db->insert_id();
                     $this->db->insert('exercise_link_types', ['exercise_id' => $exercise_id, 'type_id' => $exercise_type_id]);
                     $this->api_model->wd_result(array('status' => 1, 'message' => 'Exercise added successfully', 'data' => array('exercise_type_id' => $exercise_type_id, 'exercise_type' => $data['exercise_type'])));
                 } else {
-                    $this->api_model->wd_result(array('status' => 0, 'message' => strip_tags($this->upload->display_errors())));
+                    $this->api_model->wd_result(array('status' => 0, 'message' => 'Must upload a video'));
                 }
-            } elseif (isset($data['trainer_exercise']) && !empty($data['trainer_exercise'])) {
-                $this->db->insert('exercises', ['title' => $data['exercise_name'], 'experience_id' => 1, 'description' => '', 'video' => $data['trainer_exercise'], 'mobile_video' => $data['trainer_exercise'], 'inserted_as' => 'custom']);
-                $exercise_id = $this->db->insert_id();
-                $this->db->insert('exercise_types', ['title' => $data['exercise_type'], 'inserted_as' => 'custom']);
-                $exercise_type_id = $this->db->insert_id();
-                $this->db->insert('exercise_link_types', ['exercise_id' => $exercise_id, 'type_id' => $exercise_type_id]);
-                $this->api_model->wd_result(array('status' => 1, 'message' => 'Exercise added successfully', 'data' => array('exercise_type_id' => $exercise_type_id, 'exercise_type' => $data['exercise_type'])));
-            } else {
-                $this->api_model->wd_result(array('status' => 0, 'message' => 'Must upload a video'));
             }
         } else {
             $this->api_model->wd_result(array('status' => 0, 'message' => 'Trainer does not exist with given ID'));
@@ -3099,10 +3185,10 @@ class Member extends Controller
     }
 
 
-    function send_notifications($device_token, $message)
+    function send_notifications($device_token, $message, $type)
     {
         $jwtToken = $this->generateJWT();
-        $result = $this->sendAPNSPushNotification($device_token, $jwtToken, $message);
+        $result = $this->sendAPNSPushNotification($device_token, $jwtToken, $message, $type);
     }
 
     public function generateJWT()
@@ -3117,7 +3203,7 @@ class Member extends Controller
         return $jwt;
     }
 
-    function sendAPNSPushNotification($deviceToken, $jwtToken, $message) {
+    function sendAPNSPushNotification($deviceToken, $jwtToken, $message, $type) {
         $url = 'https://api.sandbox.push.apple.com/3/device/' . $deviceToken;
     
         $headers = array(
@@ -3128,7 +3214,11 @@ class Member extends Controller
     
         $data = array(
             'aps' => array(
-                'alert' => $message
+                'alert' => array(
+                    'title' => 'TRNHRD',
+                    'body' => $message,
+                    'loc-key' => $type == 0 ? 'REQUEST_MESSAGE' : 'CONFIRM_MESSAGE'
+                )
             )
         );
     
@@ -3140,61 +3230,34 @@ class Member extends Controller
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_2_0);
+        
+        if(curl_error($ch))
+        {
+            echo 'error:' . curl_error($ch);
+        }
+        else{
+            echo $content;  
+        }
     
         $response = curl_exec($ch);
         $info = curl_getinfo($ch);
         
         curl_close($ch);
-
-        // $url = "ssl://api.sandbox.push.apple.com:443";
-        // $path = "/3/device/" . $device_token;
-
-        // $headers = array(
-        //     "apns-topic: com.hybrid.fitness",
-        //     "apns-push-type: alert",
-        //     "authorization: bearer " . $jwtToken
-        // );
-
-        // $data = array(
-        //     "aps" => array(
-        //         "alert" => $message
-        //     )
-        // );
-
-        // $body = json_encode($data);
-
-        // $request = "POST $path HTTP/1.1\r\n";
-        // $request .= "Host: api.sandbox.push.apple.com\r\n";
-        // $request .= "Content-Type: application/json\r\n";
-        // $request .= "Content-Length: " . strlen($body) . "\r\n";
-        // foreach ($headers as $header) {
-        //     $request .= $header . "\r\n";
-        // }
-        // $request .= "\r\n";
-        // $request .= $body;
-
-        // $context = stream_context_create([
-        //     'ssl' => [
-        //         'crypto_method' => STREAM_CRYPTO_METHOD_TLS_CLIENT,
-        //     ],
-        // ]);
-
-        // $fp = stream_socket_client($url, $errno, $errstr, 30, STREAM_CLIENT_CONNECT, $context);
-        // if (!$fp) {
-        //     echo "Connection failed: $errno - $errstr";
-        // } else {
-        //     fwrite($fp, $request);
-        //     echo stream_get_contents($fp);
-        //     fclose($fp);
-        // }
+    
+        return array(
+            'response' => $response,
+            'info' => $info
+        );
     }
 
     public function testAPN()
     {
-        $device_token = 'b3786cee91405916a712b887f80e32de04c48bd0b42ce4b32c8ad34acf0c357a'; //token
+        $data = $_POST;
+        $device_token = $data['device_token']; //token
+        $type = $data['type'];
         $jwtToken = $this->generateJWT();
         echo $jwtToken . '/n';
-        $result = $this->sendAPNSPushNotification($device_token, $jwtToken, 'test');
+        $result = $this->sendAPNSPushNotification($device_token, $jwtToken, 'test', $type);
         
         echo "Response: " . $result['response'] . "\n";
         echo "HTTP Status Code: " . $result['info']['http_code'] . "\n";

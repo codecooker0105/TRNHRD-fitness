@@ -620,9 +620,9 @@ class Workouts_api extends CI_Model {
             $user = $this->ion_auth->get_user($options['user_id']);
         }
 
-        $this->db->select(array('exercises.*'));
+        $this->db->select(array('exercises.*, exercise_types.title as type_title'));
         if (isset($options['user_id'])) {
-            $this->db->where("id IN (SELECT exercise_id FROM user_available_exercises WHERE user_id = '" . $options['user_id'] . "')");
+            $this->db->where("created_by", $options['user_id']);
         }
 
         if (isset($options['available_equipment'])) {
@@ -641,7 +641,7 @@ class Workouts_api extends CI_Model {
             $this->db->where("experience_id", $options['experience_level']);
         }
 
-        return $this->db->order_by('title', 'asc')->limit($limit, ($page-1)*$limit)->get('exercises')->result();
+        return $this->db->order_by('title', 'asc')->limit($limit, ($page-1)*$limit)->join('exercise_link_types', 'exercise_link_types.exercise_id = exercises.id ', 'left')->join('exercise_types', 'exercise_types.id = exercise_link_types.type_id')->get('exercises')->result();
     }
 
     public function get_random_workout($options = '') {
@@ -655,7 +655,7 @@ class Workouts_api extends CI_Model {
     }
 
     public function overall_workouts($user_id, $page, $limit) {
-        return $this->db->select('user_workouts.id,user_workouts.title,user_workouts.workout_date,user_workouts.trainer_workout_id,user_workouts.workout_created,progressions.title as pro_title,CONCAT((meta.first_name),(" "),( meta.last_name)) AS trainer_name')->join('progressions', 'progressions.id = user_workouts.progression_id', 'left')->join('trainer_workouts', 'trainer_workouts.id = user_workouts.trainer_workout_id', 'left')->join('users', 'trainer_workouts.trainer_id = users.id', 'left')->join('meta', 'meta.user_id = users.id', 'left')->where('user_workouts.user_id', $user_id)->order_by("workout_date desc, user_workouts.id desc")->limit($limit, ($page-1)*$limit)->get('user_workouts')->result();
+        return $this->db->select('user_workouts.id,user_workouts.title,user_workouts.workout_date,user_workouts.trainer_workout_id,user_workouts.workout_created,trainer_workouts.user_id as client_id,progressions.title as pro_title,CONCAT((meta.first_name),(" "),( meta.last_name)) AS trainer_name')->join('progressions', 'progressions.id = user_workouts.progression_id', 'left')->join('trainer_workouts', 'trainer_workouts.id = user_workouts.trainer_workout_id', 'left')->join('users', 'trainer_workouts.trainer_id = users.id', 'left')->join('meta', 'meta.user_id = users.id', 'left')->where('user_workouts.user_id', $user_id)->order_by("workout_date desc, user_workouts.id desc")->limit($limit, ($page-1)*$limit)->get('user_workouts')->result();
     }
 
     public function get_past_workouts($user_id) {
