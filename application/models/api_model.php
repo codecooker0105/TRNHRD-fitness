@@ -93,12 +93,10 @@ class Api_model extends CI_Model
 
     public function user_detail_by_email($email)
     {
-        $this->db->select('meta.*,groups.name as group_name, groups.description as group_description,users.group_id,users.username,users.email');
+        $this->db->select('users.username,users.email,users.device_token');
         $this->db->from('users');
-        $this->db->join('meta', 'users.id = meta.user_id');
-        $this->db->join('groups', 'users.group_id = groups.id');
         $this->db->where(['users.email' => $email]);
-        $user = $this->db->get()->row();
+        $user = $this->db->get()->result();
         return $user;
     }
 
@@ -245,7 +243,13 @@ class Api_model extends CI_Model
 
     function get_all_clients($trainer_id, $page, $limit)
     {
-        $query = 'SELECT `users`.`id` As user_id, `users`.`username`, `users`.`email`, IFNULL(`trainer_clients`.`status`, NULL) AS status, `meta`.`first_name`, `meta`.`last_name`, `meta`.`phone_number`, `meta`.`photo`, `meta`.`available_equipment` FROM (`users`) LEFT JOIN `trainer_clients` ON `users`.`id` = `trainer_clients`.`client_id` AND `trainer_clients`.`trainer_id` = ' . $trainer_id . ' JOIN `meta` ON `users`.`id` = `meta`.`user_id` WHERE `users`.`group_id` = 2 ORDER BY `users`.`created_on` desc LIMIT ' . $limit . ' OFFSET ' . ($page-1) * $limit;
+        $trainer_removed = $this->db->get_where('trainer_removed_clients',['trainer_id'=> $trainer_id])->row();
+        $additional_query = '';
+        if ($trainer_removed) {
+            $trainer_removed_ids = $trainer_removed->removed_client_id;
+            $additional_query = 'AND `users`.`id` NOT IN (' . $trainer_removed_ids . ')';
+        }
+        $query = 'SELECT `users`.`id` As user_id, `users`.`username`, `users`.`email`, IFNULL(`trainer_clients`.`status`, NULL) AS status, `meta`.`first_name`, `meta`.`last_name`, `meta`.`phone_number`, `meta`.`photo`, `meta`.`available_equipment` FROM (`users`) LEFT JOIN `trainer_clients` ON `users`.`id` = `trainer_clients`.`client_id` AND `trainer_clients`.`trainer_id` = ' . $trainer_id . ' JOIN `meta` ON `users`.`id` = `meta`.`user_id` WHERE `users`.`group_id` = 2 ' . $additional_query . ' ORDER BY `users`.`created_on` desc LIMIT ' . $limit . ' OFFSET ' . ($page-1) * $limit;
         $result = $this->db->query($query)->result();
         return $result;
     }
@@ -375,6 +379,20 @@ class Api_model extends CI_Model
     function remove_client($trainer_id, $client_id)
     {
         $this->db->delete('trainer_clients', ['trainer_id' => $trainer_id, 'client_id' => $client_id]);
+        $trainer_removed = $this->db->get_where('trainer_removed_clients',['trainer_id'=> $trainer_id])->row();
+        if ($trainer_removed) {
+            $remove_clients = explode(',', $trainer_removed->removed_client_id);
+            if (!in_array($client_id, $remove_clients)) {
+                $new_value = implode(',',array($trainer_removed->removed_client_id, $client_id));
+                $this->db->update('trainer_removed_clients', ['removed_client_id' => $new_value], ['trainer_id' => $trainer_id]);
+            }
+        } else {
+            $insert_data = array(
+                'trainer_id' => $trainer_id,
+                'removed_client_id' => $client_id
+            );
+            $this->db->insert('trainer_removed_clients', $insert_data);
+        }
     }
 
     function remove_trainer($client_id, $trainer_id)

@@ -370,6 +370,10 @@ class Workouts_api extends CI_Model {
         } else {
             $workout = $this->db->select(array('user_workouts.*', 'trainer_workouts.trainer_id', 'trainer_workouts.start_date', 'trainer_workouts.end_date'))->join('trainer_workouts', 'user_workouts.trainer_workout_id = trainer_workouts.id', 'left')->where('user_workouts.workout_date', $date)->where('user_workouts.user_id', $user_id)->order_by("user_workouts.id desc")->get('user_workouts')->row();
         }
+        if(!$workout) {
+            $workout = $this->db->select(array('user_workouts.*', 'trainer_workouts.trainer_id', 'trainer_workouts.start_date', 'trainer_workouts.end_date'))->join('trainer_workouts', 'user_workouts.trainer_workout_id = trainer_workouts.id')->where('user_workouts.workout_date', $date)->where('trainer_workouts.user_id', $user_id)->order_by("user_workouts.id desc")->get('user_workouts')->row();
+            return $workout;
+        }
         $return_workout = array();
         if ($workout) {
             $return_workout['title'] = $workout->title;
@@ -655,9 +659,13 @@ class Workouts_api extends CI_Model {
     }
 
     public function overall_workouts($user_id, $page, $limit) {
-        return $this->db->select('user_workouts.id,user_workouts.title,user_workouts.workout_date,user_workouts.trainer_workout_id,user_workouts.workout_created,trainer_workouts.user_id as client_id,progressions.title as pro_title,CONCAT((meta.first_name),(" "),( meta.last_name)) AS trainer_name')->join('progressions', 'progressions.id = user_workouts.progression_id', 'left')->join('trainer_workouts', 'trainer_workouts.id = user_workouts.trainer_workout_id', 'left')->join('users', 'trainer_workouts.trainer_id = users.id', 'left')->join('meta', 'meta.user_id = users.id', 'left')->where('user_workouts.user_id', $user_id)->order_by("workout_date desc, user_workouts.id desc")->limit($limit, ($page-1)*$limit)->get('user_workouts')->result();
+        return $this->db->select('user_workouts.id,user_workouts.title,user_workouts.workout_date,user_workouts.trainer_workout_id,user_workouts.workout_created,trainer_workouts.user_id as client_id,CONCAT((meta.first_name),(" "),( meta.last_name)) AS trainer_name')->join('trainer_workouts', 'trainer_workouts.id = user_workouts.trainer_workout_id', 'left')->join('users', 'trainer_workouts.trainer_id = users.id', 'left')->join('meta', 'meta.user_id = users.id', 'left')->where('user_workouts.user_id', $user_id)->order_by("workout_date desc, user_workouts.id desc")->limit($limit, ($page-1)*$limit)->get('user_workouts')->result();
     }
 
+    public function client_overall_workouts($user_id, $page, $limit) {
+        return $this->db->select('user_workouts.id,user_workouts.title,user_workouts.workout_date,user_workouts.trainer_workout_id,user_workouts.workout_created,trainer_workouts.user_id as client_id,CONCAT((meta.first_name),(" "),( meta.last_name)) AS trainer_name')->join('trainer_workouts', 'trainer_workouts.id = user_workouts.trainer_workout_id', 'left')->join('users', 'trainer_workouts.trainer_id = users.id', 'left')->join('meta', 'meta.user_id = users.id', 'left')->where('trainer_workouts.user_id', $user_id)->order_by("workout_date desc, user_workouts.id desc")->limit($limit, ($page-1)*$limit)->get('user_workouts')->result();
+    }
+    
     public function get_past_workouts($user_id) {
         return $this->db->select(array('user_workouts.*'))->where('user_id', $user_id)->where('workout_date <', date('Y-m-d'))->order_by("workout_date", "desc")->get('user_workouts')->result();
     }

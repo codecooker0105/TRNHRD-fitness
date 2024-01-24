@@ -825,16 +825,16 @@ class Member extends Controller
                     $this->email->subject('Trnhrd - Trainer Request');
                     $this->email->message($message);
 
-                    $data['clients'] = $this->api_model->get_clients($data['user_id']);
+                    $data['clients'] = $this->api_model->user_detail_by_email($data['email']);
                     $data['trainer_groups'] = $this->api_model->get_groups($data['user_id']);
 
+                    if($data['clients']) {
+                        $this->send_notifications( $data['clients'][0]->device_token, "Trnhrd - Trainer Request", 0);
+                    }
                     if ($this->email->send()) {
                         $this->api_model->wd_result(array('status' => 1, 'message' => "Your message has been sent to the client", 'data' => $data));
                     } else {
                         $this->api_model->wd_result(array('status' => 0, 'message' => "Your message failed to send. Please check the email you entered and try again. If you continue to get this message, please contact support.", 'data' => $data));
-                    }
-                    if($data['clients']['device_token']) {
-                        $this->send_notifications( $data['clients']['device_token'], "Trnhrd - Trainer Request", 0);
                     }
                 } else {
                     //display the edit user form
@@ -1719,17 +1719,17 @@ class Member extends Controller
                 if ($this->input->post('decision') == 'true') {
                     $this->crud->use_table('trainer_clients');
                     $this->crud->update(array('id' => $this->input->post('request_id')), array('client_id' => $data['user_id'], 'status' => 'confirmed'));
-                    $this->api_model->wd_result(array('status' => 1, 'message' => "Request confirmed successfully"));
-                    if($trainer_user['device_token']) {
-                        $this->send_notifications( $trainer_user['device_token'], "Your request confirmed.", 1);
+                    if($trainer_user) {
+                        $this->send_notifications( $trainer_user->device_token, "Your request confirmed.", 1);
                     }
+                    $this->api_model->wd_result(array('status' => 1, 'message' => "Request confirmed successfully", 'data' => $trainer_user->device_token));
                 } else {
                     $this->crud->use_table('trainer_clients');
                     $this->crud->update(array('id' => $this->input->post('request_id')), array('client_id' => $data['user_id'], 'status' => 'denied'));
-                    $this->api_model->wd_result(array('status' => 1, 'message' => "Request denied successfully"));
-                    if($trainer_user['device_token']) {
-                        $this->send_notifications( $trainer_user['device_token'], "Your request denied.", 1);
+                    if($trainer_user) {
+                        $this->send_notifications( $trainer_user->device_token, "Your request denied.", 1);
                     }
+                    $this->api_model->wd_result(array('status' => 1, 'message' => "Request denied successfully"));
                 }
             }
 
@@ -1887,24 +1887,25 @@ class Member extends Controller
 
         $response['user'] = $user;
         $response['workouts'] = array();
-        $response['progression_plan'] = array();
 
-        $workouts = $this->workouts_api->overall_workouts($data['user_id']);
+        if ($user->group_id == 3) {
+            $workouts = $this->workouts_api->overall_workouts($data['user_id'], 1, 1000000000);
+        } else {
+            $workouts = $this->workouts_api->client_overall_workouts($data['user_id'], 1, 1000000000);
+        }
 
         $unique_workout = array();
-        foreach ($workouts->result_array() as $workout) {
-            if ($workout['title'] == '') {
+        foreach ($workouts as $workout) {
+        if ($workout->title == '') {
                 $title = 'Workout';
             } else {
-                $title = $workout['title'];
+                $title = $workout->title;
             }
-            if (!empty($workout['trainer_workout_id'])) {
-                if (!array_key_exists($workout['workout_date'], $unique_workout)) {
-                    $unique_workout[$workout['workout_date']] = $workout;
+            if (!empty($workout->trainer_workout_id)) {
+                if (!array_key_exists($workout->workout_date, $unique_workout)) {
+                    $unique_workout[$workout->workout_date] = $workout;
                     $response['workouts'][] = $workout;
                 }
-            } else {
-                $response['progression_plan'][] = $workout;
             }
         }
         $this->api_model->wd_result(array('status' => 1, 'data' => $response));
@@ -2936,7 +2937,7 @@ class Member extends Controller
 
         $user = $this->api_model->user_detail_by_user_id($data['user_id']);
         if ($user && $user->group_id == 2) {
-            $response['featured_exercise'] = $this->workouts_api->get_random_exercise(array('user_id' => $user->id, 'available_equipment' => $user->available_equipment));
+            $response['featured_exercise'] = $this->workouts_api->get_random_exercise(array('user_id' => $user->id));
             $response['upcoming_workouts'] = $this->workouts_api->get_upcoming_created_workouts($user->id);
             $this->api_model->wd_result(array('status' => 1, 'data' => $response));
         } else {
@@ -3204,7 +3205,7 @@ class Member extends Controller
     }
 
     function sendAPNSPushNotification($deviceToken, $jwtToken, $message, $type) {
-        $url = 'https://api.sandbox.push.apple.com/3/device/' . $deviceToken;
+        $url = 'https://api.push.apple.com/3/device/' . $deviceToken;
     
         $headers = array(
             'apns-topic: com.hybrid.fitness',
@@ -3227,6 +3228,7 @@ class Member extends Controller
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HEADER, false);
+        curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_2_0);
@@ -3236,7 +3238,7 @@ class Member extends Controller
             echo 'error:' . curl_error($ch);
         }
         else{
-            echo $content;  
+            echo $content;
         }
     
         $response = curl_exec($ch);
